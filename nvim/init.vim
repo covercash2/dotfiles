@@ -5,6 +5,10 @@ set number
 set relativenumber
 syntax on
 set background=dark
+set cursorline
+
+" don't resize windows when one closes
+set noequalalways
 
 " indention
 set smartindent
@@ -57,11 +61,21 @@ let g:go_highlight_types = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
 
+let g:go_fmt_command = "goimports"
+
+let g:go_auto_sameids = 1
+let g:go_auto_type_info = 1
+
+" update field highlight every .5 seconds
+set updatetime=500
+
 " configure vim-plug
 call plug#begin()
 
 Plug 'sheerun/vim-polyglot'
 Plug 'fatih/vim-go'
+
+Plug 'ctrlpvim/ctrlp.vim'
 
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 
@@ -78,10 +92,13 @@ Plug 'sukima/xmledit', { 'do': 'make' }
 Plug 'jceb/vim-orgmode'
 Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-surround'
 Plug 'vim-scripts/utl.vim'
 
 Plug 'flazz/vim-colorschemes'
 Plug 'felixhummel/setcolors.vim'
+
+Plug 'dart-lang/dart-vim-plugin'
 
 call plug#end()
 
