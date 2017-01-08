@@ -21,10 +21,6 @@ set noexpandtab
 let mapleader = "\<space>"
 let maplocalleader = "\\"
 
-" mappings
-" return to normal mode from terminal mode
-tnoremap <Esc> <C-\><C-n>
-
 " org mode
 let g:org_todo_keywords = ['TODO', 'WAITING', '|', 'DONE']
 
