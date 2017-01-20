@@ -6,22 +6,17 @@
    t)
   (package-initialize))
 
+;; my functions and keybindings
+(defun cov-edit-init ()
+  (interactive)
+  (find-file-other-window "~/.emacs.d/init.el"))
+
 ;; turn on vim bindings
 (require 'evil)
 (evil-mode 1)
 
 ;; global key bindings
 (define-key evil-normal-state-map "," 'execute-extended-command)
-
-;; a function to create a new empty buffer
-(defun cov-new-empty-buffer ()
-  "create new empty buffer.
-URL: http://ergoemacs.org/emacs/emacs_new_empty_buffer.html"
-  (interactive)
-  (let ((-buf (generate-new-buffer "empty")))
-    (switch-to-buffer -buf)
-    (funcall initial-major-mode)
-    (setq buffer-offer-save t)))
 
 ;; powerline is the bar at the bottom. helps with vim mode
 (require 'powerline)
@@ -31,8 +26,12 @@ URL: http://ergoemacs.org/emacs/emacs_new_empty_buffer.html"
 ;; (powerline-vim-theme)
 ;; (powerline-nano-theme)
 
-;; auto-complete
-(ac-config-default)
+;; auto close pairs
+(electric-pair-mode)
+
+;; enable syntax checking
+(global-flycheck-mode)
+(add-hook 'c++-mode-hook (lambda() (setq flycheck-clang-language-standard "c++14")))
 
 ;; gruvbox theme
 (load-theme 'gruvbox t)
@@ -40,6 +39,31 @@ URL: http://ergoemacs.org/emacs/emacs_new_empty_buffer.html"
 ;; c stuff
 (setq c-default-style "linux"
       c-basic-offset 4)
+
+;; c++
+(add-hook 'c++-mode-hook 'irony-mode)
+(add-hook 'c-mode-hook 'irony-mode)
+(add-hook 'objc-mode 'irony-mode)
+
+;; syntax checker
+(add-hook 'c++-mode-hook
+	  (lambda () (setq flycheck-clang-include-path
+			   (list (expand-file-name "~/code/projects/bbsp/include")))))
+
+;; use irony-mode instead of default emacs completions
+(defun my-irony-mode-hook ()
+  (define-key irony-mode-map [remap completion-at-point]
+    'irony-completion-at-point-async)
+  (define-key irony-mode-map [remap complete-symbol]
+    'irony-completion-at-point-async))
+(add-hook 'irony-mode-hook 'my-irony-mode-hook)
+(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+
+;; turn on company mode for all buffers
+(add-hook 'after-init-hook 'global-company-mode)
+
+(eval-after-load 'company
+  '(add-to-list 'company-backends 'company-irony))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
