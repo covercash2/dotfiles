@@ -16,7 +16,7 @@
 (evil-mode 1)
 
 ;; global key bindings
-(define-key evil-normal-state-map "," 'execute-extended-command)
+(define-key evil-normal-state-map "," 'helm-M-x)
 
 ;; powerline is the bar at the bottom. helps with vim mode
 (require 'powerline)
@@ -32,6 +32,17 @@
 ;; enable syntax checking
 (global-flycheck-mode)
 (add-hook 'c++-mode-hook (lambda() (setq flycheck-clang-language-standard "c++14")))
+
+;; helm config
+(require 'helm-config)
+(require 'helm-ls-git)
+(global-set-key (kbd "M-x") 'helm-M-x)
+(helm-mode 1)
+
+;; snippets
+(setq yas-snippet-dirs
+      '("~/code/libraries/yasnippet-snippets"))
+(yas-global-mode)
 
 ;; gruvbox theme
 (load-theme 'gruvbox t)

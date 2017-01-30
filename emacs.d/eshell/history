@@ -1,0 +1,8 @@
+(yas-reload-all)
+(yas-reload-all)
+cd ~/code
+ls
+cd libraries/
+ls
+ls
+ls yasnippet-snippets/
