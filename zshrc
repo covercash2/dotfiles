@@ -7,8 +7,9 @@ java=/usr/libexec/java_home
 mysql=/usr/local/mysql/bin
 virtualbox=/Applications/VirtualBox.app/Contents/MacOS
 
-go=~/code/projects/go
-go_workspace=${go}/play
+go=~/code/go
+go_workspace=${go}
+go_bin=${go}/bin
 
 mysql=/usr/local/mysql/
 
@@ -21,7 +22,7 @@ export ZSH=$zsh
 export GOPATH=$go_workspace
 
 # export path
-export PATH=$PATH:$mysql:$virtualbox:$go_workspace:$mysql
+export PATH=$PATH:$mysql:$virtualbox:$go_bin:$mysql
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes

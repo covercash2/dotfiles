@@ -31,7 +31,11 @@
 
 ;; enable syntax checking
 (global-flycheck-mode)
+
 (add-hook 'c++-mode-hook (lambda() (setq flycheck-clang-language-standard "c++14")))
+
+;; company mode completion
+(setq company-idle-delay .3)
 
 ;; helm config
 (require 'helm-config)
@@ -46,6 +50,11 @@
 
 ;; gruvbox theme
 (load-theme 'gruvbox t)
+
+;; go stuff
+(add-hook 'go-mode-hook (lambda ()
+			  (set (make-local-variable 'company-backends) '(company-go))
+			  (company-mode)))
 
 ;; c stuff
 (setq c-default-style "linux"

@@ -1,1 +1,1 @@
-("~/code/projects/bbsp/" "~/system/dotfiles/")
+("~/system/dotfiles/" "~/code/projects/test_rust/" "~/code/projects/rk4/" "~/code/projects/bbsp/")
