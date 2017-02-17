@@ -6,3 +6,6 @@ cd libraries/
 ls
 ls
 ls yasnippet-snippets/
+exec-path
+(exec-path)
+exit

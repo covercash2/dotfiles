@@ -22,7 +22,7 @@ export ZSH=$zsh
 export GOPATH=$go_workspace
 
 # export path
-export PATH=$PATH:$mysql:$virtualbox:$go_bin:$mysql
+export PATH=$PATH:"/usr/local/bin":$mysql:$virtualbox:$go_bin:$mysql
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes

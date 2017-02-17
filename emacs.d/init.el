@@ -6,11 +6,17 @@
    t)
   (package-initialize))
 
+(when (eq system-type 'darwin)
+  (add-to-list 'exec-path "/usr/local/bin")
+  (setenv "PATH" (concat (getenv "PATH") ":" "/usr/local/bin"))
+  (exec-path-from-shell-initialize))
+
 ;; my functions and keybindings
 (defun cov-edit-init ()
   (interactive)
   (find-file-other-window "~/.emacs.d/init.el"))
 
+;; configure environment
 ;; turn on vim bindings
 (require 'evil)
 (evil-mode 1)
@@ -52,9 +58,31 @@
 (load-theme 'gruvbox t)
 
 ;; go stuff
-(add-hook 'go-mode-hook (lambda ()
-			  (set (make-local-variable 'company-backends) '(company-go))
-			  (company-mode)))
+(setq cov-go-path (expand-file-name "~/code/go"))
+(setq cov-go-bin (expand-file-name "~/code/go/bin"))
+(setq separator ":")
+
+(setenv "GOPATH" cov-go-path)
+(setenv "PATH" (concat (getenv "PATH") separator cov-go-bin))
+
+(add-to-list 'auto-mode-alist '("\\.tmpl\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(setq web-mode-engines-alist
+      '(("go" . "\\.tmpl\\'"))
+)
+
+(add-to-list 'exec-path cov-go-bin)
+
+(defun cov-go-mode-hook ()
+  ; format before save
+  (add-hook 'before-save-hook 'gofmt-before-save)
+  (if (not (string-match "go" compile-command))
+      (set (make-local-variable 'compile-command)
+	   "go build -v && go test -v && go vet"))
+  (set (make-local-variable 'company-backends) '(company-go))
+  (company-mode))
+
+(add-hook 'go-mode-hook 'cov-go-mode-hook)
 
 ;; c stuff
 (setq c-default-style "linux"
@@ -92,7 +120,10 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-    ("10e231624707d46f7b2059cc9280c332f7c7a530ebc17dba7e506df34c5332c4" default))))
+    ("10e231624707d46f7b2059cc9280c332f7c7a530ebc17dba7e506df34c5332c4" default)))
+ '(package-selected-packages
+   (quote
+    (web-mode evil-magit magit exec-path-from-shell multi-term helm-projectile projectile company-go go-mode yasnippet powerline helm-ls-git gruvbox-theme flycheck evil company-irony auto-complete))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
