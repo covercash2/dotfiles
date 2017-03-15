@@ -6,9 +6,10 @@
    t)
   (package-initialize))
 
+(require 'go-projectile)
+(require 'web-mode)
+
 (when (eq system-type 'darwin)
-  (add-to-list 'exec-path "/usr/local/bin")
-  (setenv "PATH" (concat (getenv "PATH") ":" "/usr/local/bin"))
   (exec-path-from-shell-initialize))
 
 ;; my functions and keybindings
@@ -27,10 +28,6 @@
 ;; powerline is the bar at the bottom. helps with vim mode
 (require 'powerline)
 (powerline-center-evil-theme)
-;; (powerline-default-theme)
-;; (powerline-center-theme)
-;; (powerline-vim-theme)
-;; (powerline-nano-theme)
 
 ;; auto close pairs
 (electric-pair-mode)
@@ -57,22 +54,14 @@
 ;; gruvbox theme
 (load-theme 'gruvbox t)
 
-;; go stuff
-(setq cov-go-path (expand-file-name "~/code/go"))
-(setq cov-go-bin (expand-file-name "~/code/go/bin"))
-(setq separator ":")
-
-(setenv "GOPATH" cov-go-path)
-(setenv "PATH" (concat (getenv "PATH") separator cov-go-bin))
-
+;; web-mode
 (add-to-list 'auto-mode-alist '("\\.tmpl\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 (setq web-mode-engines-alist
       '(("go" . "\\.tmpl\\'"))
 )
 
-(add-to-list 'exec-path cov-go-bin)
-
+;; go stuff
 (defun cov-go-mode-hook ()
   ; format before save
   (add-hook 'before-save-hook 'gofmt-before-save)
@@ -80,7 +69,8 @@
       (set (make-local-variable 'compile-command)
 	   "go build -v && go test -v && go vet"))
   (set (make-local-variable 'company-backends) '(company-go))
-  (company-mode))
+  (company-mode)
+  (go-projectile-derive-gopath))
 
 (add-hook 'go-mode-hook 'cov-go-mode-hook)
 
@@ -118,12 +108,14 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-enabled-themes (quote (gruvbox)))
  '(custom-safe-themes
    (quote
     ("10e231624707d46f7b2059cc9280c332f7c7a530ebc17dba7e506df34c5332c4" default)))
  '(package-selected-packages
    (quote
-    (web-mode evil-magit magit exec-path-from-shell multi-term helm-projectile projectile company-go go-mode yasnippet powerline helm-ls-git gruvbox-theme flycheck evil company-irony auto-complete))))
+    (go-projectile web-mode evil-magit magit exec-path-from-shell multi-term helm-projectile projectile company-go go-mode yasnippet powerline helm-ls-git gruvbox-theme flycheck evil company-irony auto-complete)))
+ '(projectile-mode t nil (projectile)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
