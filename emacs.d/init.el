@@ -1,13 +1,11 @@
-(when (>= emacs-major-version 24)
-  (require 'package)
-  (add-to-list
-   'package-archives
-   '("melpa" . "http://melpa.org/packages/")
-   t)
-  (package-initialize))
+(add-to-list 'load-path (expand-file-name "scripts" user-emacs-directory))
 
-(require 'go-projectile)
-(require 'web-mode)
+(require 'init-elpa)
+(require 'init-editor)
+(require 'init-ui)
+(require 'init-nav)
+
+(require 'cov-rust)
 
 (when (eq system-type 'darwin)
   (exec-path-from-shell-initialize))
@@ -17,42 +15,16 @@
   (interactive)
   (find-file-other-window "~/.emacs.d/init.el"))
 
-;; configure environment
-;; turn on vim bindings
-(require 'evil)
-(evil-mode 1)
-
-;; global key bindings
-(define-key evil-normal-state-map "," 'helm-M-x)
-
 ;; powerline is the bar at the bottom. helps with vim mode
 (require 'powerline)
 (powerline-center-evil-theme)
 
-;; auto close pairs
-(electric-pair-mode)
-
-;; enable syntax checking
-(global-flycheck-mode)
-
 (add-hook 'c++-mode-hook (lambda() (setq flycheck-clang-language-standard "c++14")))
-
-;; company mode completion
-(setq company-idle-delay .3)
-
-;; helm config
-(require 'helm-config)
-(require 'helm-ls-git)
-(global-set-key (kbd "M-x") 'helm-M-x)
-(helm-mode 1)
 
 ;; snippets
 (setq yas-snippet-dirs
       '("~/code/libraries/yasnippet-snippets"))
 (yas-global-mode)
-
-;; gruvbox theme
-(load-theme 'gruvbox t)
 
 ;; web-mode
 (add-to-list 'auto-mode-alist '("\\.tmpl\\'" . web-mode))
@@ -103,22 +75,4 @@
 (eval-after-load 'company
   '(add-to-list 'company-backends 'company-irony))
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-enabled-themes (quote (gruvbox)))
- '(custom-safe-themes
-   (quote
-    ("10e231624707d46f7b2059cc9280c332f7c7a530ebc17dba7e506df34c5332c4" default)))
- '(package-selected-packages
-   (quote
-    (go-projectile web-mode evil-magit magit exec-path-from-shell multi-term helm-projectile projectile company-go go-mode yasnippet powerline helm-ls-git gruvbox-theme flycheck evil company-irony auto-complete)))
- '(projectile-mode t nil (projectile)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+(provide 'init)

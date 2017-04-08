@@ -1,6 +1,11 @@
 zsh=~/.oh-my-zsh
 
-java=`/usr/libexec/java_home`
+if [[ `uname` == Darwin ]]
+then
+	java=`/usr/libexec/java_home`
+else
+	java="/usr/lib/jvm/default-java"
+fi
 
 android_sdk=/usr/local/opt/android-sdk
 
@@ -12,13 +17,15 @@ go=~/code/go
 go_workspace=${go}
 go_bin=${go}/bin
 
+cargo=~/.cargo/bin
+
 mysql=/usr/local/mysql/
 
 export MYSQL_PATH=$mysql
 
-export JAVA_HOME=`/usr/libexec/java_home`
+export JAVA_HOME=$java
 export ANDROID_HOME=$android_sdk
 export ZSH=$zsh
 export GOPATH=$go_workspace
 
-export PATH=$PATH:$mysql:$virtualbox:$go_bin
+export PATH=$PATH:$mysql:$virtualbox:$go_bin:$cargo
