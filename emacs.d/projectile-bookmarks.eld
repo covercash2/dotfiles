@@ -1,1 +1,1 @@
-("~/code/projects/test_rust/" "~/system/dotfiles/" "~/code/go/src/github.com/covercash2/academy/" "~/code/projects/rk4/" "~/code/projects/bbsp/")
+("~/system/dotfiles/" "~/code/projects/test_rust/" "~/code/go/src/github.com/covercash2/academy/" "~/code/projects/rk4/" "~/code/projects/bbsp/")

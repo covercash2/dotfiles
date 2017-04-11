@@ -5,6 +5,7 @@
 (require 'init-ui)
 (require 'init-nav)
 
+(require 'cov-java)
 (require 'cov-rust)
 
 (when (eq system-type 'darwin)
