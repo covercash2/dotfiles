@@ -13,6 +13,7 @@
 
 (eval-when-compile
   (require 'use-package))
+
 (require 'diminish)
 (require 'bind-key)
 
@@ -20,6 +21,7 @@
 (require 'init-editor)
 (require 'init-ui)
 ;;
+(require 'cov-keybind)
 
 (require 'cov-java)
 (require 'cov-kotlin)
@@ -49,19 +51,19 @@
   (setq company-idle-delay .2)
   (add-hook 'prog-mode-hook 'company-mode))
 
-(use-package evil
-  :ensure t
-  ;; :commands (evil-mode)
-  :config
-  (evil-mode 1)
-  (use-package evil-leader
-    :ensure t
-    :config
-    (global-evil-leader-mode))
-  (use-package evil-surround
-    :ensure t
-    :config
-    (global-evil-surround-mode)))
+;; (use-package evil
+;;   :ensure t
+;;   ;; :commands (evil-mode)
+;;   :config
+;;   (evil-mode 1)
+;;   (use-package evil-leader
+;;     :ensure t
+;;     :config
+;;     (global-evil-leader-mode))
+;;   (use-package evil-surround
+;;     :ensure t
+;;     :config
+;;     (global-evil-surround-mode)))
 
 (use-package rainbow-delimiters
   :ensure t
@@ -111,19 +113,31 @@
   :config
   (load-theme 'gruvbox t))
 
+(use-package web-mode
+  :config
+  (add-to-list 'auto-mode-alist '("\\.tmpl\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+  (setq web-mode-engines-alist
+	'(("go" . "\\.tmpl\\'"))))
+
+;; log tag
+(setq cov--tag-error "[E] : ")
+
+(defun switch-to-minibuffer ()
+  "switch to minibuffer"
+  (interactive)
+  (if (active-minibuffer-window)
+      (select-window (active-minibuffer-window))
+    (error (concat cov--tag-error "minibuffer not active"))))
+
+
+
 ;; my functions and keybindings
 (defun cov-edit-init ()
   (interactive)
   (find-file "~/.emacs.d/init.el"))
 
 (add-hook 'c++-mode-hook (lambda() (setq flycheck-clang-language-standard "c++14")))
-
-;; web-mode
-(add-to-list 'auto-mode-alist '("\\.tmpl\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-(setq web-mode-engines-alist
-      '(("go" . "\\.tmpl\\'"))
-)
 
 ;; go stuff
 (defun cov-go-mode-hook ()

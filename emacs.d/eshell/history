@@ -9,3 +9,11 @@ ls yasnippet-snippets/
 exec-path
 (exec-path)
 exit
+cd
+(length "string")
+(setq TAG "E:  ")
+(TAG)
+(print 'TAG)
+(print TAG)
+cd ~/.emacs.d/scripts
+ls
