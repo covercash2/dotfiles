@@ -1,1 +1,1 @@
-("~/system/dotfiles/yasnippet-snippets/" "~/system/dotfiles/" "~/code/projects/test_rust/" "~/code/go/src/github.com/covercash2/academy/" "~/code/projects/rk4/" "~/code/projects/bbsp/")
+("~/system/dotfiles/" "~/system/dotfiles/yasnippet-snippets/" "~/code/projects/test_rust/" "~/code/go/src/github.com/covercash2/academy/" "~/code/projects/rk4/" "~/code/projects/bbsp/")
