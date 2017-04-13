@@ -51,20 +51,6 @@
   (setq company-idle-delay .2)
   (add-hook 'prog-mode-hook 'company-mode))
 
-;; (use-package evil
-;;   :ensure t
-;;   ;; :commands (evil-mode)
-;;   :config
-;;   (evil-mode 1)
-;;   (use-package evil-leader
-;;     :ensure t
-;;     :config
-;;     (global-evil-leader-mode))
-;;   (use-package evil-surround
-;;     :ensure t
-;;     :config
-;;     (global-evil-surround-mode)))
-
 (use-package rainbow-delimiters
   :ensure t
   :config
