@@ -1,9 +1,3 @@
-(require 'init-elpa)
-(require-package 'atom-one-dark-theme)
-(require-package 'golden-ratio)
-
-(require 'golden-ratio)
-
 (setq inhibit-startup-message t)
 (menu-bar-mode -1)
 (when (fboundp 'tool-bar-mode)
@@ -20,10 +14,6 @@
       apropos-do-all t
       mouse-yank-at-point t)
 
-(load-theme 'atom-one-dark t)
-
 (setq ring-bell-function 'ignore)
-
-(golden-ratio-mode 1)
 
 (provide 'init-ui)
