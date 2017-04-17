@@ -93,7 +93,8 @@
   (setq yas-snippet-dirs
 	'("~/code/libraries/yasnippet-snippets/"))
   :config
-  (yas-global-mode))
+  (add-hook 'prog-mode-hook 'yas-minor-mode)
+  )
 
 (use-package gruvbox-theme
   :config
@@ -110,7 +111,7 @@
 (setq cov--tag-error "[E] : ")
 
 (defun switch-to-minibuffer ()
-  "switch to minibuffer"
+  "Switch to minibuffer."
   (interactive)
   (if (active-minibuffer-window)
       (select-window (active-minibuffer-window))
@@ -175,7 +176,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (groovy-mode kotlin-mode racer flycheck-rust rust-mode jdee yasnippet web-mode rainbow-delimiters powerline multi-term memoize helm-projectile helm-ls-git gruvbox-theme golden-ratio go-projectile flycheck exec-path-from-shell evil-magit company-irony company-go auto-complete atom-one-dark-theme))))
+    (toml-mode groovy-mode kotlin-mode racer flycheck-rust rust-mode jdee yasnippet web-mode rainbow-delimiters powerline multi-term memoize helm-projectile helm-ls-git gruvbox-theme golden-ratio go-projectile flycheck exec-path-from-shell evil-magit company-irony company-go auto-complete atom-one-dark-theme))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

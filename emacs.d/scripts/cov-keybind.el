@@ -15,12 +15,16 @@
   "Config leader keys etc."
   (evil-leader/set-leader ",")
   (evil-leader/set-key
-    "b" 'helm-mini
-    "x" 'helm-M-x
-    "E" 'eval-buffer
     "." 'golden-ratio
+    "b" 'helm-mini
+    "E" 'eval-buffer
+    "g" 'magit-status
+    "I" 'cov-edit-init
     "o" 'projectile-find-file-other-window
-    "I" 'cov-edit-init))
+    "p" 'projectile-switch-project
+    "t" 'multi-term-dedicated-toggle
+    "x" 'helm-M-x
+    ))
 
 (use-package evil
   :ensure t

@@ -17,7 +17,7 @@ go=~/code/go
 go_workspace=${go}
 go_bin=${go}/bin
 
-cargo=~/.cargo/bin
+cargo=~/.cargo/
 
 mysql=/usr/local/mysql/
 
@@ -27,5 +27,7 @@ export JAVA_HOME=$java
 export ANDROID_HOME=$android_sdk
 export ZSH=$zsh
 export GOPATH=$go_workspace
+export CARGO_HOME=$cargo
 
-export PATH=$PATH:$mysql:$virtualbox:$go_bin:$cargo
+export PATH=$PATH:$mysql:$virtualbox:$go_bin:$cargo/bin
+
