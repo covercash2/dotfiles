@@ -34,7 +34,16 @@
   :config
   (exec-path-from-shell-initialize))
 
+(if (eq system-type 'gnu/linux)
+    (setq x-select-enable-clipboard t))
+
+(use-package magit
+  :ensure t)
+
 (use-package restart-emacs
+  :ensure t)
+
+(use-package multi-term
   :ensure t)
 
 (use-package flycheck
