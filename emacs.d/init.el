@@ -43,6 +43,11 @@
 (use-package restart-emacs
   :ensure t)
 
+(use-package relative-line-numbers
+  :ensure t
+  :config
+  (global-relative-line-numbers-mode))
+
 (use-package multi-term
   :ensure t)
 
@@ -72,11 +77,6 @@
   (helm-mode 1)
   (use-package helm-ls-git
     :ensure t))
-
-(use-package golden-ratio
-  :ensure t
-  :config
-  (golden-ratio-mode 1))
 
 (use-package recentf
   :ensure t
