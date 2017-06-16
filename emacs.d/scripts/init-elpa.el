@@ -1,7 +1,10 @@
+;;; cov-py --- Summary:
+;;; Commentary:
+;;; Code:
 (require 'package)
 
 (defun require-package (package)
-  "install 'package' if not installed"
+  "Install PACKAGE if not installed."
   (if (package-installed-p package)
       t
     (progn

@@ -18,6 +18,7 @@
     "." 'golden-ratio
     "b" 'helm-mini
     "E" 'eval-buffer
+    "f" 'projectile-find-file
     "g" 'magit-status
     "I" 'cov-edit-init
     "o" 'projectile-find-file-other-window

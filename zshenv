@@ -17,9 +17,11 @@ go=~/code/go
 go_workspace=${go}
 go_bin=${go}/bin
 
-cargo=~/.cargo/
+cargo=~/.cargo
 
 mysql=/usr/local/mysql/
+
+homebin=~/bin
 
 export MYSQL_PATH=$mysql
 
@@ -29,5 +31,5 @@ export ZSH=$zsh
 export GOPATH=$go_workspace
 export CARGO_HOME=$cargo
 
-export PATH=$PATH:$mysql:$virtualbox:$go_bin:$cargo/bin
+export PATH=$PATH:$mysql:$virtualbox:$go_bin:$cargo/bin:$homebin
 

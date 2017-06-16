@@ -1,9 +1,7 @@
-
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
-(package-initialize)
+;;; init.el --- Summary
+;;; Commentary:
+;;; Code:
+;(package-initialize)
 (add-to-list 'load-path (expand-file-name "scripts" user-emacs-directory))
 (require 'init-elpa)
 
@@ -27,6 +25,7 @@
 (require 'cov-kotlin)
 (require 'cov-groovy)
 (require 'cov-rust)
+(require 'cov-py)
 
 (use-package exec-path-from-shell
   :if (eq system-type 'darwin)
@@ -35,7 +34,7 @@
   (exec-path-from-shell-initialize))
 
 (if (eq system-type 'gnu/linux)
-    (setq x-select-enable-clipboard t))
+    (setq select-enable-clipboard t))
 
 (use-package magit
   :ensure t)
@@ -54,6 +53,7 @@
 (use-package flycheck
   :ensure t
   :config
+  (setq-default flycheck-emacs-lisp-load-path 'inherit)
   (add-hook 'after-init-hook
 	    (lambda()
 	      (global-flycheck-mode))))
@@ -185,7 +185,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (toml-mode groovy-mode kotlin-mode racer flycheck-rust rust-mode jdee yasnippet web-mode rainbow-delimiters powerline multi-term memoize helm-projectile helm-ls-git gruvbox-theme golden-ratio go-projectile flycheck exec-path-from-shell evil-magit company-irony company-go auto-complete atom-one-dark-theme))))
+    (flycheck-kotlin toml-mode groovy-mode kotlin-mode racer flycheck-rust rust-mode jdee yasnippet web-mode rainbow-delimiters powerline multi-term memoize helm-projectile helm-ls-git gruvbox-theme golden-ratio go-projectile flycheck exec-path-from-shell evil-magit company-irony company-go auto-complete atom-one-dark-theme))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

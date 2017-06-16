@@ -1,4 +1,10 @@
+;;; cov-kotlin --- Summary
+;;; Commentary:
+
+;;; Code:
 (require 'init-elpa)
-(require-package 'kotlin-mode)
+
+(use-package kotlin-mode
+  :ensure t)
 
 (provide 'cov-kotlin)
