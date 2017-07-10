@@ -1,53 +1,3 @@
-(yas-reload-all)
-(yas-reload-all)
-cd ~/code
-ls
-cd libraries/
-ls
-ls
-ls yasnippet-snippets/
-exec-path
-(exec-path)
-exit
-cd
-(length "string")
-(setq TAG "E:  ")
-(TAG)
-(print 'TAG)
-(print TAG)
-cd ~/.emacs.d/scripts
-ls
-ls
-ls
-kotlinc
-addpath
-alias
-kotlinc
-kotlinc
-ls /
-file:/foo/.
-kotlinc
->>> curDir.getCanonicalPath()
-kotlinc
-exit
-exit
-ls
-ls Applications/Zeal.G
-ls
-ls
-ls Library/
-ls /usr/local/opt/android-sdk/tools/
-cd /usr/local/opt/android-sdk/
-ls apps
-ls
-ls platform-tools/
-ls
-ls
-ls platforms/
-ls
-ls build-tools/
-ls platforms/
-ls tools/
 ./tools/android 
 brew install rsync
 ls
@@ -116,3 +66,63 @@ ls
 kotlinc
 kotlinc
 kotlinc
+ls
+cd assets
+ls
+curl https://github.com/mozilla/Fira/blob/master/ttf/FiraMono-Regular.ttf
+curl https://github.com/mozilla/Fira/blob/master/ttf/FiraSans-Regular.ttf > FiraSans-Regular.ttf
+ls
+ls
+ls
+chmod 744 FiraSans-Regular.ttf 
+ls
+ls -al
+chmod 755 FiraSans-Regular.ttf 
+ls -al
+ls
+ls
+cd system/redox/
+ls
+ls rust/
+ls rust
+ls rust
+ls kernel/
+ls
+ls
+ls rust
+brew install make
+brew update
+brew install gcc49
+🍺  /usr/local/Cellar/gcc@4.9/4.9.4: 1,181 files, 200.8MB
+brew install nasm qemu
+brew install pkg-config
+brew install Caskroom/cask/osxfuse
+brew install Caskroom/cask/osxfuse
+brew install redox-os/gcc_cross_compilers/x86_64-elf-gcc
+python3
+cd ~/code
+ls
+clear
+
+ls
+ls
+mkdir 
+brew install cask
+cask init elsync
+ls
+ls scripts/
+rm Cask 
+ls
+ls gist
+mkdir elsync
+cd elsync/
+ls
+cask init
+ls
+cask install
+exit
+brew cask install google-chrome
+brew cask install google-chrome
+exit
+ls
+rm -rf elpa/

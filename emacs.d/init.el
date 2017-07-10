@@ -2,8 +2,80 @@
 ;;; Commentary:
 ;;; Code:
 ;(package-initialize)
+(require 'cask "/usr/local/share/emacs/site-lisp/cask/cask.el")
+(cask-initialize)
+
+(require 'pallet)
+(pallet-mode t)
+
+;; load scripts directory
 (add-to-list 'load-path (expand-file-name "scripts" user-emacs-directory))
-(require 'init-elpa)
+
+(require 'cov-keybind)
+
+(require 'cask)
+(cask-initialize)
+
+;; exec=path-from-shell
+(if (eq system-type 'darwin)
+    (require 'exec-path-from-shell)
+    (exec-path-from-shell-initialize))
+
+(if (eq system-type 'gnu/linux)
+    (setq select-enable-clipboard t))
+
+(require 'company)
+(add-hook 'after-init-hook
+	  (lambda()
+	    (setq company-tooltip-align-annotations t)
+	    (setq company-idle-delay .1)
+	    ;; turn on company mode for all buffers
+	    (global-company-mode)
+	    (add-hook 'prog-mode-hook 'company-mode)))
+
+(require 'flycheck)
+(setq-default flycheck-emacs-lisp-load-path 'inherit)
+(add-hook 'after-init-hook
+	  (lambda()
+	    (global-flycheck-mode)))
+
+(require 'gruvbox-theme)
+(load-theme 'gruvbox t)
+
+(require 'helm)
+(require 'helm-ls-git)
+(add-hook 'after-init-hook
+	  (lambda()
+	    (helm-mode 1)
+	    (global-set-key (kbd "M-x") 'helm-M-x)))
+
+(require 'linum)
+(require 'magit)
+
+(require 'powerline)
+(powerline-center-evil-theme)
+
+(require 'projectile)
+(projectile-mode)
+
+(require 'rainbow-delimiters)
+(add-hook 'prog-mode-hook #'rainbow-delimiters-mode-enable)
+
+(require 'recentf)
+(add-hook 'after-init-hook
+	  (lambda()
+	    (setq recentf-save-file (concat user-emacs-directory ".recentf"))
+	    (setq recentf-max-menu-items 30)
+	    (recentf-mode 1)))
+
+(require 'restart-emacs)
+
+(require 'yasnippet)
+(add-hook 'after-init-hook
+	  (lambda()
+	    (setq yas-snippet-dirs
+		  '("~/code/libraries/yasnippet-snippets/"))))
+(add-hook 'prog-mode-hook 'yas-minor-mode)
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -15,99 +87,28 @@
 (require 'diminish)
 (require 'bind-key)
 
-;; obsolete: needs to be moved here
+;; init ui
+(setq inhibit-startup-message t)
+(menu-bar-mode -1)
+(when (fboundp 'tool-bar-mode)
+  (tool-bar-mode -1))
+(when (fboundp 'scroll-bar-mode)
+  (scroll-bar-mode -1))
+
+;; font/face config
+(set-face-attribute 'default nil :height 120)
+(setq-default line-spacing 0.2)
+
+;; turn off error bell
+(setq ring-bell-function 'ignore)
+
 (require 'init-editor)
-(require 'init-ui)
-;;
-(require 'cov-keybind)
 
 (require 'cov-java)
 (require 'cov-kotlin)
 (require 'cov-groovy)
 (require 'cov-rust)
 (require 'cov-py)
-
-(use-package exec-path-from-shell
-  :if (eq system-type 'darwin)
-  :ensure t
-  :config
-  (exec-path-from-shell-initialize))
-
-(if (eq system-type 'gnu/linux)
-    (setq select-enable-clipboard t))
-
-(use-package magit
-  :ensure t)
-
-(use-package restart-emacs
-  :ensure t)
-
-(use-package relative-line-numbers
-  :ensure t
-  :config
-  (global-relative-line-numbers-mode))
-
-(use-package multi-term
-  :ensure t)
-
-(use-package flycheck
-  :ensure t
-  :config
-  (setq-default flycheck-emacs-lisp-load-path 'inherit)
-  (add-hook 'after-init-hook
-	    (lambda()
-	      (global-flycheck-mode))))
-
-(use-package company
-  :ensure t
-  :config
-  (setq company-tooltip-align-annotations t)
-  (setq company-idle-delay .2)
-  (add-hook 'prog-mode-hook 'company-mode))
-
-(use-package rainbow-delimiters
-  :ensure t
-  :config
-  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode-enable))
-
-(use-package helm
-  :ensure t
-  :bind ("M-x" . helm-M-x)
-  :config
-  (helm-mode 1)
-  (use-package helm-ls-git
-    :ensure t))
-
-(use-package recentf
-  :ensure t
-  :init
-  (setq recentf-save-file (concat user-emacs-directory ".recentf"))
-  (setq recentf-max-menu-items 40)
-  :config
-  (recentf-mode 1))
-
-(use-package projectile
-  :ensure t
-  :config
-  (projectile-global-mode))
-
-(use-package powerline
-  :ensure t
-  :config
-  (powerline-center-evil-theme))
-
-(use-package yasnippet
-  :ensure t
-  :init
-  (setq yas-snippet-dirs
-	'("~/code/libraries/yasnippet-snippets/"))
-  :config
-  (add-hook 'prog-mode-hook 'yas-minor-mode)
-  )
-
-(use-package gruvbox-theme
-  :config
-  (load-theme 'gruvbox t))
 
 (use-package web-mode
   :config
@@ -117,7 +118,7 @@
 	'(("go" . "\\.tmpl\\'"))))
 
 ;; log tag
-(setq cov--tag-error "[E] : ")
+(defvar cov--tag-error "[E] : ")
 
 (defun switch-to-minibuffer ()
   "Switch to minibuffer."
@@ -126,10 +127,9 @@
       (select-window (active-minibuffer-window))
     (error (concat cov--tag-error "minibuffer not active"))))
 
-
-
 ;; my functions and keybindings
 (defun cov-edit-init ()
+  "Open init.el for editing."
   (interactive)
   (find-file "~/.emacs.d/init.el"))
 
@@ -137,6 +137,7 @@
 
 ;; go stuff
 (defun cov-go-mode-hook ()
+  "Golang config."
   ; format before save
   (add-hook 'before-save-hook 'gofmt-before-save)
   (if (not (string-match "go" compile-command))
@@ -171,24 +172,8 @@
 (add-hook 'irony-mode-hook 'my-irony-mode-hook)
 (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
-;; turn on company mode for all buffers
-(add-hook 'after-init-hook 'global-company-mode)
-
 (eval-after-load 'company
   '(add-to-list 'company-backends 'company-irony))
 
 (provide 'init)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (flycheck-kotlin toml-mode groovy-mode kotlin-mode racer flycheck-rust rust-mode jdee yasnippet web-mode rainbow-delimiters powerline multi-term memoize helm-projectile helm-ls-git gruvbox-theme golden-ratio go-projectile flycheck exec-path-from-shell evil-magit company-irony company-go auto-complete atom-one-dark-theme))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+;;; init.el ends here

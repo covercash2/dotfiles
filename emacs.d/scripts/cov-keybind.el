@@ -6,10 +6,10 @@
 ;; and i moved some visual elements to the main init.el for now.
 
 ;;; Code:
-(defun cov--config-evil ()
-  "Config evil mode states and keybindings."
-  (delete 'multi-term evil-insert-state-modes)
-  (delete 'eshell-mode evil-insert-state-modes))
+
+(require 'evil)
+(require 'evil-leader)
+(require 'evil-surround)
 
 (defun cov--config-evil-leader ()
   "Config leader keys etc."
@@ -27,20 +27,34 @@
     "x" 'helm-M-x
     ))
 
-(use-package evil
-  :ensure t
-  :config
-  (add-hook 'evil-mode-hook 'cov--config-evil)
-  (evil-mode 1)
-  (use-package evil-leader
-    :ensure t
-    :config
-    (global-evil-leader-mode)
-    (cov--config-evil-leader))
-  (use-package evil-surround
-    :ensure t
-    :config
-    (global-evil-surround-mode)))
+(defun cov--config-evil ()
+  "Config evil mode states and keybindings."
+  (cov--config-evil-leader)
+  ;; configure terminals
+  (delete 'multi-term evil-insert-state-modes)
+  (delete 'eshell-mode evil-insert-state-modes)
+  ;; enable evil modes
+  (global-evil-leader-mode)
+  (global-evil-surround-mode))
+
+(add-hook 'evil-mode-hook 'cov--config-evil)
+
+(evil-mode 1)
+
+;; (use-package evil
+;;   :ensure t
+;;   :config
+;;   (add-hook 'evil-mode-hook 'cov--config-evil)
+;;   (evil-mode 1)
+;;   (use-package evil-leader
+;;     :ensure t
+;;     :config
+;;     (global-evil-leader-mode)
+;;     (cov--config-evil-leader))
+;;   (use-package evil-surround
+;;     :ensure t
+;;     :config
+;;     (global-evil-surround-mode)))
 
 (provide 'cov-keybind)
 ;;; cov-keybind.el ends here

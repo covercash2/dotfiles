@@ -1,30 +1,14 @@
 # -*- mode: gitignore; -*-
 *~
+*.elc
 \#*\#
+.\#*
 /.emacs.desktop
 /.emacs.desktop.lock
-*.elc
-auto-save-list
+ac-comphist.dat 
+auto-save*
 tramp
-.\#*
 session.*
-
-# Org-mode
-.org-id-locations
-*_archive
-
-# flymake-mode
-*_flymake.*
-
-# eshell files
-/eshell/history
-/eshell/lastdir
-
-# elpa packages
-/elpa/
-
-# reftex files
-*.rel
 
 # AUCTeX auto folder
 /auto/
@@ -33,14 +17,34 @@ session.*
 .cask/
 dist/
 
+# directory configuration
+.dir-locals.el
+
+# elpa packages
+/elpa/
+
+# eshell files
+/eshell/history
+/eshell/lastdir
+
 # Flycheck
 flycheck_*.el
 
-# server auth directory
-/server/
+# flymake-mode
+*_flymake.*
+
+# Org-mode
+.org-id-locations
+*_archive
 
 # projectiles files
-.projectile
+projectile*
 
-# directory configuration
-.dir-locals.el
+# python 
+.python-environments
+
+# reftex files
+*.rel
+
+# server auth directory
+/server/
