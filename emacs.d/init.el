@@ -17,9 +17,9 @@
 (cask-initialize)
 
 ;; exec=path-from-shell
-(if (eq system-type 'darwin)
-    (require 'exec-path-from-shell)
-    (exec-path-from-shell-initialize))
+(when (eq system-type 'darwin)
+  (require 'exec-path-from-shell)
+  (exec-path-from-shell-initialize))
 
 (if (eq system-type 'gnu/linux)
     (setq select-enable-clipboard t))
@@ -38,6 +38,9 @@
 (add-hook 'after-init-hook
 	  (lambda()
 	    (global-flycheck-mode)))
+
+(require 'git-gutter)
+(global-git-gutter-mode +1)
 
 (require 'gruvbox-theme)
 (load-theme 'gruvbox t)
@@ -98,6 +101,17 @@
 ;; font/face config
 (set-face-attribute 'default nil :height 120)
 (setq-default line-spacing 0.2)
+
+;; highlight todos
+(defun cov--highlight-todos ()
+  "Highlight a bunch of well known comment annotations.
+This functions should be added to the hooks of major modes for programming."
+  (font-lock-add-keywords
+   nil '(("\\<\\(FIX\\(ME\\)?\\|TODO\\|OPTIMIZE\\|HACK\\|REFACTOR\\):"
+          1 font-lock-warning-face t))))
+
+(add-hook 'text-mode-hook 'cov--highlight-todos)
+(add-hook 'text-mode-hook 'cov--highlight-todos)
 
 ;; turn off error bell
 (setq ring-bell-function 'ignore)

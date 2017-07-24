@@ -1,13 +1,3 @@
-./tools/android 
-brew install rsync
-ls
-rsync --help
---modify-window=NUM     compare mod-times with reduced accuracy
-ls
-cd
-ls
-cd code
-ls
 cd scripts/
 ls
 mkdir sh
@@ -126,3 +116,13 @@ brew cask install google-chrome
 exit
 ls
 rm -rf elpa/
+ls
+ssh green-arch
+ssh chreeus@green-arch
+ssh chreeus@green-arch
+ls
+man rsync
+cd loggerr
+ls
+cargo build
+target/debug/loggerr log -m "message"
