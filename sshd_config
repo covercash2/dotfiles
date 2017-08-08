@@ -2,6 +2,11 @@
 
 # my config based on the OpenBSD default
 
+PasswordAuthentication no
+RSAAuthentication yes
+PubkeyAuthentication yes
+PermitRootLogin without-password
+
 # See sshd_config(5) for details on setting the Port and Listen values on Mac OS X
 #Port 22
 # IPv4 IPv6 inet6 inet4
@@ -42,8 +47,8 @@ SyslogFacility AUTHPRIV
 #MaxSessions 10
 
 # ssh keys
-RSAAuthentication yes
-PubkeyAuthentication yes
+#RSAAuthentication yes
+#PubkeyAuthentication yes
 
 # The default is to check both .ssh/authorized_keys and .ssh/authorized_keys2
 # but this is overridden so installations will only check .ssh/authorized_keys
@@ -66,7 +71,7 @@ AuthorizedKeysFile	.ssh/authorized_keys
 
 # To disable tunneled clear text passwords both PasswordAuthentication and
 # ChallengeResponseAuthentication must be set to "no".
-PasswordAuthentication no
+#PasswordAuthentication no
 #PermitEmptyPasswords no
 
 # Change to no to disable s/key passwords
