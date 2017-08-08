@@ -1,2 +1,4 @@
 # macOS bullshit
 .DS_Store
+
+/build/*
