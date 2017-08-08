@@ -9,6 +9,7 @@ ac-comphist.dat
 auto-save*
 tramp
 session.*
+.recentf
 
 # AUCTeX auto folder
 /auto/
@@ -24,8 +25,7 @@ dist/
 /elpa/
 
 # eshell files
-/eshell/history
-/eshell/lastdir
+eshell*
 
 # Flycheck
 flycheck_*.el
