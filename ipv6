@@ -1,0 +1,21 @@
+# this file enables IPv6
+# it belongs /etc/network/interfaces.d
+# load with 
+#	source /path/to/this/file
+# in /etc/network/interfaces
+
+## setup:
+# using vim
+# :%s/<interface>/#name#/g
+# :%s/<ipv6>/#address#/g
+
+## source:
+# https://www.ovh.co.uk/g2365.vps-ipv6
+
+iface <interface> inet6 static
+address <ipv6>
+netmask 128
+post-up /sbin/ip -6 route add <ipv6> dev <interface>
+post-up /sbin/ip -6 route add default via <ipv6> dev <interface>
+pre-down /sbin/ip -6 route del default via <ipv6> dev <interface>
+pre-down /sbin/ip -6 route del <ipv6> dev <interface>
