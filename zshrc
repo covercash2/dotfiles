@@ -6,6 +6,10 @@
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 ZSH_THEME="ys"
 
+# setup go version manager gvm
+[[ -s "/home/chreeus/.gvm/scripts/gvm" ]] && \
+	source "/home/chreeus/.gvm/scripts/gvm"
+
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
 
