@@ -3,7 +3,6 @@
 # my config based on the OpenBSD default
 
 PasswordAuthentication no
-RSAAuthentication yes
 PubkeyAuthentication yes
 PermitRootLogin without-password
 

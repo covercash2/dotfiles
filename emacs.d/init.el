@@ -27,8 +27,12 @@
 (require 'company)
 (add-hook 'after-init-hook
 	  (lambda()
+	    (setq company-tooltip-limit 15)
 	    (setq company-tooltip-align-annotations t)
 	    (setq company-idle-delay .1)
+	    (setq company-echo-delay 0) ; stops blinking
+	    ; start autocomplete only when typing
+	    (setq company-begin-commands '(self-insert-command))
 	    ;; turn on company mode for all buffers
 	    (global-company-mode)
 	    (add-hook 'prog-mode-hook 'company-mode)))
@@ -80,6 +84,11 @@
 		  '("~/code/libraries/yasnippet-snippets/"))))
 (add-hook 'prog-mode-hook 'yas-minor-mode)
 
+(require 'web-mode)
+
+; using cask now.
+; leaving for backwards compatibility
+; TODO remove
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
@@ -116,10 +125,14 @@ This functions should be added to the hooks of major modes for programming."
 ;; turn off error bell
 (setq ring-bell-function 'ignore)
 
+;; set tab width
+(setq tab-width 4)
+
 (require 'init-editor)
 
 (require 'cov-java)
 (require 'cov-kotlin)
+(require 'cov-go)
 (require 'cov-groovy)
 (require 'cov-rust)
 (require 'cov-py)
