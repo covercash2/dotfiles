@@ -2,7 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 ;(package-initialize)
-(require 'cask "/usr/local/share/emacs/site-lisp/cask/cask.el")
+(require 'cask (expand-file-name "$HOME/.cask/cask.el"))
 (cask-initialize)
 
 (require 'pallet)
@@ -57,6 +57,8 @@
 
 (require 'powerline)
 (powerline-center-evil-theme)
+
+(require 'pkg-info)
 
 (require 'projectile)
 (projectile-mode)

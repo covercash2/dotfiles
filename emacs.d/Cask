@@ -62,4 +62,5 @@
 (depends-on "undo-tree")
 (depends-on "use-package")
 (depends-on "with-editor")
+(depends-on "virtualenvwrapper")
 (depends-on "yasnippet")
