@@ -1,3 +1,6 @@
 [submodule "n"]
 	path = yasnippet-snippets
 	url = https://github.com/AndreaCrotti/yasnippet-snippets.git
+[submodule "cask"]
+	path = cask
+	url = https://github.com/cask/cask.git

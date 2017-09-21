@@ -1,0 +1,19 @@
+* my dotfiles
+** emacs
+*** install
+	1. clone
+		git clone git@github.com/covercash2/dotfiles.git
+		git submodule init
+		git submodule update
+	1. install cask
+	2. cd ~/system/dotfiles/ && cask install
+
+**** cask
+	https://github.com/cask/cask
+***** install
+	cask can be installed from homebrew (macOS) or from the AUR (arch)
+***** cask.el
+	my emacs config requires a local copy of cask.el
+	located at ~/system/dotfiles/cask/cask.el
+
+**** pallet
