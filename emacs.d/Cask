@@ -22,6 +22,7 @@
 (depends-on "evil-leader")
 (depends-on "evil-surround")
 (depends-on "exec-path-from-shell")
+(depends-on "indium")
 (depends-on "f")
 (depends-on "find-file-in-project")
 (depends-on "flycheck")

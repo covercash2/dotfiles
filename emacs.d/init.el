@@ -43,6 +43,8 @@
 	  (lambda()
 	    (global-flycheck-mode)))
 
+(require 'indium)
+
 (require 'git-gutter)
 (global-git-gutter-mode +1)
 
