@@ -19,13 +19,11 @@ go_bin=${go}/bin
 
 cargo=~/.cargo
 
+cask=~/.cask/bin
+
 mysql=/usr/local/mysql/
 
 homebin=~/bin
-
-# node 
-export NVM_DIR="HOME/.nvm"
-source "/usr/local/opt/nvm/nvm.sh"
 
 export MYSQL_PATH=$mysql
 
@@ -35,5 +33,5 @@ export ZSH=$zsh
 export GOPATH=$go_workspace
 export CARGO_HOME=$cargo
 
-export PATH=$PATH:$mysql:$virtualbox:$go_bin:$cargo/bin:$homebin
+export PATH=$PATH:$mysql:$virtualbox:$go_bin:$cargo/bin:$homebin:$cask
 
