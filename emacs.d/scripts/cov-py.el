@@ -3,22 +3,16 @@
 ;;; Commentary:
 ;;; use elpy to extend python functions
 ;;; Code:
-(require 'init-elpa)
 
-(use-package jedi
-  :ensure t
-  :config
-  (jedi:setup)
-  (setq jedi:complete-on-dot t)
-  (use-package company-jedi
-    :ensure t
-    :config
-    (add-to-list 'company-backends 'company-jedi)))
+(require 'jedi)
+(jedi:setup)
+(setq jedi:complete-on-dot t)
 
-(use-package elpy
-  :ensure t
-  :config
-  (add-hook 'python-mode #'elpy-enable))
+(require 'company-jedi)
+(add-to-list 'company-backends 'company-jedi)
+
+(require 'elpy)
+(add-hook 'python-mode #'elpy-enable)
 
 ;; workaround for python repl bug. should be fixed in 25.2
 (with-eval-after-load 'python

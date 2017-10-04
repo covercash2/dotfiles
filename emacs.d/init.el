@@ -2,7 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 ;(package-initialize)
-(require 'cask "/usr/local/share/emacs/site-lisp/cask/cask.el")
+(require 'cask (concat (getenv "HOME") "/.cask/cask.el"))
 (cask-initialize)
 
 (require 'pallet)
