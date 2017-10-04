@@ -16,10 +16,8 @@
 (require 'cask)
 (cask-initialize)
 
-;; exec=path-from-shell
-(when (eq system-type 'darwin)
-  (require 'exec-path-from-shell)
-  (exec-path-from-shell-initialize))
+(require 'exec-path-from-shell)
+(exec-path-from-shell-initialize)
 
 (if (eq system-type 'gnu/linux)
     (setq select-enable-clipboard t))
@@ -34,7 +32,6 @@
 	    ; start autocomplete only when typing
 	    (setq company-begin-commands '(self-insert-command))
 	    ;; turn on company mode for all buffers
-	    (global-company-mode)
 	    (add-hook 'prog-mode-hook 'company-mode)))
 
 (require 'flycheck)
@@ -164,48 +161,6 @@ This functions should be added to the hooks of major modes for programming."
   "Open init.el for editing."
   (interactive)
   (find-file "~/.emacs.d/init.el"))
-
-(add-hook 'c++-mode-hook (lambda() (setq flycheck-clang-language-standard "c++14")))
-
-;; go stuff
-(defun cov-go-mode-hook ()
-  "Golang config."
-  ; format before save
-  (add-hook 'before-save-hook 'gofmt-before-save)
-  (if (not (string-match "go" compile-command))
-      (set (make-local-variable 'compile-command)
-	   "go build -v && go test -v && go vet"))
-  (set (make-local-variable 'company-backends) '(company-go))
-  (company-mode)
-  (go-projectile-derive-gopath))
-
-(add-hook 'go-mode-hook 'cov-go-mode-hook)
-
-;; c stuff
-(setq c-default-style "linux"
-      c-basic-offset 4)
-
-;; c++
-(add-hook 'c++-mode-hook 'irony-mode)
-(add-hook 'c-mode-hook 'irony-mode)
-(add-hook 'objc-mode 'irony-mode)
-
-;; syntax checker
-(add-hook 'c++-mode-hook
-	  (lambda () (setq flycheck-clang-include-path
-			   (list (expand-file-name "~/code/projects/bbsp/include")))))
-
-;; use irony-mode instead of default emacs completions
-(defun my-irony-mode-hook ()
-  (define-key irony-mode-map [remap completion-at-point]
-    'irony-completion-at-point-async)
-  (define-key irony-mode-map [remap complete-symbol]
-    'irony-completion-at-point-async))
-(add-hook 'irony-mode-hook 'my-irony-mode-hook)
-(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
-
-(eval-after-load 'company
-  '(add-to-list 'company-backends 'company-irony))
 
 (provide 'init)
 ;;; init.el ends here
