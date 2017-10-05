@@ -25,5 +25,7 @@
 
 (add-hook 'go-mode-hook 'cov--go-mode-hook)
 
+(set-face-foreground 'font-lock-comment-face "light green")
+
 (provide 'cov-go)
 ;;; cov-go.el ends here

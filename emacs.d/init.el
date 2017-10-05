@@ -83,6 +83,12 @@
 		  '("~/code/libraries/yasnippet-snippets/"))))
 (add-hook 'prog-mode-hook 'yas-minor-mode)
 
+
+(require 'sublimity)
+(require 'sublimity-scroll)
+(require 'sublimity-attractive)
+(sublimity-mode 1)
+
 (require 'web-mode)
 
 ; using cask now.
@@ -121,8 +127,7 @@ This functions should be added to the hooks of major modes for programming."
    nil '(("\\<\\(FIX\\(ME\\)?\\|TODO\\|OPTIMIZE\\|HACK\\|REFACTOR\\):"
           1 font-lock-warning-face t))))
 
-(add-hook 'text-mode-hook 'cov--highlight-todos)
-(add-hook 'text-mode-hook 'cov--highlight-todos)
+(add-hook 'prog-mode-hook 'cov--highlight-todos)
 
 ;; turn off error bell
 (setq ring-bell-function 'ignore)
@@ -169,7 +174,10 @@ This functions should be added to the hooks of major modes for programming."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-agenda-files (quote ("~/notes/orgmode.org"))))
+ '(org-agenda-files (quote ("~/notes/orgmode.org")))
+ '(package-selected-packages
+   (quote
+    (sublimity web-mode use-package restart-emacs rainbow-delimiters racer projectile powerline pallet multi-term magit kotlin-mode jedi jdee indium helm-ls-git gruvbox-theme groovy-mode gradle-mode go-guru go-eldoc git-gutter flycheck-rust exec-path-from-shell evil-surround evil-leader elpy company-jedi company-go cargo))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
