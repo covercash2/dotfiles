@@ -76,6 +76,8 @@
 
 (require 'restart-emacs)
 
+(require 'yaml-mode)
+
 (require 'yasnippet)
 (add-hook 'after-init-hook
 	  (lambda()
