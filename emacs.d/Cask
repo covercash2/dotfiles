@@ -24,6 +24,7 @@
 (depends-on "exec-path-from-shell")
 (depends-on "f")
 (depends-on "find-file-in-project")
+(depends-on "fish-mode")
 (depends-on "flycheck")
 (depends-on "flycheck-rust")
 (depends-on "git-commit")
@@ -35,6 +36,7 @@
 (depends-on "gradle-mode")
 (depends-on "groovy-mode")
 (depends-on "gruvbox-theme")
+
 (depends-on "helm")
 (depends-on "helm-core")
 (depends-on "helm-ls-git")
