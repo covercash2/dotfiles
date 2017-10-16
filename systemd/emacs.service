@@ -1,0 +1,11 @@
+[Unit]
+Description=emacs. this script may be outdated in 26
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/emacs --daemon
+ExecStop=/usr/bin/emacsclient --eval"(kill-emacs)"
+
+[Install]
+WantedBy=default.target
+
