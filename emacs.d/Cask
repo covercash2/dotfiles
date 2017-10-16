@@ -36,7 +36,6 @@
 (depends-on "gradle-mode")
 (depends-on "groovy-mode")
 (depends-on "gruvbox-theme")
-
 (depends-on "helm")
 (depends-on "helm-core")
 (depends-on "helm-ls-git")

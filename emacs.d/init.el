@@ -179,7 +179,7 @@ This functions should be added to the hooks of major modes for programming."
  '(org-agenda-files (quote ("~/notes/orgmode.org")))
  '(package-selected-packages
    (quote
-    (sublimity web-mode use-package restart-emacs rainbow-delimiters racer projectile powerline pallet multi-term magit kotlin-mode jedi jdee indium helm-ls-git gruvbox-theme groovy-mode gradle-mode go-guru go-eldoc git-gutter flycheck-rust exec-path-from-shell evil-surround evil-leader elpy company-jedi company-go cargo))))
+    (fish-mode sublimity web-mode use-package restart-emacs rainbow-delimiters racer projectile powerline pallet multi-term magit kotlin-mode jedi jdee indium helm-ls-git gruvbox-theme groovy-mode gradle-mode go-guru go-eldoc git-gutter flycheck-rust exec-path-from-shell evil-surround evil-leader elpy company-jedi company-go cargo))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
