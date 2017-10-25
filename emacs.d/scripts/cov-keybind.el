@@ -21,6 +21,7 @@
     "f" 'projectile-find-file
     "g" 'magit-status
     "I" 'cov-edit-init
+    "n" 'neotree-toggle
     "o" 'projectile-find-file-other-window
     "p" 'projectile-switch-project
     "t" 'multi-term-dedicated-toggle

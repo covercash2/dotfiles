@@ -16,6 +16,8 @@
 (require 'cask)
 (cask-initialize)
 
+(require 'all-the-icons)
+
 (require 'exec-path-from-shell)
 (exec-path-from-shell-initialize)
 
@@ -58,11 +60,24 @@
 (require 'linum)
 (require 'magit)
 
+(require 'neotree)
+(setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+
+(evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
+(evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-quick-look)
+(evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
+(evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
+
 (require 'powerline)
 (powerline-center-evil-theme)
 
 (require 'projectile)
 (projectile-mode)
+;; TODO this is a workaround for a lag issue
+(setq projectile-mode-line
+      '(:eval (format " Projectile[%s]"
+		      (projectile-project-name))))
+
 
 (require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode-enable)
