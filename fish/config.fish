@@ -5,7 +5,7 @@ fish_vi_key_bindings
 
 set cargo ~/.cargo
 set cask ~/.cask/bin
-set go ~/code/go
+set go /usr/local/go
 set gobin $go/bin
 
 set --export GOPATH $go
