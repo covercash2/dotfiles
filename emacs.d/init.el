@@ -129,8 +129,13 @@
 (when (fboundp 'scroll-bar-mode)
   (scroll-bar-mode -1))
 
-;; set agenda key
+;; org mode settings
+; set agenda key
 (global-set-key (kbd "C-c a") 'org-agenda)
+
+; todo keywords
+(setq org-todo-keywords
+      '((sequence "TODO" "STARTED" "|" "DONE")))
 
 ;; font/face config
 (set-face-attribute 'default nil :height 120)
