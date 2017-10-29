@@ -25,13 +25,13 @@ function fish_prompt --description 'Write out the prompt'
                     case "*R*"
                         set git_status "$git_status"(set_color purple)➜
                     case "*U*"
-                        set git_status "$git_status"(set_color brown)'❱'
+                        set git_status "$git_status"(set_color brown)═
                     case "??"
                         set git_status "$git_status"(set_color red)≠
                 end
             end
         else
-            set git_status (set_color green):
+            set git_status (set_color green)✔
         end
         set git_info "($git_status$git_branch"(set_color white)")"
     end
