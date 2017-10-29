@@ -8,25 +8,25 @@ function git_status_symbol --description "symbolic git status in unicode chars"
 
 			switch $i
 			    case "*[ahead *"
-				set git_status "$git_status"(set_color red)" ⬆"
+				set git_status "$git_status"(set_color red)"⬆"
 			    case "*behind *"
-				set git_status "$git_status"(set_color red)" ⬇"
+				set git_status "$git_status"(set_color red)"⬇"
 			    case "."
-				set git_status "$git_status"(set_color green)" ✚"
+				set git_status "$git_status"(set_color green)"✚"
 			    case " D"
-				set git_status "$git_status"(set_color red)" ✖"
+				set git_status "$git_status"(set_color red)"✖"
 			    case "*M*"
-				set git_status "$git_status"(set_color green)" ✱"
+				set git_status "$git_status"(set_color green)"✱"
 			    case "*R*"
-				set git_status "$git_status"(set_color purple)" ➜"
+				set git_status "$git_status"(set_color purple)"➜"
 			    case "*U*"
-				set git_status "$git_status"(set_color brown)" ═"
+				set git_status "$git_status"(set_color brown)"═"
 			    case "??"
-				set git_status "$git_status"(set_color red)" ≠"
+				set git_status "$git_status"(set_color red)"≠"
 			end
             end
         else
-            set git_status "✔"
+            set git_status (set_color brgreen)"✔"
 	end
 
 	echo $git_status
