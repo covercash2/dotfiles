@@ -13,30 +13,30 @@ function fish_prompt --description 'Write out the prompt'
  (git status --porcelain | cut -c 1-2 | uniq)
                 switch $i
                     case "*[ahead *"
-                        set git_status "$git_status"(set_color red)⬆
+                        set git_status "$git_status"(set_color red)" ⬆"
                     case "*behind *"
-                        set git_status "$git_status"(set_color red)⬇
+                        set git_status "$git_status"(set_color red)" ⬇"
                     case "."
-                        set git_status "$git_status"(set_color green)✚
+                        set git_status "$git_status"(set_color green)" ✚"
                     case " D"
-                        set git_status "$git_status"(set_color red)✖
+                        set git_status "$git_status"(set_color red)" ✖"
                     case "*M*"
-                        set git_status "$git_status"(set_color green)✱
+                        set git_status "$git_status"(set_color green)" ✱"
                     case "*R*"
-                        set git_status "$git_status"(set_color purple)➜
+                        set git_status "$git_status"(set_color purple)" ➜"
                     case "*U*"
-                        set git_status "$git_status"(set_color brown)═
+                        set git_status "$git_status"(set_color brown)" ═"
                     case "??"
-                        set git_status "$git_status"(set_color red)≠
+                        set git_status "$git_status"(set_color red)" ≠"
                 end
             end
         else
-            set git_status (set_color green)✔
+            set git_status ""
         end
-        set git_info "($git_status$git_branch"(set_color white)")"
+        set git_info "$git_branch$git_status"
     end
 
-    printf "%s %s%s\n" $git_info (set_color cyan) (date +'❰%m/%d ❙ %H:%M:%S❱')
+    printf "%s %s%s\n" $git_info (set_color -o cyan) (date +'❰%m/%d ❙ %H:%M:%S❱')
 
     printf '%s%s%s%s%s%s%s%s%s%s%s%s%s%s' (set_color -o white) '❰' (set_color green) \
     $USER "@" (cat /etc/hostname) (set_color white) '❙' (set_color yellow) \
