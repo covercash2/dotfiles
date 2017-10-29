@@ -12,7 +12,7 @@ function git_pretty_status
 
 	set git_status (git_status_symbol)
 
-        set git_info "$git_branch$git_status"
+        set git_info "$git_branch $git_status"
     end
 
     printf "%s" $git_info
