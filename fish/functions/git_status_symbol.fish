@@ -29,5 +29,5 @@ function git_status_symbol --description "symbolic git status in unicode chars"
             set git_status (set_color green)"◈"
 	end
 
-	echo $git_status
+	printf "%s" $git_status
 end
