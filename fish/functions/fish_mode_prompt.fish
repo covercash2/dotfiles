@@ -1,16 +1,12 @@
 function fish_mode_prompt --description 'displays current vi mode'
 	switch $fish_bind_mode
 		case default
-			set_color --bold --background green black
-			echo '[n]'
+			printf "%s%s" (set_color blue) 'ⓝ '
 		case insert
-			set_color --bold --background blue black
-			echo '[i]'
+			printf "%s%s" (set_color white) 'ⓘ '
 		case visual
-			set_color --bold --background purple black
-			echo '[v]'
+			printf "%s%s" (set_color purple) 'ⓥ '
 	end
 	
 	set_color normal
-	echo -n ' '
 end

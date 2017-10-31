@@ -1,18 +1,24 @@
 function fish_prompt --description 'Write out the prompt'
 	set laststatus $status
 
-	set git_info (git_branch_name)
+	set hostname (cat /etc/hostname)
+	set user $USER
 
-	printf '%s%s%s%s%s%s%s%s%s%s%s%s' (set_color -o white) (set_color cyan) \
-	$USER "@" (cat /etc/hostname) (set_color white) '⁞' (set_color yellow) \
-	(echo $PWD | sed -e "s|^$HOME|~|") (set_color white) (set_color white) \
+	if test $user = chreeus
+		set user ⚇
+	end
+
+	set workspace_info 
+
+	printf '%s%s%s%s%s%s%s%s%s%s%s%s' (set_color blue)\
+	$user (set_color cyan)"⇴" (set_color -o brgreen) (cat /etc/hostname) \
+	(set_color brblack) '⁚' (set_color brblue) \
+	(echo $PWD | sed -e "s|^$HOME|~|") (echo /)(set_color white) (set_color white) \
 	(set_color white)
 
-	if test $laststatus -eq 0
-	    printf "%s\n%s▶%s " (set_color -o green) (set_color white) 
-	else
-	    printf "%s\n%s▶" (set_color -o red) (set_color white) 
-	end
+	set command_start "⇒"
+
+	printf "\n%s%s " (set_color normal) $command_start
 
 	set_color normal
 end
