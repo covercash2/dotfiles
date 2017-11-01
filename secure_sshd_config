@@ -1,6 +1,7 @@
 #	$OpenBSD: sshd_config,v 1.95 2015/04/27 21:42:48 djm Exp $
 
 # my config based on the OpenBSD default
+# /etc/ssh/sshd_config
 
 PasswordAuthentication no
 PubkeyAuthentication yes

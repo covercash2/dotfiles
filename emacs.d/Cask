@@ -3,6 +3,7 @@
 (source melpa-stable)
 
 (depends-on "all-the-icons")
+(depends-on "alect-themes")
 (depends-on "async")
 (depends-on "auto-complete")
 (depends-on "bind-key")
@@ -14,6 +15,7 @@
 (depends-on "company-shell")
 (depends-on "concurrent")
 (depends-on "ctable")
+(depends-on "cyberpunk-theme")
 (depends-on "dash")
 (depends-on "deferred")
 (depends-on "diminish")
