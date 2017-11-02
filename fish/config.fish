@@ -5,10 +5,16 @@ set cask ~/.cask/bin
 set go /usr/local/go
 set gobin $go/bin
 
+set path $cargo/bin $cask $gobin
+
 set --export GOPATH $go
 set --export CARGO_HOME $cargo
 
-set PATH $CARGO_HOME/bin $gobin $cask $PATH
+for p in $path
+	if test -d $p
+		set PATH $PATH $p
+	end
+end
 
 # fish configs
 set fish_color_command -o white
