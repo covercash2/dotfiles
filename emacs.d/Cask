@@ -10,6 +10,7 @@
 (depends-on "cargo")
 (depends-on "cask")
 (depends-on "company")
+(depends-on "company-ansible")
 (depends-on "company-go")
 (depends-on "company-jedi")
 (depends-on "company-shell")

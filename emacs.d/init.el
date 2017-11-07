@@ -36,6 +36,8 @@
 	    ;; turn on company mode for all buffers
 	    (add-hook 'prog-mode-hook 'company-mode)))
 
+(add-to-list 'company-backends 'company-ansible)
+
 (require 'flycheck)
 (setq-default flycheck-emacs-lisp-load-path 'inherit)
 (add-hook 'after-init-hook
