@@ -11,6 +11,8 @@
 ;; load scripts directory
 (add-to-list 'load-path (expand-file-name "scripts" user-emacs-directory))
 
+(add-to-list 'default-frame-alist '(font . "Hack-14"))
+
 (require 'cov-keybind)
 
 (require 'cask)
