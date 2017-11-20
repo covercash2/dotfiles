@@ -1,0 +1,12 @@
+[Unit]
+Description=emacs.
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/emacs
+ExecStop=/usr/bin/emacsclient --eval "(kill-emacs)"
+Environment=SSH_AUTH_SOCK=%t/keyring/ssh
+Restart=always
+
+[Install]
+WantedBy=default.target
