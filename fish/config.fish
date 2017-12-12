@@ -5,7 +5,9 @@ set cask ~/.cask/bin
 set go /usr/local/go
 set gobin $go/bin
 
-set path $cargo/bin $cask $gobin
+set homebin ~/bin
+
+set path $cargo/bin $cask $gobin $homebin
 
 set --export GOPATH $go
 set --export CARGO_HOME $cargo
