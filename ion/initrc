@@ -1,8 +1,3 @@
 fn PROMPT
-   let user = "${c::0x55,bold}${USER}"
-   # convenience variable to reset color
-   let d = ${c::default}
-   let host = $(hostname)
-
-   printf '%s@%s> %s' ${user} $host $d
+	printf "${USER}\@$(hostname)\n > "
 end

@@ -52,6 +52,7 @@
 (depends-on "jedi")
 (depends-on "jedi-core")
 (depends-on "kotlin-mode")
+(depends-on "lsp-mode")
 (depends-on "lsp-rust")
 (depends-on "magit")
 (depends-on "magit-popup")

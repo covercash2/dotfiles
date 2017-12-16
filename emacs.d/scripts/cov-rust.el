@@ -1,37 +1,51 @@
 ;;; Code:
-(require 'init-elpa)
 
-(use-package rust-mode
-  :ensure t
-  :config
-  (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
-  (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
+(require 'rust-mode)
 
-  (defvar rust-platform-dir (concat (getenv "HOME") "/.rustup/toolchains/stable-x86_64-"
-				    (if (eq system-type 'darwin)
-					"apple-darwin/"
-				      ;; else
-				      "unknown-linux-gnu/")))
+(require 'cargo)
 
-  (use-package cargo
-    :ensure t
-    :config
-    (add-hook 'rust-mode-hook 'cargo-minor-mode))
+(require 'racer)
 
-  (use-package racer
-    :ensure t
-    :init
-    (setq racer-cmd (concat (getenv "HOME") "/.cargo/bin/racer"))
-    :config
-    (setq racer-rust-src-path (concat rust-platform-dir "lib/rustlib/src/rust/src/"))
-    (add-hook 'rust-mode-hook #'racer-mode)
-    (add-hook 'rust-mode-hook #'eldoc-mode)
-    (add-hook 'racer-mode-hook #'company-mode))
+(require 'flycheck-rust)
 
-  (use-package flycheck-rust
-    :ensure t
-    :config
-    (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)))
+;; enable rust-mode
+(add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
+
+;; tab to complete
+(define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
+
+;; set rust toolchain
+;; defaults to nightly
+(defvar rust-toolchain "nightly")
+
+;; architecture
+(defvar rust-toolchain-dir 
+  (concat (getenv "HOME")
+	  "/.rustup/toolchains/"
+	  rust-toolchain
+	  "-x86_64"
+	  (if (eq system-type 'darwin)
+	    "-apple-darwin/"
+	    ;; else
+	    "-unknown-linux-gnu/")))
+
+;; racer setup
+(setq racer-cmd 
+      (concat (getenv "HOME")
+	      "/.cargo/bin/racer"))
+
+(setq racer-rust-src-path
+      (concat 
+	rust-toolchain-dir
+	"lib/rustlib/src/rust/src/"))
+
+;; hooks
+(add-hook 'rust-mode-hook 'cargo-minor-mode)
+(add-hook 'rust-mode-hook #'racer-mode)
+(add-hook 'rust-mode-hook #'eldoc-mode)
+(add-hook 'racer-mode-hook #'company-mode)
+(add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
 
 (provide 'cov-rust)
+
 
