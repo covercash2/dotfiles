@@ -1,3 +1,7 @@
 fn PROMPT
 	printf "${USER}\@$(hostname)\n > "
 end
+
+fn ls
+   ls --color=auto
+end
