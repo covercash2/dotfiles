@@ -26,3 +26,7 @@ set fish_color_quote brcyan
 
 # set vi mode on
 fish_vi_key_bindings
+
+# color man pages with most
+# TODO check if most exists
+set --export PAGER 'most'
