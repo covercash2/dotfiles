@@ -1,11 +1,8 @@
 ;;; Code:
 
 (require 'rust-mode)
-
 (require 'cargo)
-
 (require 'racer)
-
 (require 'flycheck-rust)
 
 ;; enable rust-mode
@@ -19,7 +16,7 @@
 (defvar rust-toolchain "nightly")
 
 ;; architecture
-(defvar rust-toolchain-dir 
+(defvar rust-toolchain-dir
   (concat (getenv "HOME")
 	  "/.rustup/toolchains/"
 	  rust-toolchain
@@ -29,23 +26,30 @@
 	    ;; else
 	    "-unknown-linux-gnu/")))
 
+;; rls/lsp setup
+(with-eval-after-load 'lsp-mode
+  (setq lsp-rust-rls-command '("rustup" "run" "nightly" "rls"))
+  (require 'lsp-rust))
+
 ;; racer setup
-(setq racer-cmd 
+(setq racer-cmd
       (concat (getenv "HOME")
 	      "/.cargo/bin/racer"))
 
 (setq racer-rust-src-path
-      (concat 
+      (concat
 	rust-toolchain-dir
 	"lib/rustlib/src/rust/src/"))
 
 ;; hooks
-(add-hook 'rust-mode-hook 'cargo-minor-mode)
-(add-hook 'rust-mode-hook #'racer-mode)
+(add-hook 'rust-mode-hook #'cargo-minor-mode)
 (add-hook 'rust-mode-hook #'eldoc-mode)
+(add-hook 'rust-mode-hook #'lsp-mode)
+(add-hook 'rust-mode-hook #'lsp-rust-enable)
+(add-hook 'rust-mode-hook #'racer-mode)
+
 (add-hook 'racer-mode-hook #'company-mode)
 (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
 
 (provide 'cov-rust)
-
-
+;;; cov-rust.el ends here
