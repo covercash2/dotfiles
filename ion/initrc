@@ -1,5 +1,0 @@
-fn PROMPT
-	let user = "${c::0x55}${USER}${c::default}"
-	let path = "${c::0x22}${PWD}${c::default}"
-	printf "${user}%s$(hostname):${path}\n> " '@'
-end
