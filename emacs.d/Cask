@@ -2,8 +2,8 @@
 (source melpa)
 (source melpa-stable)
 
-(depends-on "all-the-icons")
 (depends-on "alect-themes")
+(depends-on "all-the-icons")
 (depends-on "async")
 (depends-on "auto-complete")
 (depends-on "bind-key")
@@ -41,7 +41,6 @@
 (depends-on "gradle-mode")
 (depends-on "groovy-mode")
 (depends-on "gruvbox-theme")
-
 (depends-on "helm")
 (depends-on "helm-core")
 (depends-on "helm-ls-git")
@@ -67,7 +66,6 @@
 (depends-on "projectile")
 (depends-on "python-environment")
 (depends-on "pyvenv")
-
 (depends-on "racer")
 (depends-on "rainbow-delimiters")
 (depends-on "restart-emacs")
