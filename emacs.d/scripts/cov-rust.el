@@ -51,5 +51,7 @@
 (add-hook 'racer-mode-hook #'company-mode)
 (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
 
+(add-hook 'rust-mode-hook #'rust-enable-format-on-save)
+
 (provide 'cov-rust)
 ;;; cov-rust.el ends here

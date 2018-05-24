@@ -18,6 +18,9 @@ for p in $path
 	end
 end
 
+# load makeinfo from brew
+set PATH /usr/local/opt/texinfo/bin $PATH
+
 # fish configs
 set fish_color_command -o white
 set fish_color_normal brred
