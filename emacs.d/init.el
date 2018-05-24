@@ -148,12 +148,20 @@
 (set-face-attribute 'default nil :height 120)
 (setq-default line-spacing 0.2)
 
+;; TODO keyword regex
+(defvar cov--todo-regex "\\<\\(FIX\\(ME\\)?\\|TODO\\|OPTIMIZE\\|HACK\\|REFACTOR\\)")
+
+(defun cov--collect-todos ()
+  "Create an occur buffer matching a regex."
+  (interactive)
+  (occur cov--todo-regex))
+
 ;; highlight todos
 (defun cov--highlight-todos ()
   "Highlight a bunch of well known comment annotations.
 This functions should be added to the hooks of major modes for programming."
   (font-lock-add-keywords
-   nil '(("\\<\\(FIX\\(ME\\)?\\|TODO\\|OPTIMIZE\\|HACK\\|REFACTOR\\):"
+   nil '(("\\<\\(FIX\\(ME\\)?\\|TODO\\|OPTIMIZE\\|HACK\\|REFACTOR\\)"
           1 font-lock-warning-face t))))
 
 (add-hook 'prog-mode-hook 'cov--highlight-todos)
@@ -195,6 +203,58 @@ This functions should be added to the hooks of major modes for programming."
   "Open init.el for editing."
   (interactive)
   (find-file "~/.emacs.d/init.el"))
+
+;; set shell for fish compatibility
+(setq shell-file-name "/bin/bash")
+
+;; inhibit annoying messages
+;; ignore a couple of common "errors"
+(setq debug-ignored-errors
+      '(quit
+        beginning-of-line    end-of-line
+        beginning-of-buffer  end-of-buffer
+        end-of-file
+	text-read-only
+        buffer-read-only
+        file-supersession) )
+
+(defvar error-buffer-name "*Errors*" "Errors log buffer.")
+
+(defun say-and-log-error (data _ fun)
+  "This error function communicates the errors in the echo area.
+It does so by means of a one-liner as to avoid being disruptive
+(while still offering condensed feedback, which often is enough).
+DATA is the error; FUN is where it occurred.
+The errors are logged in the buffer `error-buffer-name'.
+To list them, use `errors'.
+To use this function, set `command-error-function' to:
+\(lambda \(&rest args\) \(apply #'say-and-log-error args\)"
+  (if (not (member (car data) debug-ignored-errors))
+      (let*((error-str (format "%S in %S" data fun))
+            (error-buffer (get-buffer-create error-buffer-name))
+            (error-win (get-buffer-window error-buffer)) )
+        (message "%s" error-str)           ; echo the error message
+        (with-current-buffer error-buffer
+          (goto-char (point-max))
+          (insert error-str "\n") )        ; log it
+        (discard-input) )))
+
+(setq command-error-function
+      (lambda (&rest args)
+        (apply #'say-and-log-error args) ))
+
+(defun errors ()
+  "Visit the errors log buffer, `error-buffer-name'.
+See `say-and-log-error' for more on this."
+  (interactive)
+  (switch-to-buffer (get-buffer-create error-buffer-name))
+  (goto-char (point-max))
+  (recenter -1) )
+
+
+
+
+
 
 (provide 'init)
 ;;; init.el ends here
