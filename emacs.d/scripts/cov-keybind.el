@@ -16,7 +16,7 @@
   (evil-leader/set-leader ",")
   (evil-leader/set-key
     "." 'golden-ratio
-    "b" 'helm-mini
+    "b" 'helm-buffers-list
     "E" 'eval-buffer
     "f" 'projectile-find-file
     "g" 'magit-status
