@@ -5,7 +5,7 @@
 ;;;
 ;;; Code:
 
-(setenv "GOPATH" (concat (getenv "HOME") "/code/go"))
+(setenv "GOPATH" "/usr/local/go")
 
 ;; TODO come up with something better
 ;; make sure the go/bin directory is in the PATH

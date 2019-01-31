@@ -9,7 +9,11 @@
 
 (set-face-attribute 'default nil
 		    :family "Input Mono"
-		    :height 180)
+		    :weight 'semi-light
+		    :height 110)
+
+;; font/face config
+(setq-default line-spacing 0.1)
 
 ;; init ui
 (setq inhibit-startup-message t)
@@ -18,6 +22,7 @@
   (tool-bar-mode -1))
 (when (fboundp 'scroll-bar-mode)
   (scroll-bar-mode -1))
+(setq initial-scratch-message "")
 
 (blink-cursor-mode 0)
 
@@ -31,10 +36,6 @@
 ; todo keywords
 (setq org-todo-keywords
       '((sequence "TODO" "STARTED" "|" "DONE")))
-
-;; font/face config
-(set-face-attribute 'default nil :height 120)
-(setq-default line-spacing 0.2)
 
 ;; highlight todos
 (defun cov--highlight-todos ()
@@ -100,6 +101,8 @@ This functions should be added to the hooks of major modes for programming."
 
 (require 'exec-path-from-shell)
 (exec-path-from-shell-initialize)
+
+(setq shell-file-name "/bin/bash")
 
 ;; load scripts directory
 (add-to-list 'load-path (expand-file-name "scripts" user-emacs-directory))
@@ -185,7 +188,7 @@ This functions should be added to the hooks of major modes for programming."
 (add-hook 'after-init-hook
 	  (lambda()
 	    (setq yas-snippet-dirs
-		  '("~/code/libraries/yasnippet-snippets/"))))
+		  '("~/system/dotfiles/yasnippet-snippets/"))))
 (add-hook 'prog-mode-hook 'yas-minor-mode)
 
 
@@ -217,10 +220,11 @@ This functions should be added to the hooks of major modes for programming."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (cask elpy evil flycheck helm helm-core ivy lsp-mode magit-popup pyvenv gitter ample-theme yasnippet yaml-mode web-mode telephone-line sublimity restart-emacs rainbow-delimiters racer projectile pallet neotree magit lsp-rust indium helm-ls-git go-eldoc flycheck-rust exec-path-from-shell evil-surround evil-leader diminish company-go company-ansible cargo bind-key all-the-icons))))
+    (gnuplot-mode dart-mode flymake-rust fill-column-indicator docker-compose-mode cask elpy evil flycheck helm helm-core ivy lsp-mode magit-popup pyvenv gitter ample-theme yasnippet yaml-mode web-mode telephone-line sublimity restart-emacs rainbow-delimiters racer projectile pallet neotree magit lsp-rust indium helm-ls-git go-eldoc flycheck-rust exec-path-from-shell evil-surround evil-leader diminish company-go company-ansible cargo bind-key all-the-icons))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(put 'scroll-left 'disabled nil)

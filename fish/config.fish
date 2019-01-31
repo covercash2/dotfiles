@@ -1,14 +1,17 @@
 # fish main config
 
+set android ~/code/libs/android
 set cargo ~/.cargo
 set cask ~/.cask/bin
+set flutter ~/code/libs/flutter
 set go /usr/local/go
 set gobin $go/bin
 
 set homebin ~/bin
 
-set path $cargo/bin $cask $gobin $homebin
+set path $android $cargo/bin $cask $flutter/bin $gobin $homebin
 
+set --export ANDROID_HOME $android
 set --export GOPATH $go
 set --export CARGO_HOME $cargo
 
