@@ -1,7 +1,6 @@
 function fish_prompt --description 'Write out the prompt'
 	set laststatus $status
 
-	set hostname (cat /etc/hostname)
 	set user $USER
 
 	if test $user = chreeus

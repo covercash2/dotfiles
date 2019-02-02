@@ -4,6 +4,7 @@
 (require 'cargo)
 (require 'racer)
 (require 'flycheck-rust)
+(require 'flymake-rust)
 
 ;; enable rust-mode
 (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
@@ -43,11 +44,12 @@
 
 ;; hooks
 (add-hook 'rust-mode-hook #'cargo-minor-mode)
-(add-hook 'rust-mode-hook #'eldoc-mode)
 (add-hook 'rust-mode-hook #'lsp-mode)
 (add-hook 'rust-mode-hook #'lsp-rust-enable)
 (add-hook 'rust-mode-hook #'racer-mode)
+(add-hook 'rust-mode-hook 'flymake-rust-load)
 
+(add-hook 'racer-mode-hook #'eldoc-mode)
 (add-hook 'racer-mode-hook #'company-mode)
 (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
 
