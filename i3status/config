@@ -13,6 +13,7 @@ general {
 
 order += "wireless _first_"
 order += "disk /"
+order += "memory"
 order += "load"
 order += "tztime local"
 
@@ -37,4 +38,10 @@ load {
 
 disk "/" {
         format = "%avail"
+}
+
+memory {
+       format = "%used/%available"
+       threshold_degraded = "1G"
+       format_degraded = "MEMORY < %available"
 }

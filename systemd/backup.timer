@@ -1,0 +1,9 @@
+[Unit]
+Description=backup necessary files
+
+[Timer]
+OnCalendar=weekly
+Persistent=true
+
+[Install]
+WantedBy=timers.target

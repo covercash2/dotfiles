@@ -1,16 +1,45 @@
+;;; cov-rust --- Summary
+;;; Commentary:
+;;; configure Rust and its modes
+;;;
 ;;; Code:
 
-(require 'rust-mode)
-(require 'cargo)
-(require 'racer)
-(require 'flycheck-rust)
-(require 'flymake-rust)
+(require 'use-package)
 
-;; enable rust-mode
-(add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
+(use-package rust-mode
+  :commands rust-enable-format-on-save
+  :init
+  (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
+  :config
+  (rust-enable-format-on-save))
 
-;; tab to complete
-(define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
+(use-package lsp-mode
+  :hook (rust-mode . lsp)
+  :commands lsp
+  :config (require 'lsp-clients))
+(use-package lsp-ui
+  :hook (rust-mode . lsp-ui-mode)
+  :requires lsp-mode)
+
+(use-package cargo
+  :commands cargo-minor-mode
+  :hook (rust-mode . cargo-minor-mode))
+
+(use-package company
+  :hook (prog-mode . company-mode))
+(use-package company-lsp
+  :commands company-lsp
+  :requires company)
+
+(use-package eldoc-mode
+  :hook (rust-mode . eldoc-mode))
+
+(use-package flycheck
+  :commands flycheck-mode
+  :hook (rust-mode . flycheck-mode))
+(use-package flycheck-rust
+  :requires flycheck
+  :hook (flycheck-mode . flycheck-rust-setup))
 
 ;; set rust toolchain
 ;; defaults to nightly
@@ -26,34 +55,6 @@
 	    "-apple-darwin/"
 	    ;; else
 	    "-unknown-linux-gnu/")))
-
-;; rls/lsp setup
-(with-eval-after-load 'lsp-mode
-  (setq lsp-rust-rls-command '("rustup" "run" "nightly" "rls"))
-  (require 'lsp-rust))
-
-;; racer setup
-(setq racer-cmd
-      (concat (getenv "HOME")
-	      "/.cargo/bin/racer"))
-
-(setq racer-rust-src-path
-      (concat
-	rust-toolchain-dir
-	"lib/rustlib/src/rust/src/"))
-
-;; hooks
-(add-hook 'rust-mode-hook #'cargo-minor-mode)
-(add-hook 'rust-mode-hook #'lsp-mode)
-(add-hook 'rust-mode-hook #'lsp-rust-enable)
-(add-hook 'rust-mode-hook #'racer-mode)
-(add-hook 'rust-mode-hook 'flymake-rust-load)
-
-(add-hook 'racer-mode-hook #'eldoc-mode)
-(add-hook 'racer-mode-hook #'company-mode)
-(add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
-
-(add-hook 'rust-mode-hook #'rust-enable-format-on-save)
 
 (provide 'cov-rust)
 ;;; cov-rust.el ends here

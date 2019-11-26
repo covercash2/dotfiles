@@ -1,7 +1,22 @@
 ;;; init.el --- Summary
 ;;; Commentary:
 ;;; Code:
-;(package-initialize)
+
+(require 'package)
+
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("marmalade" . "http://marmalade-repo.org/packages/")
+                         ("melpa-stable" . "https://stable.melpa.org/packages/")
+                         ("gnu" . "https://elpa.gnu.org/packages/")
+                         ("org" . "http://orgmode.org/elpa/")))
+(package-initialize)
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(eval-when-compile
+  (require 'use-package))
+
 (if (eq system-type 'gnu/linux)
     (setq select-enable-clipboard t))
 
@@ -10,10 +25,12 @@
 (set-face-attribute 'default nil
 		    :family "Input Mono"
 		    :weight 'semi-light
-		    :height 110)
+		    :height 130)
+
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
 ;; font/face config
-(setq-default line-spacing 0.1)
+(setq-default line-spacing 0.0)
 
 ;; init ui
 (setq inhibit-startup-message t)
@@ -25,6 +42,10 @@
 (setq initial-scratch-message "")
 
 (blink-cursor-mode 0)
+
+(use-package gruvbox-theme
+  :config
+  (load-theme 'gruvbox t))
 
 ;; org mode settings
 ; set agenda key
@@ -68,10 +89,10 @@ This functions should be added to the hooks of major modes for programming."
 (setq auto-save-file-name-transforms
       `((".*" ,cov-autosave-dir t)))
 
-(add-hook 'prog-mode-hook
-	  (lambda ()
-	    (linum-mode)
-	    (electric-pair-mode 1)))
+(global-display-line-numbers-mode 1)
+
+;(require 'git-gutter-fringe)
+(setq git-gutter-fr:side 'right-fringe)
 
 ;; log tag
 (defvar cov--tag-error "[E] : ")
@@ -89,18 +110,8 @@ This functions should be added to the hooks of major modes for programming."
   (interactive)
   (find-file "~/.emacs.d/init.el"))
 
-(require 'cask (concat (getenv "HOME") "/.cask/cask.el"))
-(cask-initialize)
-
-(require 'pallet)
-(pallet-mode t)
-
-(require 'ample-theme)
-(load-theme 'ample t t)
-(enable-theme 'ample)
-
-(require 'exec-path-from-shell)
-(exec-path-from-shell-initialize)
+(use-package exec-path-from-shell
+  :config (exec-path-from-shell-initialize))
 
 (setq shell-file-name "/bin/bash")
 
@@ -109,82 +120,70 @@ This functions should be added to the hooks of major modes for programming."
 
 (require 'cov-keybind)
 
-(require 'all-the-icons)
+(use-package all-the-icons)
 
-(require 'company)
-(add-hook 'after-init-hook
-	  (lambda()
-	    (setq company-tooltip-limit 15)
-	    (setq company-tooltip-align-annotations t)
-	    (setq company-idle-delay .1)
-	    (setq company-echo-delay 0) ; stops blinking
-	    ; start autocomplete only when typing
-	    (setq company-begin-commands '(self-insert-command))
-	    ;; turn on company mode for all buffers
-	    (add-hook 'prog-mode-hook 'company-mode)))
+(use-package company
+  :hook (prog-mode . company-mode)
+  :config
+  (setq company-tooltip-limit 15)
+   (setq company-tooltip-align-annotations t)
+   (setq company-idle-delay .1)
+   (setq company-echo-delay 0)
+   (setq company-begin-commands '(self-insert-command)))
 
-(require 'company-ansible)
-(add-to-list 'company-backends 'company-ansible)
+(use-package company-ansible
+  :config (add-to-list 'company-backends 'company-ansible))
 
-(require 'flycheck)
+(use-package flycheck)
 (setq-default flycheck-emacs-lisp-load-path 'inherit)
 (add-hook 'after-init-hook
 	  (lambda()
 	    (global-flycheck-mode)))
 
-(require 'indium)
 
-(require 'helm)
-(require 'helm-ls-git)
-(add-hook 'after-init-hook
-	  (lambda()
-	    (helm-mode 1)
-	    (global-set-key (kbd "M-x") 'helm-M-x)))
+(use-package helm
+  :commands (helm-mode helm-M-x)
+  :bind
+  ("M-x" . 'helm-M-x)
+  :config
+  (helm-mode 1))
+(use-package helm-ls-git
+  :requires helm)
 
-(require 'linum)
-(require 'magit)
+(use-package linum)
+(use-package magit)
 
-(require 'neotree)
-(setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+(use-package neotree
+  :config
+  (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 
 (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
 (evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-quick-look)
 (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
 (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
 
-(require 'projectile)
-(projectile-mode)
-;; TODO this is a workaround for a lag issue
-(setq projectile-mode-line
-      '(:eval (format " Projectile[%s]"
-		      (projectile-project-name))))
+(use-package projectile
+  :config
+  (setq projectile-mode-line
+	'(:eval (format " project[%s]"
+			(projectile-project-name))))
+  (projectile-mode))
 
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode-enable))
 
-(require 'rainbow-delimiters)
-(add-hook 'prog-mode-hook #'rainbow-delimiters-mode-enable)
-
-(require 'recentf)
+(use-package recentf)
 (add-hook 'after-init-hook
 	  (lambda()
 	    (setq recentf-save-file (concat user-emacs-directory ".recentf"))
 	    (setq recentf-max-menu-items 30)
 	    (recentf-mode 1)))
 
-(require 'restart-emacs)
-;
-;; TODO this doesn't work in remacs
-;(require 'telephone-line)
-;(setq telephone-line-primary-left-separator 'telephone-line-gradient
-;     telephone-line-secondary-left-separator 'telephone-line-nil
-;     telephone-line-primary-right-separator 'telephone-line-gradient
-;     telephone-line-secondary-right-separator 'telephone-line-nil)
-;(setq telephone-line-height 20
-;     telephone-line-evil-use-short-tag t)
-;(telephone-line-mode 1)
-;
-(require 'yaml-mode)
+(use-package restart-emacs)
 
-(require 'yasnippet)
+(use-package yaml-mode)
+
+(use-package yasnippet)
 (add-hook 'after-init-hook
 	  (lambda()
 	    (setq yas-snippet-dirs
@@ -192,21 +191,18 @@ This functions should be added to the hooks of major modes for programming."
 (add-hook 'prog-mode-hook 'yas-minor-mode)
 
 
-(require 'sublimity)
-(sublimity-mode 1)
+(use-package web-mode
+  :config
+  (add-to-list 'auto-mode-alist '("\\.tmpl\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+  (setq web-mode-engines-alist
+	'(("go" . "\\.tmpl\\'"))))
 
-(require 'web-mode)
-(add-to-list 'auto-mode-alist '("\\.tmpl\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-(setq web-mode-engines-alist
-      '(("go" . "\\.tmpl\\'")))
-
-(require 'diminish)
-(require 'bind-key)
+(use-package bind-key)
 
 ;(require 'cov-java)
-;(require 'cov-kotlin)
-(require 'cov-go)
+(require 'cov-kotlin)
+;(require 'cov-go)
 ;(require 'cov-groovy)
 (require 'cov-rust)
 ;(require 'cov-py)
@@ -218,9 +214,12 @@ This functions should be added to the hooks of major modes for programming."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("a22f40b63f9bc0a69ebc8ba4fbc6b452a4e3f84b80590ba0a92b4ff599e53ad0" "8f97d5ec8a774485296e366fdde6ff5589cf9e319a584b845b6f7fa788c9fa9a" "1436d643b98844555d56c59c74004eb158dc85fc55d2e7205f8d9b8c860e177f" default)))
  '(package-selected-packages
    (quote
-    (gnuplot-mode dart-mode flymake-rust fill-column-indicator docker-compose-mode cask elpy evil flycheck helm helm-core ivy lsp-mode magit-popup pyvenv gitter ample-theme yasnippet yaml-mode web-mode telephone-line sublimity restart-emacs rainbow-delimiters racer projectile pallet neotree magit lsp-rust indium helm-ls-git go-eldoc flycheck-rust exec-path-from-shell evil-surround evil-leader diminish company-go company-ansible cargo bind-key all-the-icons))))
+    (rust-mode fish-mode prettier-js js3-mode company-tern 0blayout tern flymake-jslint gruvbox-theme company-lsp git-gutter-fringe evil-smartparens evil-cleverparens gradle-mode flycheck-kotlin kotlin-mode gnuplot-mode dart-mode flymake-rust fill-column-indicator docker-compose-mode cask elpy evil flycheck helm helm-core ivy lsp-mode magit-popup pyvenv gitter ample-theme yasnippet yaml-mode web-mode telephone-line sublimity restart-emacs rainbow-delimiters racer projectile pallet neotree magit lsp-rust indium helm-ls-git go-eldoc flycheck-rust exec-path-from-shell evil-surround evil-leader diminish company-go company-ansible cargo bind-key all-the-icons))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
