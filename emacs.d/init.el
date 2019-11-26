@@ -25,7 +25,7 @@
 (set-face-attribute 'default nil
 		    :family "Input Mono"
 		    :weight 'semi-light
-		    :height 130)
+		    :height 140)
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
