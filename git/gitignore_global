@@ -38,5 +38,9 @@ Thumbs.db
 
 # personal files
 __notes.org
+
+# Tags
 rusty-tags.emacs
+
+.indium.json
 

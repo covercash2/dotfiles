@@ -1,0 +1,7 @@
+unsetkey "j"
+unsetkey "k"
+unsetkey "h"
+unsetkey "l"
+
+setkey "down"	"j"
+setkey "up" 	"k"

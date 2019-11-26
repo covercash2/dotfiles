@@ -1,0 +1,1 @@
+/mnt/space/home/.config/nvim/plugged/gocode/nvim/autoload/gocomplete.vim

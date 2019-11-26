@@ -7,9 +7,13 @@
 
 ;;; Code:
 
-(require 'evil)
-(require 'evil-leader)
-(require 'evil-surround)
+(require 'use-package)
+
+(use-package evil)
+(use-package evil-leader
+  :requires evil)
+(use-package evil-surround
+  :requires evil)
 
 (defun cov--config-evil-leader ()
   "Config leader keys etc."
