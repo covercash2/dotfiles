@@ -9,12 +9,6 @@
 
 (require 'use-package)
 
-(use-package evil)
-(use-package evil-leader
-  :requires evil)
-(use-package evil-surround
-  :requires evil)
-
 (defun cov--config-evil-leader ()
   "Config leader keys etc."
   (evil-leader/set-leader ",")
@@ -34,32 +28,23 @@
 
 (defun cov--config-evil ()
   "Config evil mode states and keybindings."
-  (cov--config-evil-leader)
   ;; configure terminals
   (delete 'multi-term evil-insert-state-modes)
-  (delete 'eshell-mode evil-insert-state-modes)
-  ;; enable evil modes
-  (global-evil-leader-mode)
-  (global-evil-surround-mode))
+  (delete 'eshell-mode evil-insert-state-modes))
+
+(use-package evil
+  :config
+  (use-package evil-leader
+    :init (global-evil-leader-mode)
+    :config (cov--config-evil-leader))
+  (use-package evil-surround
+    :init (global-evil-surround-mode))
+  (use-package evil-magit)
+  (cov--config-evil)
+  (evil-mode 1)
+  )
 
 (add-hook 'evil-mode-hook 'cov--config-evil)
-
-(evil-mode 1)
-
-;; (use-package evil
-;;   :ensure t
-;;   :config
-;;   (add-hook 'evil-mode-hook 'cov--config-evil)
-;;   (evil-mode 1)
-;;   (use-package evil-leader
-;;     :ensure t
-;;     :config
-;;     (global-evil-leader-mode)
-;;     (cov--config-evil-leader))
-;;   (use-package evil-surround
-;;     :ensure t
-;;     :config
-;;     (global-evil-surround-mode)))
 
 (provide 'cov-keybind)
 ;;; cov-keybind.el ends here

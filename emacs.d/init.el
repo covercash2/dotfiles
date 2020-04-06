@@ -23,9 +23,9 @@
 ;;(add-to-list 'default-frame-alist '(font . "Hack-14"))
 
 (set-face-attribute 'default nil
-		    :family "Input Mono"
+		    :family "Fira Mono"
 		    :weight 'semi-light
-		    :height 130)
+		    :height 140)
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
@@ -43,9 +43,12 @@
 
 (blink-cursor-mode 0)
 
-(use-package gruvbox-theme
+(use-package monokai-theme
   :config
-  (load-theme 'gruvbox t))
+  (load-theme 'monokai t))
+
+; smooth mouse scrolling
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line
 
 ;; org mode settings
 ; set agenda key
@@ -91,9 +94,6 @@ This functions should be added to the hooks of major modes for programming."
 
 (global-display-line-numbers-mode 1)
 
-;(require 'git-gutter-fringe)
-(setq git-gutter-fr:side 'right-fringe)
-
 ;; log tag
 (defvar cov--tag-error "[E] : ")
 
@@ -118,7 +118,13 @@ This functions should be added to the hooks of major modes for programming."
 ;; load scripts directory
 (add-to-list 'load-path (expand-file-name "scripts" user-emacs-directory))
 
+(electric-pair-mode)
+
 (require 'cov-keybind)
+
+(use-package evil-magit
+  :config
+  (require 'evil-magit))
 
 (use-package all-the-icons)
 
@@ -152,6 +158,12 @@ This functions should be added to the hooks of major modes for programming."
 
 (use-package linum)
 (use-package magit)
+
+;(require 'git-gutter-fringe)
+(use-package diff-hl
+  :config
+  (diff-hl-flydiff-mode)
+  (global-diff-hl-mode))
 
 (use-package neotree
   :config
@@ -219,7 +231,7 @@ This functions should be added to the hooks of major modes for programming."
     ("a22f40b63f9bc0a69ebc8ba4fbc6b452a4e3f84b80590ba0a92b4ff599e53ad0" "8f97d5ec8a774485296e366fdde6ff5589cf9e319a584b845b6f7fa788c9fa9a" "1436d643b98844555d56c59c74004eb158dc85fc55d2e7205f8d9b8c860e177f" default)))
  '(package-selected-packages
    (quote
-    (rust-mode fish-mode prettier-js js3-mode company-tern 0blayout tern flymake-jslint gruvbox-theme company-lsp git-gutter-fringe evil-smartparens evil-cleverparens gradle-mode flycheck-kotlin kotlin-mode gnuplot-mode dart-mode flymake-rust fill-column-indicator docker-compose-mode cask elpy evil flycheck helm helm-core ivy lsp-mode magit-popup pyvenv gitter ample-theme yasnippet yaml-mode web-mode telephone-line sublimity restart-emacs rainbow-delimiters racer projectile pallet neotree magit lsp-rust indium helm-ls-git go-eldoc flycheck-rust exec-path-from-shell evil-surround evil-leader diminish company-go company-ansible cargo bind-key all-the-icons))))
+    (evil-magit diff-hl monokai-theme rust-mode fish-mode prettier-js js3-mode company-tern 0blayout tern flymake-jslint gruvbox-theme company-lsp git-gutter-fringe evil-smartparens evil-cleverparens gradle-mode flycheck-kotlin kotlin-mode gnuplot-mode dart-mode flymake-rust fill-column-indicator docker-compose-mode cask elpy evil flycheck helm helm-core ivy lsp-mode magit-popup pyvenv gitter ample-theme yasnippet yaml-mode web-mode telephone-line sublimity restart-emacs rainbow-delimiters racer projectile pallet neotree magit lsp-rust indium helm-ls-git go-eldoc flycheck-rust exec-path-from-shell evil-surround evil-leader diminish company-go company-ansible cargo bind-key all-the-icons))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

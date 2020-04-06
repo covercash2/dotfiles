@@ -16,7 +16,10 @@
 (use-package lsp-mode
   :hook (rust-mode . lsp)
   :commands lsp
-  :config (require 'lsp-clients))
+  :config
+  (setq lsp-rust-server 'rust-analyzer)
+  (setq lsp-rust-analyzer-server-command '("/usr/bin/rust-analyzer"))
+  (require 'lsp-clients))
 (use-package lsp-ui
   :hook (rust-mode . lsp-ui-mode)
   :requires lsp-mode)
@@ -40,6 +43,13 @@
 (use-package flycheck-rust
   :requires flycheck
   :hook (flycheck-mode . flycheck-rust-setup))
+
+(defun cov-add-autoformat-hook ()
+     "Add lsp autoformat to the save hook."
+     (interactive)
+     (add-hook 'before-save-hook 'lsp-format-buffer))
+
+(add-hook 'rust-mode-hook 'cov-add-autoformat-hook)
 
 ;; set rust toolchain
 ;; defaults to nightly
