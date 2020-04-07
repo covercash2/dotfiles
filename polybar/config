@@ -29,7 +29,7 @@ alert		= #bd2c40
 
 [bar/default]
 modules-right	= wlan cpu temperature memory date
-modules-left	= i3
+modules-left	= i3 xwindow
 
 ;https://github.com/polybar/polybar/issues/763#issuecomment-331604987
 monitor = ${env:MONITOR:}
@@ -41,7 +41,7 @@ bottom	= true
 
 background	= ${colors.background}
 
-font-0	= InputMonoNarrow-Regular;size=13;2
+font-0	= InputMonoNarrow-Regular;size=13;3
 font-1	= unifont:fontformat=truetype:size=8:antialias=false;0
 font-2	= siji:pixelsize=10;1
 
@@ -260,7 +260,7 @@ format = <bar-used>
 
 [module/wlan]
 type = internal/network
-interface = wlp0s29u1u2
+interface = wlp6s0u2u4
 interval = 3.0
 
 label-font = 1
@@ -403,7 +403,7 @@ animation-discharging-framerate = 750
 [module/temperature]
 type			= internal/temperature
 thermal-zone		= 0
-warn-temperature	= 60
+warn-temperature	= 75
 units			= false
 
 format			= <ramp> <label>
