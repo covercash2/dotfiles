@@ -5,3 +5,6 @@ __pycache__
 
 fishd.*
 
+.lsp-session*
+
+network-security.data
