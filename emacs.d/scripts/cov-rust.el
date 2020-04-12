@@ -17,6 +17,8 @@
   :hook (rust-mode . lsp)
   :commands lsp
   :config
+  (setq lsp-signature-auto-activate t)
+  (setq lsp-signature-doc-lines 1)
   (setq lsp-rust-server 'rust-analyzer)
   (setq lsp-rust-analyzer-server-command '("/usr/bin/rust-analyzer"))
   (require 'lsp-clients))

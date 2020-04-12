@@ -82,13 +82,23 @@ This functions should be added to the hooks of major modes for programming."
 ;; show current line
 (global-hl-line-mode 1)
 
+;; setup autosave
+
 (defvar cov-backup-dir (concat user-emacs-directory "backups"))
 (defvar cov-autosave-dir (concat user-emacs-directory "auto-save/"))
+
+(defun cov-ensure-dir (dir-path)
+  "Ensure that directory at DIR-PATH exists."
+  (unless (file-directory-p dir-path)
+    (make-directory dir-path)))
+
+(cov-ensure-dir cov-backup-dir)
+(cov-ensure-dir cov-autosave-dir)
 
 ;; put backups in ./backups
 (setq backup-directory-alist `((".*" . ,cov-backup-dir)))
 
-;; specify directory for backup files
+; set format for autosave file names
 (setq auto-save-file-name-transforms
       `((".*" ,cov-autosave-dir t)))
 
@@ -213,7 +223,7 @@ This functions should be added to the hooks of major modes for programming."
 (use-package bind-key)
 
 ;(require 'cov-java)
-(require 'cov-kotlin)
+;(require 'cov-kotlin)
 ;(require 'cov-go)
 ;(require 'cov-groovy)
 (require 'cov-rust)
