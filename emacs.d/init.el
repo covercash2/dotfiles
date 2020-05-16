@@ -266,9 +266,10 @@ Contains a reference to the variable `cov-preferred-columns'"
 
 (use-package yasnippet
   :ensure t
-  :hook (prog-mode)
+  :hook (prog-mode . yas-minor-mode)
   :config
-  (setq yas-snippet-dirs '("~/system/dotfiles/yasnippet-snippets/")))
+  (setq yas-snippet-dirs '("~/.emacs.d/snippets/"
+			   "~/system/dotfiles/yasnippet-snippets/")))
 
 (use-package web-mode
   :ensure t
