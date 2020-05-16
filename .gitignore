@@ -8,3 +8,7 @@ fishd.*
 .lsp-session*
 
 network-security.data
+
+# quelpa manages emacs packages using git
+# i'm letting emacs handle these packages
+emacs.d/quelpa

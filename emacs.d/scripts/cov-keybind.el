@@ -13,7 +13,6 @@
   "Config leader keys etc."
   (evil-leader/set-leader ",")
   (evil-leader/set-key
-    "." 'golden-ratio
     "b" 'helm-buffers-list
     "E" 'eval-buffer
     "f" 'projectile-find-file
@@ -33,15 +32,20 @@
   (delete 'eshell-mode evil-insert-state-modes))
 
 (use-package evil
+  :ensure t
   :config
   (use-package evil-leader
+    :ensure t
     :init (global-evil-leader-mode)
     :config (cov--config-evil-leader))
   (use-package evil-surround
+    :ensure t
     :init (global-evil-surround-mode))
-  (use-package evil-magit)
+  (use-package evil-magit
+    :requires magit)
   (cov--config-evil)
   (evil-mode 1)
+  ; use-package evil
   )
 
 (add-hook 'evil-mode-hook 'cov--config-evil)

@@ -20,6 +20,18 @@
 (if (eq system-type 'gnu/linux)
     (setq select-enable-clipboard t))
 
+(use-package quelpa
+  :ensure t
+  :config
+  (use-package quelpa-use-package
+    :ensure t))
+
+(use-package ron-mode
+  :quelpa (ron-mode :fetcher github :repo "rhololkeolke/ron-mode"))
+
+(global-visual-line-mode)
+(global-eldoc-mode)
+
 ;;(add-to-list 'default-frame-alist '(font . "Hack-14"))
 
 (set-face-attribute 'default nil
@@ -43,9 +55,16 @@
 
 (blink-cursor-mode 0)
 
-(use-package monokai-theme
+(use-package doom-themes
   :config
-  (load-theme 'monokai t))
+  (setq doom-themes-enable-bold t
+	doom-themes-enable-italic t)
+  (load-theme 'doom-one t)
+
+  (doom-themes-visual-bell-config)
+
+  (doom-themes-neotree-config)
+  (doom-themes-org-config))
 
 ; smooth mouse scrolling
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line
@@ -121,6 +140,7 @@ This functions should be added to the hooks of major modes for programming."
   (find-file "~/.emacs.d/init.el"))
 
 (use-package exec-path-from-shell
+  :ensure t
   :config (exec-path-from-shell-initialize))
 
 (setq shell-file-name "/bin/bash")
@@ -130,15 +150,43 @@ This functions should be added to the hooks of major modes for programming."
 
 (electric-pair-mode)
 
+(mouse-avoidance-mode 'animate)
+
+(defvar cov-preferred-columns 80
+  "Preferred number of columns in a window.
+Can be changed for different modes.")
+
+(defun cov-set-window-width (width)
+  "Set current window's width to WIDTH."
+  (adjust-window-trailing-edge nil (- width (window-width)) t))
+
+(defun cov-set-window-preferred-columns ()
+  "Set current window to preferred size.
+Contains a reference to the variable `cov-preferred-columns'"
+  (interactive)
+  (cov-set-window-width cov-preferred-columns)
+  (setq window-size-fixed t))
+
+(defun cov-toggle-window-size-fixed ()
+    "Emacs doesn't have a function for this for some stupid reason."
+  (interactive)
+  (if 'window-size-fixed
+      (setq window-size-fixed nil)
+    ;(setq window-size-fixed t)
+    ))
+
 (require 'cov-keybind)
 
 (use-package evil-magit
+  :ensure t
   :config
   (require 'evil-magit))
 
-(use-package all-the-icons)
+(use-package all-the-icons
+  :ensure t)
 
 (use-package company
+  :ensure t
   :hook (prog-mode . company-mode)
   :config
   (setq company-tooltip-limit 15)
@@ -148,9 +196,11 @@ This functions should be added to the hooks of major modes for programming."
    (setq company-begin-commands '(self-insert-command)))
 
 (use-package company-ansible
+  :ensure t
   :config (add-to-list 'company-backends 'company-ansible))
 
-(use-package flycheck)
+(use-package flycheck
+  :ensure t)
 (setq-default flycheck-emacs-lisp-load-path 'inherit)
 (add-hook 'after-init-hook
 	  (lambda()
@@ -158,24 +208,28 @@ This functions should be added to the hooks of major modes for programming."
 
 
 (use-package helm
+  :ensure t
   :commands (helm-mode helm-M-x)
   :bind
   ("M-x" . 'helm-M-x)
   :config
+  (use-package helm-ls-git
+    :ensure t
+    :requires helm)
   (helm-mode 1))
-(use-package helm-ls-git
-  :requires helm)
 
-(use-package linum)
-(use-package magit)
+(use-package magit
+  :ensure t)
 
 ;(require 'git-gutter-fringe)
 (use-package diff-hl
+  :ensure t
   :config
   (diff-hl-flydiff-mode)
   (global-diff-hl-mode))
 
 (use-package neotree
+  :ensure t
   :config
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 
@@ -185,6 +239,7 @@ This functions should be added to the hooks of major modes for programming."
 (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
 
 (use-package projectile
+  :ensure t
   :config
   (setq projectile-mode-line
 	'(:eval (format " project[%s]"
@@ -192,35 +247,39 @@ This functions should be added to the hooks of major modes for programming."
   (projectile-mode))
 
 (use-package rainbow-delimiters
+  :ensure t
   :hook (prog-mode . rainbow-delimiters-mode-enable))
 
-(use-package recentf)
+(use-package recentf
+  :ensure t)
 (add-hook 'after-init-hook
 	  (lambda()
 	    (setq recentf-save-file (concat user-emacs-directory ".recentf"))
 	    (setq recentf-max-menu-items 30)
 	    (recentf-mode 1)))
 
-(use-package restart-emacs)
+(use-package restart-emacs
+  :ensure t)
 
-(use-package yaml-mode)
+(use-package yaml-mode
+  :ensure t)
 
-(use-package yasnippet)
-(add-hook 'after-init-hook
-	  (lambda()
-	    (setq yas-snippet-dirs
-		  '("~/system/dotfiles/yasnippet-snippets/"))))
-(add-hook 'prog-mode-hook 'yas-minor-mode)
-
+(use-package yasnippet
+  :ensure t
+  :hook (prog-mode)
+  :config
+  (setq yas-snippet-dirs '("~/system/dotfiles/yasnippet-snippets/")))
 
 (use-package web-mode
+  :ensure t
   :config
   (add-to-list 'auto-mode-alist '("\\.tmpl\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
   (setq web-mode-engines-alist
 	'(("go" . "\\.tmpl\\'"))))
 
-(use-package bind-key)
+(use-package bind-key
+  :ensure t)
 
 ;(require 'cov-java)
 ;(require 'cov-kotlin)
@@ -229,6 +288,39 @@ This functions should be added to the hooks of major modes for programming."
 (require 'cov-rust)
 ;(require 'cov-py)
 
+(use-package doom-modeline
+  :ensure t
+  :requires all-the-icons
+  :config
+  (doom-modeline-mode 1)
+  (setq doom-modeline-icon (display-graphic-p))
+  (setq find-file-visit-truename t))
+
+(defun cov-toggle-window-dedicated ()
+  "Toggle lock buffer in current window."
+  (interactive)
+  (message
+   (if (let (window (get-buffer-window (current-buffer)))
+	 (set-window-dedicated-p window (not (window-dedicated-p window))))
+       "%s: buffer locked to window"
+     "%s: window unlocked")
+   (current-buffer)))
+
+(defun cov-rename-file-and-buffer (new-name)
+  "Rename the current file and buffer to NEW-NAME."
+  (interactive "snew file name: ")
+  (let ((name (buffer-name))
+	(filename (buffer-file-name)))
+    (if (not filename)
+	(message "buffer '%s' is not a file" name)
+      (if (get-buffer new-name)
+	  (message "buffer with name '%s' already exists" new-name)
+	(progn
+	  (rename-file filename new-name 1)
+	  (rename-buffer new-name)
+	  (set-visited-file-name new-name)
+	  (set-buffer-modified-p nil))))))
+
 (provide 'init)
 ;;; init.el ends here
 (custom-set-variables
@@ -236,16 +328,12 @@ This functions should be added to the hooks of major modes for programming."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-    ("a22f40b63f9bc0a69ebc8ba4fbc6b452a4e3f84b80590ba0a92b4ff599e53ad0" "8f97d5ec8a774485296e366fdde6ff5589cf9e319a584b845b6f7fa788c9fa9a" "1436d643b98844555d56c59c74004eb158dc85fc55d2e7205f8d9b8c860e177f" default)))
+ '(helm-completion-style 'emacs)
  '(package-selected-packages
-   (quote
-    (evil-magit diff-hl monokai-theme rust-mode fish-mode prettier-js js3-mode company-tern 0blayout tern flymake-jslint gruvbox-theme company-lsp git-gutter-fringe evil-smartparens evil-cleverparens gradle-mode flycheck-kotlin kotlin-mode gnuplot-mode dart-mode flymake-rust fill-column-indicator docker-compose-mode cask elpy evil flycheck helm helm-core ivy lsp-mode magit-popup pyvenv gitter ample-theme yasnippet yaml-mode web-mode telephone-line sublimity restart-emacs rainbow-delimiters racer projectile pallet neotree magit lsp-rust indium helm-ls-git go-eldoc flycheck-rust exec-path-from-shell evil-surround evil-leader diminish company-go company-ansible cargo bind-key all-the-icons))))
+   '(quelpa-use-package quelpa ron-mode yasnippet yaml-mode web-mode use-package spacemacs-theme restart-emacs rainbow-delimiters projectile neotree monokai-theme lsp-ui helm-ls-git flycheck-rust exec-path-from-shell evil-surround evil-magit evil-leader doom-themes doom-modeline diff-hl company-lsp company-ansible cargo)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
-(put 'scroll-left 'disabled nil)
