@@ -27,7 +27,9 @@
     :ensure t))
 
 (use-package ron-mode
-  :quelpa (ron-mode :fetcher github :repo "rhololkeolke/ron-mode"))
+  :quelpa (ron-mode :fetcher github :repo "rhololkeolke/ron-mode")
+  :config
+  (add-to-list 'auto-mode-alist '("\\.ron\\'" . ron-mode)))
 
 (global-visual-line-mode)
 (global-eldoc-mode)
@@ -38,6 +40,10 @@
 		    :family "Fira Mono"
 		    :weight 'semi-light
 		    :height 140)
+
+(custom-theme-set-faces
+ 'user
+ '(variable-pitch ((t (:family "Cantarell" :slant normal :weight normal :height 150 :width normal)))))
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
@@ -66,12 +72,42 @@
   (doom-themes-neotree-config)
   (doom-themes-org-config))
 
+; fix ANSI color codes
+(use-package xterm-color
+  :ensure t)
+(setq comint-output-filter-functions (remove 'ansi-color-process-output comint-output-filter-functions))
+(add-hook 'compilation-mode-hook 'ansi-color-for-comint-mode-on)
+
+(add-hook 'compilation-mode-hook
+	;; enable ANSI filter
+	  (lambda ()
+	    ; disable font lock
+	    (font-lock-mode -1)
+	    (make-local-variable 'font-lock-function)
+	    (setq font-lock-function (lambda (_) nil))
+	    (add-hook 'comint-preoutput-filter-functions 'xterm-color-filter nil t)
+	    ))
+
+(defun cov-colorize-compilation-buffer ()
+  ; Colorize Compilation Buffer.
+  (ansi-color-apply-on-region compilation-filter-start (point))
+  )
+
+(add-hook 'compilation-filter-hook 'cov-colorize-compilation-buffer)
+; track the end of compilation output
+(add-hook 'compilation-mode 'auto-revert-mode)
+
 ; smooth mouse scrolling
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line
 
 ;; org mode settings
 ; set agenda key
 (global-set-key (kbd "C-c a") 'org-agenda)
+
+; allow a variable width font in org mode
+(use-package mixed-pitch
+  :ensure t
+  :hook (text-mode . mixed-pitch-mode))
 
 ;; fontify (?) code blocks
 (setq org-src-fontify-natively t)
@@ -193,7 +229,10 @@ Contains a reference to the variable `cov-preferred-columns'"
    (setq company-tooltip-align-annotations t)
    (setq company-idle-delay .1)
    (setq company-echo-delay 0)
-   (setq company-begin-commands '(self-insert-command)))
+   (setq company-begin-commands '(self-insert-command))
+   (use-package company-box
+     :ensure t
+     :hook (company-mode . company-box-mode)))
 
 (use-package company-ansible
   :ensure t
@@ -293,19 +332,25 @@ Contains a reference to the variable `cov-preferred-columns'"
   :ensure t
   :requires all-the-icons
   :config
-  (doom-modeline-mode 1)
   (setq doom-modeline-icon (display-graphic-p))
-  (setq find-file-visit-truename t))
+  (setq find-file-visit-truename t)
+  (setq doom-modeline-lsp t)
+  (doom-modeline-mode 1)
+  )
 
-(defun cov-toggle-window-dedicated ()
-  "Toggle lock buffer in current window."
-  (interactive)
-  (message
-   (if (let (window (get-buffer-window (current-buffer)))
-	 (set-window-dedicated-p window (not (window-dedicated-p window))))
-       "%s: buffer locked to window"
-     "%s: window unlocked")
-   (current-buffer)))
+; emacs-purpose on github, enables purpose-mode. slightly confusing
+; for setting purposes for windows to prevent unwanted resizing
+(use-package window-purpose
+  :ensure t
+  :config
+  (add-to-list 'purpose-user-mode-purposes '(prog-mode . main))
+  (add-to-list 'purpose-user-mode-purposes '(conf-mode . main))
+  (add-to-list 'purpose-user-mode-purposes '(text-mode . side))
+  (add-to-list 'purpose-user-mode-purposes '(cargo-process-mode . side))
+  (add-to-list 'purpose-user-mode-purposes '(magit-mode . side))
+  (add-to-list 'purpose-user-mode-purposes '(helm-mode . side))
+  (purpose-compile-user-configuration)
+  (purpose-mode))
 
 (defun cov-rename-file-and-buffer (new-name)
   "Rename the current file and buffer to NEW-NAME."
@@ -329,12 +374,13 @@ Contains a reference to the variable `cov-preferred-columns'"
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(helm-completion-style 'emacs)
+ '(helm-completion-style (quote emacs))
  '(package-selected-packages
-   '(quelpa-use-package quelpa ron-mode yasnippet yaml-mode web-mode use-package spacemacs-theme restart-emacs rainbow-delimiters projectile neotree monokai-theme lsp-ui helm-ls-git flycheck-rust exec-path-from-shell evil-surround evil-magit evil-leader doom-themes doom-modeline diff-hl company-lsp company-ansible cargo)))
+   (quote
+    (hydra evil-collection window-purpose company-box mixed-pitch quelpa-use-package quelpa ron-mode yasnippet yaml-mode web-mode use-package spacemacs-theme restart-emacs rainbow-delimiters projectile neotree monokai-theme lsp-ui helm-ls-git flycheck-rust exec-path-from-shell evil-surround evil-magit doom-themes doom-modeline diff-hl company-lsp company-ansible cargo))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(variable-pitch ((t (:family "Cantarell" :slant normal :weight normal :height 150 :width normal)))))

@@ -13,8 +13,9 @@
   (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
   :config
   (setq cov-preferred-columns 100)
-  (display-fill-column-indicator-mode t)
-  (setq display-fill-column-indicator-column cov-preferred-columns)
+  (setq fill-column 100)
+  ; emacs 27
+  ;(display-fill-column-indicator-mode t)
   (rust-enable-format-on-save))
 
 (use-package lsp-mode
@@ -33,6 +34,7 @@
   :hook (rust-mode . lsp-ui-mode)
   :requires lsp-mode
   :config
+  (setq lsp-ui-sideline-update-mode 'line)
   (setq lsp-ui-doc-position 'top))
 
 (use-package cargo
