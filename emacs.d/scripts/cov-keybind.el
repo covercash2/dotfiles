@@ -19,6 +19,16 @@
     :init (global-evil-surround-mode))
   ;; (use-package evil-magit
   ;;   :requires magit)
+  (use-package evil-org
+    :ensure t
+    :config
+    (add-hook 'org-mode-hook 'evil-org-mode)
+    (add-hook 'evil-org-mode-hook
+	      (lambda ()
+		(evil-org-set-key-theme)))
+    (require 'evil-org-agenda)
+    (evil-org-agenda-set-keys)
+    )
   (use-package evil-collection
     :ensure t
     :custom (evil-collection-setup-minibuffer t)

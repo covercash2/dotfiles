@@ -111,6 +111,8 @@ end-of-buffer signals; pass the rest to the default handler."
 
 ;; org mode settings
 ; set agenda key
+(add-to-list 'org-agenda-files "~/sync/notes/")
+
 (global-set-key (kbd "C-c a") 'org-agenda)
 
 ; allow a variable width font in org mode
@@ -426,7 +428,7 @@ Contains a reference to the variable `cov-preferred-columns'"
  '(helm-completion-style (quote emacs))
  '(package-selected-packages
    (quote
-    (dap-mode hydra evil-collection window-purpose company-box mixed-pitch quelpa-use-package quelpa ron-mode yasnippet yaml-mode web-mode use-package spacemacs-theme restart-emacs rainbow-delimiters projectile neotree monokai-theme lsp-ui helm-ls-git flycheck-rust exec-path-from-shell evil-surround evil-magit doom-themes doom-modeline diff-hl company-lsp company-ansible cargo))))
+    (evil-org dap-mode hydra evil-collection window-purpose company-box mixed-pitch quelpa-use-package quelpa ron-mode yasnippet yaml-mode web-mode use-package spacemacs-theme restart-emacs rainbow-delimiters projectile neotree monokai-theme lsp-ui helm-ls-git flycheck-rust exec-path-from-shell evil-surround evil-magit doom-themes doom-modeline diff-hl company-lsp company-ansible cargo))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
