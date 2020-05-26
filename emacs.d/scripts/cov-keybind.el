@@ -11,6 +11,8 @@
 
 (use-package evil
   :ensure t
+  :init
+  (setq evil-want-keybinding nil)
   :config
   (use-package evil-surround
     :ensure t
@@ -20,7 +22,6 @@
   (use-package evil-collection
     :ensure t
     :config
-    (setq evil-want-keybinding nil)
     (evil-collection-init))
   (evil-mode 1)
   )
@@ -214,7 +215,7 @@ _<ESC>_, _C-[_, _C-g_: cancel
 
   (evil-define-key '(normal visual) 'global (kbd "<SPC>") 'hydra-leader/body)
 
-  (global-set-key (kbd "C-w") 'hydra-window/body)
+  (evil-define-key '(normal visual) 'global (kbd "C-w") 'hydra-window/body)
   )
 
 (provide 'cov-keybind)

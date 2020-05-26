@@ -62,6 +62,7 @@
 (blink-cursor-mode 0)
 
 (use-package doom-themes
+  :ensure t
   :config
   (setq doom-themes-enable-bold t
 	doom-themes-enable-italic t)
