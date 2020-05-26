@@ -12,7 +12,6 @@
 (use-package evil
   :ensure t
   :config
-  (evil-set-leader '(normal visual) (kbd "<SPC>"))
   (use-package evil-surround
     :ensure t
     :init (global-evil-surround-mode))
@@ -31,7 +30,7 @@
   :requires evil
   :config
   ; TODO replace broken dependencies and customize docstring
-  (defhydra hydra-window ()
+  (defhydra hydra-window (:hint nil)
     "
 Movement^^        ^Split^         ^Switch^		^Resize^
 ----------------------------------------------------------------
@@ -89,7 +88,7 @@ _SPC_ cancel	_o_nly this   	_d_elete
 	   (setq this-command 'winner-undo))
      )
     ("Z" winner-redo)
-    ("SPC" nil)
+    ("SPC" hydra-leader/body :color blue)
     )
 
   (defhydra hydra-lsp (:exit t :hint nil)
@@ -97,10 +96,10 @@ _SPC_ cancel	_o_nly this   	_d_elete
 lsp
   buffer^^                  ^symbol^            server^^
 --------------------------------------------------------------------
-  _f_ormat                  _d_efinition        _C-r_estart
-  e_x_ecute code action     _r_eferences        _C-d_escribe session
-  i_m_enu                   _i_mplementations
-                          _R_ename
+  _f_ormat                  _d_efinition        _C-d_escribe session
+  i_m_enu                   _i_mplementations   _C-r_estart
+  e_x_ecute code action     _r_eferences
+  ^^                        _R_ename
 "
     ("f" lsp-format-buffer)
     ("x" lsp-execute-code-action)
@@ -116,30 +115,85 @@ lsp
   (defhydra hydra-project (:exit t :hint nil)
     "
 project
- compile^^    navigation^^
----------------
- _b_uild      _f_ind file
- _r_un
- _t_est
+ ^compile^    ^navigation^      ^env^
+------------------------------------------
+ _b_uild      _f_ind file       _c_hange project
+ _r_un        _s_earch          _k_ill buffers
+ _t_est       ^^                _R_ecent files
 "
+    ("k" projectile-kill-buffers)
+    ("R" projectile-recentf)
+    ("c" projectile-switch-project)
+    ("s" projectile-ag)
     ("f" projectile-find-file)
     ("t" projectile-test-project)
     ("r" projectile-run-project)
     ("b" projectile-compile-project))
 
+  (defhydra hydra-lint (:color red :hint nil)
+    "
+lint
+ ^navigate^
+------------
+ _j_,_k_ next/prev
+ _gg_ first
+
+_q_: cancel
+"
+    ("gg" flycheck-first-error)
+    ("f" flycheck-error-list-set-filter)
+    ("j" flycheck-next-error)
+    ("k" flycheck-previos-error)
+    ("q" nil :color blue)
+    )
+
+  (defhydra hydra-debug (:color red :hint nil)
+    "
+gud
+ ^execution^     ^control^            ^inspect^       ^breakpoints^
+--------------------------------------------------------------
+  _S_tart gdb    _c_ontinue           _p_rint         _b_reakpoint insert
+  _r_un          _s_tep               _v_iew change   _B_reakpoint delete
+  _f_inish       _n_ext line
+  ^^             _i_nstruction step
+"
+    ("v" gdb-many-windows)
+    ("S" gdb)
+    ("B" gud-remove)
+    ("b" gud-break)
+    ("f" gud-finish)
+    ("c" gud-cont)
+    ("p" gud-print)
+    ("n" gud-next)
+    ("s" gud-step)
+    ("i" gud-stepi)
+    ("r" gud-run))
+
+  (defhydra hydra-yas
+    (:exti t :hint nil)
+    "
+yasnippets
+_i_nsert  _n_ew
+"
+    ("i" yas-insert-snippet)
+    ("n" yas-new-snippet))
+
   (defhydra hydra-leader
     (:exit t :hint nil)
     "
 main menu
- buffer^^      ^navigate^          ^command^              ^code^
-------------------------------------------------------------------------
- _s_ave        _b_uffer list       _<SPC>_ M-x run        _g_it status
- _f_ind file   _p_roject hydra     ^^                     _l_sp hydra
- ^^            _n_eotree
- ^^            _w_indow hydra
+ buffer^^       ^navigate^          ^command^              ^code^
+-------------------------------------------------------------------------
+ _f_ind file    _b_uffer list       _<SPC>_ M-x run        _g_it status
+ _s_ave         _n_eotree           ^^                     _l_sp hydra
+ _y_asnippet    _p_roject hydra     ^^                     _C-l_int
+ ^^             _w_indow hydra      ^^                     _d_ebug
 
 _<ESC>_, _C-[_, _C-g_: cancel
 "
+    ("y" hydra-yas/body)
+    ("d" hydra-debug/body)
+    ("C-l" hydra-lint/body)
     ("s" save-buffer :color red)
     ("b" helm-buffers-list)
     ; projectile
@@ -160,7 +214,7 @@ _<ESC>_, _C-[_, _C-g_: cancel
 
   (evil-define-key '(normal visual) 'global (kbd "<SPC>") 'hydra-leader/body)
 
-  (evil-define-key 'normal 'global (kbd "C-w") 'hydra-window/body)
+  (global-set-key (kbd "C-w") 'hydra-window/body)
   )
 
 (provide 'cov-keybind)

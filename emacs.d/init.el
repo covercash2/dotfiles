@@ -88,11 +88,6 @@
 	    (add-hook 'comint-preoutput-filter-functions 'xterm-color-filter nil t)
 	    ))
 
-(defun cov-colorize-compilation-buffer ()
-  ; Colorize Compilation Buffer.
-  (ansi-color-apply-on-region compilation-filter-start (point))
-  )
-
 (add-hook 'compilation-filter-hook 'cov-colorize-compilation-buffer)
 ; track the end of compilation output
 (add-hook 'compilation-mode 'auto-revert-mode)
@@ -308,7 +303,8 @@ Contains a reference to the variable `cov-preferred-columns'"
   :hook (prog-mode . yas-minor-mode)
   :config
   (setq yas-snippet-dirs '("~/.emacs.d/snippets/"
-			   "~/system/dotfiles/yasnippet-snippets/")))
+			   "~/system/dotfiles/yasnippet-snippets/"))
+  (yas-reload-all))
 
 (use-package web-mode
   :ensure t
@@ -367,6 +363,18 @@ Contains a reference to the variable `cov-preferred-columns'"
 	  (set-visited-file-name new-name)
 	  (set-buffer-modified-p nil))))))
 
+; debugger settings
+; TODO wtf is gud
+
+
+(use-package dap-mode
+  :ensure t
+  :requires hydra
+  :config
+  (add-hook 'dap-stopped-hook
+	    (lambda ()
+	      (call-interactively #'dap-hydra))))
+
 (provide 'init)
 ;;; init.el ends here
 (custom-set-variables
@@ -377,7 +385,7 @@ Contains a reference to the variable `cov-preferred-columns'"
  '(helm-completion-style (quote emacs))
  '(package-selected-packages
    (quote
-    (hydra evil-collection window-purpose company-box mixed-pitch quelpa-use-package quelpa ron-mode yasnippet yaml-mode web-mode use-package spacemacs-theme restart-emacs rainbow-delimiters projectile neotree monokai-theme lsp-ui helm-ls-git flycheck-rust exec-path-from-shell evil-surround evil-magit doom-themes doom-modeline diff-hl company-lsp company-ansible cargo))))
+    (dap-mode hydra evil-collection window-purpose company-box mixed-pitch quelpa-use-package quelpa ron-mode yasnippet yaml-mode web-mode use-package spacemacs-theme restart-emacs rainbow-delimiters projectile neotree monokai-theme lsp-ui helm-ls-git flycheck-rust exec-path-from-shell evil-surround evil-magit doom-themes doom-modeline diff-hl company-lsp company-ansible cargo))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

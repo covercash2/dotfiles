@@ -1,0 +1,67 @@
+;;; package --- defines keybindings
+;; describes keybindings and configures evil mode
+
+;;; Commentary:
+;; this file replaces my init-editor file.  i think it's a little less ambiguous
+;; and i moved some visual elements to the main init.el for now.
+
+;;; Code:
+
+(require 'use-package)
+
+(defun cov--config-evil-leader ()
+  "Config leader keys etc."
+  (evil-leader/set-leader "<SPC>")
+  (evil-leader/set-key
+    "b" 'helm-buffers-list
+    "E" 'eval-buffer
+    "f" 'projectile-find-file
+    "g" 'magit-status
+    "I" 'cov-edit-init
+    "n" 'neotree-toggle
+    "o" 'projectile-find-file-other-window
+    "p" 'projectile-switch-project
+    "t" 'multi-term-dediated-toggle
+    "x" 'lsp-execute-code-action
+    "<SPC>" 'helm-M-x
+    )
+; org mode bindings
+  (evil-leader/set-key-for-mode
+    "s" org-insert-subheading)
+  )
+
+(use-package org
+  :config
+  (evil-leader/set-key-for-mode 'org-mode
+    "s" org-insert-subheading)
+  )
+
+(defun cov--config-evil ()
+  "Config evil mode states and keybindings."
+  ;; configure terminals
+  (delete 'multi-term evil-insert-state-modes)
+  (delete 'eshell-mode evil-insert-state-modes))
+
+(use-package evil
+  :ensure t
+  :config
+  (use-package evil-leader
+    :ensure t
+    :init (global-evil-leader-mode)
+    :config (cov--config-evil-leader))
+  (use-package evil-surround
+    :ensure t
+    :init (global-evil-surround-mode))
+  ;; (use-package evil-magit
+  ;;   :requires magit)
+  (use-package evil-collection
+    :ensure t)
+  (cov--config-evil)
+  (evil-mode 1)
+  ; use-package evil
+  )
+
+(add-hook 'evil-mode-hook 'cov--config-evil)
+
+(provide 'cov-keybind)
+;;; cov-keybind.el ends here

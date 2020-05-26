@@ -58,13 +58,6 @@
   :commands flycheck-mode
   :hook (rust-mode . flycheck-mode))
 
-(defun cov-add-autoformat-hook ()
-     "Add lsp autoformat to the save hook."
-     (interactive)
-     (add-hook 'before-save-hook 'lsp-format-buffer))
-
-(add-hook 'rust-mode-hook 'cov-add-autoformat-hook)
-
 ;; set rust toolchain
 ;; defaults to nightly
 (defvar rust-toolchain "nightly")
