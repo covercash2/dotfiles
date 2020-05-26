@@ -96,6 +96,19 @@
 ; smooth mouse scrolling
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line
 
+(defun cov/command-error-function (data context caller)
+  "Ignore the buffer-read-only, beginning-of-buffer,
+end-of-buffer signals; pass the rest to the default handler."
+  (when (not (memq (car data) '(quit
+				buffer-read-only
+				beginning-of-line
+				end-of-line
+                                beginning-of-buffer
+                                end-of-buffer)))
+    (command-error-default-function data context caller)))
+
+(setq command-error-function #'cov/command-error-function)
+
 ;; org mode settings
 ; set agenda key
 (global-set-key (kbd "C-c a") 'org-agenda)
@@ -110,7 +123,34 @@
 
 ; todo keywords
 (setq org-todo-keywords
-      '((sequence "TODO" "STARTED" "|" "DONE")))
+      '((sequence "TODO" "WAIT" "|" "DONE")))
+
+(defun cov/get-date ()
+  "Get the current date."
+  (format-time-string "%y.%m.%d %H:%M")
+  )
+
+(defun cov/on-todo ()
+  "Function called when $ORG_STATE is TODO."
+  (org-set-property "CREATED" (cov/get-date))
+  (org-delete-property "FINISHED")
+  )
+
+(defun cov/on-done ()
+  "Functino called when $ORG_STATE is DONE."
+  (org-set-property "FINISHED" (cov/get-date))
+  )
+
+(defun cov/on-todo-state-changed ()
+  "Function to be run when org todo state is changed."
+  (cond
+   ((string= org-state "TODO") (cov/on-todo))
+    ((string= org-state "DONE") (cov/on-done))
+    (t (message "nuthin"))))
+
+(add-hook 'org-after-todo-state-change-hook 'cov/on-todo-state-changed)
+
+;; end org mode
 
 ;; highlight todos
 (defun cov--highlight-todos ()

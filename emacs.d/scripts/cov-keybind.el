@@ -21,8 +21,10 @@
   ;;   :requires magit)
   (use-package evil-collection
     :ensure t
-    :config
-    (evil-collection-init))
+    :custom (evil-collection-setup-minibuffer t)
+    :init
+    (evil-collection-init)
+    :config)
   (evil-mode 1)
   )
 
@@ -171,13 +173,32 @@ gud
     ("r" gud-run))
 
   (defhydra hydra-yas
-    (:exti t :hint nil)
+    (:color teal :hint nil)
     "
 yasnippets
-_i_nsert  _n_ew
+_i_nsert  _n_ew  _r_eload
 "
+    ("r" yas-reload-all)
     ("i" yas-insert-snippet)
     ("n" yas-new-snippet))
+
+  (defhydra hydra-org (:color blue :hint nil)
+    "
+org mode
+  ^todo^      ^headers^          ^links^
+--------------------------------------------------------------
+  _t_oggle    _h_eader           _l_ink insert      _y_asnippets
+              _s_ubheader
+              _H_eader todo
+              _S_ubheader todo
+"
+    ("t" org-todo :exit nil)
+    ("y" hydra-yas/body)
+    ("l" org-insert-link)
+    ("h" org-insert-heading)
+    ("s" org-insert-subheading)
+    ("H" org-insert-todo-heading)
+    ("S" org-insert-todo-subheading))
 
   (defhydra hydra-leader
     (:exit t :hint nil)
@@ -186,12 +207,13 @@ main menu
  buffer^^       ^navigate^          ^command^              ^code^
 -------------------------------------------------------------------------
  _f_ind file    _b_uffer list       _<SPC>_ M-x run        _g_it status
- _s_ave         _n_eotree           ^^                     _l_sp hydra
+ _s_ave         _n_eotree           _e_val expression      _l_sp hydra
  _y_asnippet    _p_roject hydra     ^^                     _C-l_int
  ^^             _w_indow hydra      ^^                     _d_ebug
 
 _<ESC>_, _C-[_, _C-g_: cancel
 "
+    ("e" eval-expression)
     ("y" hydra-yas/body)
     ("d" hydra-debug/body)
     ("C-l" hydra-lint/body)
@@ -216,6 +238,8 @@ _<ESC>_, _C-[_, _C-g_: cancel
   (evil-define-key '(normal visual) 'global (kbd "<SPC>") 'hydra-leader/body)
 
   (evil-define-key '(normal visual) 'global (kbd "C-w") 'hydra-window/body)
+
+  (evil-define-key '(normal) 'org-mode-map (kbd "C-<SPC>") 'hydra-org/body)
   )
 
 (provide 'cov-keybind)
