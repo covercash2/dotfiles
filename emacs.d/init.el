@@ -111,6 +111,7 @@ end-of-buffer signals; pass the rest to the default handler."
 
 ;; org mode settings
 ; set agenda key
+(require 'org)
 (add-to-list 'org-agenda-files "~/sync/notes/")
 
 (global-set-key (kbd "C-c a") 'org-agenda)
