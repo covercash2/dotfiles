@@ -11,6 +11,8 @@ backups
 tramp
 session.*
 .recentf
+.cache
+.lsp-session-v1
 
 # AUCTeX auto folder
 /auto/

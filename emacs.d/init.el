@@ -74,20 +74,20 @@
   (doom-themes-org-config))
 
 ; fix ANSI color codes
-(use-package xterm-color
-  :ensure t)
-(setq comint-output-filter-functions (remove 'ansi-color-process-output comint-output-filter-functions))
-(add-hook 'compilation-mode-hook 'ansi-color-for-comint-mode-on)
+;; (use-package xterm-color
+;;   :ensure t)
+;; (setq comint-output-filter-functions (remove 'ansi-color-process-output comint-output-filter-functions))
+;; (add-hook 'compilation-mode-hook 'ansi-color-for-comint-mode-on)
 
-(add-hook 'compilation-mode-hook
-	;; enable ANSI filter
-	  (lambda ()
-	    ; disable font lock
-	    (font-lock-mode -1)
-	    (make-local-variable 'font-lock-function)
-	    (setq font-lock-function (lambda (_) nil))
-	    (add-hook 'comint-preoutput-filter-functions 'xterm-color-filter nil t)
-	    ))
+;; (add-hook 'compilation-mode-hook
+;; 	;; enable ANSI filter
+;; 	  (lambda ()
+;; 	    ; disable font lock
+;; 	    (font-lock-mode -1)
+;; 	    (make-local-variable 'font-lock-function)
+;; 	    (setq font-lock-function (lambda (_) nil))
+;; 	    (add-hook 'comint-preoutput-filter-functions 'xterm-color-filter nil t)
+;; 	    ))
 
 (add-hook 'compilation-filter-hook 'cov-colorize-compilation-buffer)
 ; track the end of compilation output
@@ -306,15 +306,20 @@ Contains a reference to the variable `cov-preferred-columns'"
   (diff-hl-flydiff-mode)
   (global-diff-hl-mode))
 
-(use-package neotree
+(use-package treemacs
   :ensure t
   :config
-  (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
-
-(evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
-(evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-quick-look)
-(evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
-(evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
+  (setq treemacs-indentation 1)
+  (use-package treemacs-evil
+    :after evil
+    :ensure t)
+  (use-package treemacs-projectile
+    :ensure t)
+  (use-package treemacs-icons-dired
+    :ensure t
+    :config (treemacs-icons-dired-mode))
+  (use-package treemacs-magit
+    :ensure t))
 
 (use-package projectile
   :ensure t
@@ -349,6 +354,43 @@ Contains a reference to the variable `cov-preferred-columns'"
   (setq yas-snippet-dirs '("~/.emacs.d/snippets/"
 			   "~/system/dotfiles/yasnippet-snippets/"))
   (yas-reload-all))
+
+(defun cov/change-frame-width (frame window ratio)
+  "A function to change the width of the current frame.
+Meant to be used for changing child frame size.
+$FRAME is the current frame and $WINDOW is the
+current window (may not be used).
+$RATIO is the new size ratio"
+  (cond ((framep frame)
+	 (windowp window)
+	 (floatp ratio)))
+  (set-frame-parameter frame 'width ratio)
+  )
+
+(use-package lsp-mode
+  :ensure t
+  :hook (rust-mode . lsp)
+  :commands lsp
+  :init
+  (setq gc-cons-threshold 100000000)
+  :config
+  (setq lsp-signature-auto-activate t)
+  (setq lsp-signature-doc-lines 1)
+  (setq lsp-rust-server 'rust-analyzer)
+  (setq lsp-rust-analyzer-server-command '("/usr/bin/rust-analyzer"))
+  (require 'lsp-clients))
+(use-package lsp-ui
+  :ensure t
+  :hook (rust-mode . lsp-ui-mode)
+  :requires lsp-mode
+  :init
+  (add-hook 'lsp-ui-doc-frame-hook
+	    (lambda (frame window)
+	      (cov/change-frame-width (frame window 0.3))))
+  :config
+  (setq lsp-ui-sideline-update-mode 'line)
+  (setq lsp-ui-doc-max-width 80)
+  (setq lsp-ui-doc-position 'top))
 
 (use-package web-mode
   :ensure t
@@ -429,7 +471,7 @@ Contains a reference to the variable `cov-preferred-columns'"
  '(helm-completion-style (quote emacs))
  '(package-selected-packages
    (quote
-    (evil-org dap-mode hydra evil-collection window-purpose company-box mixed-pitch quelpa-use-package quelpa ron-mode yasnippet yaml-mode web-mode use-package spacemacs-theme restart-emacs rainbow-delimiters projectile neotree monokai-theme lsp-ui helm-ls-git flycheck-rust exec-path-from-shell evil-surround evil-magit doom-themes doom-modeline diff-hl company-lsp company-ansible cargo))))
+    (treemacs-magit treemacs-icons-dired treemacs-projectile treemacs-evil evil-org dap-mode hydra evil-collection window-purpose company-box mixed-pitch quelpa-use-package quelpa ron-mode yasnippet yaml-mode web-mode use-package spacemacs-theme restart-emacs rainbow-delimiters projectile neotree monokai-theme lsp-ui helm-ls-git flycheck-rust exec-path-from-shell evil-surround evil-magit doom-themes doom-modeline diff-hl company-lsp company-ansible cargo))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -35,3 +35,4 @@ export CARGO_HOME=$cargo
 
 export PATH=$PATH:$mysql:$virtualbox:$go_bin:$cargo/bin:$homebin:$cask
 
+if [ -e /mnt/space/home/.nix-profile/etc/profile.d/nix.sh ]; then . /mnt/space/home/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer

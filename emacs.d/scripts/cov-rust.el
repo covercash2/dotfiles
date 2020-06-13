@@ -12,30 +12,10 @@
   :init
   (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
   :config
-  (setq cov-preferred-columns 100)
   (setq fill-column 100)
   ; emacs 27
   ;(display-fill-column-indicator-mode t)
   (rust-enable-format-on-save))
-
-(use-package lsp-mode
-  :ensure t
-  :hook (rust-mode . lsp)
-  :commands lsp
-  :config
-  (setq lsp-signature-auto-activate t)
-  (setq lsp-signature-doc-lines 1)
-  (setq lsp-rust-server 'rust-analyzer)
-  (setq lsp-rust-analyzer-server-command '("/usr/bin/rust-analyzer"))
-  (setq gc-cons-threshold 100000000)
-  (require 'lsp-clients))
-(use-package lsp-ui
-  :ensure t
-  :hook (rust-mode . lsp-ui-mode)
-  :requires lsp-mode
-  :config
-  (setq lsp-ui-sideline-update-mode 'line)
-  (setq lsp-ui-doc-position 'top))
 
 (use-package cargo
   :ensure t

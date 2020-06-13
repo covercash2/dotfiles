@@ -217,7 +217,7 @@ main menu
  buffer^^       ^navigate^          ^command^              ^code^
 -------------------------------------------------------------------------
  _f_ind file    _b_uffer list       _<SPC>_ M-x run        _g_it status
- _s_ave         _n_eotree           _e_val expression      _l_sp hydra
+ _s_ave         _t_ree           _e_val expression      _l_sp hydra
  _y_asnippet    _p_roject hydra     ^^                     _C-l_int
  ^^             _w_indow hydra      ^^                     _d_ebug
 
@@ -236,7 +236,8 @@ _<ESC>_, _C-[_, _C-g_: cancel
     ("g" magit-status)
     ("I" cov-edit-init)
     ; TODO explore treemacs
-    ("n" neotree-toggle :color red)
+    ;; ("n" neotree-toggle :color red)
+    ("t" treemacs)
     ; lsp
     ("l" hydra-lsp/body)
     ("<SPC>" helm-M-x)
