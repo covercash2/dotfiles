@@ -1,0 +1,3 @@
+homebin=~/.local/bin
+
+PATH=$homebin:$PATH

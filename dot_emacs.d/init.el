@@ -379,7 +379,12 @@ $RATIO is the new size ratio"
   (setq lsp-signature-auto-activate t)
   (setq lsp-signature-doc-lines 1)
   (setq lsp-rust-server 'rust-analyzer)
-  (setq lsp-rust-analyzer-server-command '("/usr/bin/rust-analyzer"))
+  (setq lsp-rust-analyzer-server-command
+	'((cond
+	   ((eq system-type "gnu/linux") ("/usr/bin/rust-analyzer"))
+	   ((eq system-type "darwin") ("~/.local/bin/rust-analyzer"))
+	   (t (message "can't get lsp server binary")))
+	   ))
   (require 'lsp-clients))
 (use-package lsp-ui
   :ensure t
