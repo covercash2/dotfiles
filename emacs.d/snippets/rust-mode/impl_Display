@@ -1,9 +1,0 @@
-# -*- mode: snippet -*-
-# name: impl Display
-# key: implDisplay
-# --
-impl fmt::Display for Point {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-       write!(f, "{}", $0)
-    }
-}
