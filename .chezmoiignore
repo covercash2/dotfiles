@@ -3,6 +3,9 @@ Library
 gnu.emacs.daemon.plist
 {{ end }}
 
+# backup system files
+etc
+
 ipv6
 udev
 yasnippet-snippets
