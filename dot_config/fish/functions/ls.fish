@@ -1,4 +1,8 @@
 # Defined in - @ line 2
 function ls --description 'redirect ls to exa'
-	echo -e "\e[1muse exa or l instead"
+	exa $argv
+	if test ! $status
+		echo "exa failed; falling back to /bin/ls"
+		/bin/ls $argv
+	end
 end
