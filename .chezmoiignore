@@ -4,7 +4,7 @@ gnu.emacs.daemon.plist
 {{ end }}
 
 # backup system files
-etc
+root_etc
 
 ipv6
 udev
