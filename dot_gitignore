@@ -1,3 +1,7 @@
+# this file is meant to block executables
+# and system files from being commited.
+# it needs to be configured:
+#     git config --global core.excludesFile '~/.gitignore'
 # compiled source #
 ###################
 *.com

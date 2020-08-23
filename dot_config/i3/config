@@ -38,6 +38,11 @@ font pango: Input Sans 12
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
+# volume keys
+bindsym XF86AudioMute exec "pulsemixer --toggle-mute"
+bindsym XF86AudioLowerVolume exec "pulsemixer --change-volume -5"
+bindsym XF86AudioRaiseVolume exec "pulsemixer --change-volume +5"
+
 # start a terminal
 bindsym $mod+Return exec alacritty
 
