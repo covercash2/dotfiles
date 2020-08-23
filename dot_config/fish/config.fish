@@ -1,13 +1,19 @@
 # fish main config
 
 # node config
-set nodeversion (cat ~/.nvm/alias/default)
-set nodebin ~/.nvm/versions/node/v$nodeversion/bin/
+if test	-d ~/.nvm
+	set nodeversion (cat ~/.nvm/alias/default)
+	set nodebin ~/.nvm/versions/node/v$nodeversion/bin/
 
-# load makeinfo from brew
-set makeinfo /usr/local/opt/texinfo/bin 
+	set path $nodebin $path
+end
 
-set path $nodebin $makeinfo
+# load makeinfo from homebrew
+# mac specific
+if test -d
+	set makeinfo /usr/local/opt/texinfo/bin 
+	set path $makeinfo $path
+end
 
 for p in $path
 	if test -d $p

@@ -46,20 +46,8 @@ endfunction
 
 autocmd FocusLost * call ReturnToNormalMode()
 
-autocmd VimEnter * call deoplete#initialize()
-
 " org mode config
 let g:org_heading_shade_leading_stars = 1
-
-" deoplete config
-let g:deoplete#enable_at_startup = 1
-" deoplete-go
-let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
-let g:deoplete#sources#go#use_cache = 1
-let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
-
-let g:deoplete#sources#clang#libclang_path = '/Users/chreeus/code/packages/llvm/build/lib/libclang.dylib'
-let g:deoplete#sources#clang_header = '/Users/chreeus/code/packages/llvm/build/lib/clang/'
 
 " configure vim-go
 let g:go_highlight_functions = 1
@@ -84,6 +72,8 @@ set updatetime=500
 " configure vim-plug
 call plug#begin()
 
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
 Plug 'sheerun/vim-polyglot'
 Plug 'fatih/vim-go'
 
@@ -91,11 +81,7 @@ Plug 'ctrlpvim/ctrlp.vim'
 
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 
-Plug 'bash-support.vim'
-
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'Shougo/neco-vim'
-Plug 'zchee/deoplete-go', { 'do': 'make' }
 
 Plug 'nsf/gocode', { 'rtp': 'nvim', 'do': '~/.config/nvim/plugged/gocode/nvim/symlink.sh' }
 
@@ -112,13 +98,9 @@ Plug 'vim-scripts/utl.vim'
 Plug 'flazz/vim-colorschemes'
 Plug 'felixhummel/setcolors.vim'
 
-Plug 'dart-lang/dart-vim-plugin'
-
 Plug 'zchee/libclang-python3'
-
-Plug 'zchee/deoplete-clang'
 
 call plug#end()
 
 " set color theme
-colorscheme gruvbox
+" colorscheme gruvbox
