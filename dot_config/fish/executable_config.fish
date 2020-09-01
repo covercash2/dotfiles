@@ -3,20 +3,61 @@
 set homebin ~/.local/bin
 
 # node config
-set nodeversion (cat ~/.nvm/alias/default)
-set nodebin ~/.nvm/versions/node/v$nodeversion/bin/
+if test -d $HOME/.nvm
+	set nodeversion (cat ~/.nvm/alias/default)
+	set nodebin ~/.nvm/versions/node/v$nodeversion/bin/
 
+	logger --priority user.info "node works"
+end
+
+# os specific stuff
+set os (uname)
+switch $os
+	case Linux
+		# linux found
+	case Darwin
 # load makeinfo from brew
-set makeinfo /usr/local/opt/texinfo/bin 
+			set makeinfo /usr/local/opt/texinfo/bin 
+			if test -d $makeinfo
+				set path $nodebin $makeinfo $homebin
 
-set path $nodebin $makeinfo $homebin
+				logger --priority user.info \
+				"makeinfo works"
+			else
+				logger --priority user.warning \
+				"makeinfo doesn't work"
+			end
+	case '*'
+		logger --priority user.warning --stderr \
+		"weird os detected: $os"
+end
 
+# if oh-my-fish is installed
+if test -d $HOME/.local/share/omf
 # fenv is an oh-my-fish plugin
-fenv source ~/.nix-profile/etc/profile.d/nix.sh
-fenv ~/.profile
+	set nix_setup $HOME/.nix-profile/etc/profile.d/nix.sh
+	if test -e $nix_setup
+		fenv source $nix_setup
+	else
+		# nix is not installed
+		logger --priority user.warning "fish can't find nix"
+	end
 
+	if test -e $HOME/.profile
+		fenv $HOME/.profile
+	else
+		logger --priority user.warning --stderr \
+		"fish can't find nix"
+	end
+else
+	logger --priority user.warning \
+	"oh-my-fish wasn't detected"
+end
+
+if which direnv > /dev/null 2>&1
 # enable direnv
-eval (direnv hook fish)
+	eval (direnv hook fish)
+end
 
 for p in $path
 	if test -d $p

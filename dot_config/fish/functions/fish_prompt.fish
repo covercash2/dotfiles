@@ -1,17 +1,17 @@
 function fish_prompt --description 'Write out the prompt'
 	set laststatus $status
 
-	set user $USER
-
-	if test $user = chreeus
-		set user ⚇
+	if test $USER = chrash
+		set user "⚇ "
+	else
+		set user (string join0 $USER "@")
 	end
 
 	set workspace_info 
 
 	printf '%s%s%s%s%s%s%s%s%s%s%s%s' (set_color blue)\
-	$user (set_color cyan)"⇴" (set_color -o brgreen) (cat /etc/hostname) \
-	(set_color brblack) '⁚' (set_color brblue) \
+	$user (set_color -o brgreen) (cat /etc/hostname) \
+	(set_color brblue) \
 	(echo $PWD | sed -e "s|^$HOME|~|") (echo /)(set_color white) (set_color white) \
 	(set_color white)
 

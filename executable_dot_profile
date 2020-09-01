@@ -1,3 +1,5 @@
 homebin=~/.local/bin
 
+export EDITOR=/usr/bin/nvim
+
 PATH=$homebin:$PATH

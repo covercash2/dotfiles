@@ -72,6 +72,8 @@ set updatetime=500
 " configure vim-plug
 call plug#begin()
 
+Plug 'rust-lang-nursery/rustfmt'
+
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 Plug 'sheerun/vim-polyglot'
