@@ -7,13 +7,20 @@ function fish_prompt --description 'Write out the prompt'
 		set user (string join0 $USER "@")
 	end
 
-	set workspace_info 
+	set current_dir $PWD
+	set max_dir_length 30
+
+	set current_dir (string replace "$HOME" "~" "$PWD")
+
+	if test (string length $current_dir) -gt $max_dir_length
+		set current_dir ..\
+			(string sub --start=-$max_dir_length $current_dir)
+	end
 
 	printf '%s%s%s%s%s%s%s%s%s%s%s%s' (set_color blue)\
 	$user (set_color -o brgreen) (cat /etc/hostname) \
 	(set_color brblue) \
-	(echo $PWD | sed -e "s|^$HOME|~|") (echo /)(set_color white) (set_color white) \
-	(set_color white)
+	$current_dir (set_color white)
 
 	set command_start "⇒"
 
