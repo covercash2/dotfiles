@@ -227,8 +227,6 @@ This functions should be added to the hooks of major modes for programming."
 
 (electric-pair-mode)
 
-(mouse-avoidance-mode 'animate)
-
 (defvar cov-preferred-columns 80
   "Preferred number of columns in a window.
 Can be changed for different modes.")
@@ -253,6 +251,20 @@ Contains a reference to the variable `cov-preferred-columns'"
     ))
 
 (require 'cov-keybind)
+
+(require 'erc)
+(defun cov-irc-login ()
+  "Login to IRC."
+  (interactive)
+  (erc-tls
+   :server "irc.rizon.net"
+   :port 6697
+   :nick "chrash"
+   )
+  )
+
+(setq erc-autojoin-channels-alist '(("rizon.net" "#ZW9wRxhVTlIz2AzM")))
+
 
 (use-package evil-magit
   :ensure t
