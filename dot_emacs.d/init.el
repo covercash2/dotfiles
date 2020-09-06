@@ -365,8 +365,9 @@ Contains a reference to the variable `cov-preferred-columns'"
   :ensure t
   :hook (prog-mode . yas-minor-mode)
   :config
-  (setq yas-snippet-dirs '("~/.emacs.d/snippets/"
-			   "~/system/dotfiles/yasnippet-snippets/"))
+  (use-package yasnippet-snippets
+    :ensure t)
+  (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets/")
   (yas-reload-all))
 
 (defun cov/change-frame-width (frame window ratio)
