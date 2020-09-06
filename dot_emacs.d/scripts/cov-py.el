@@ -4,26 +4,28 @@
 ;;; use elpy to extend python functions
 ;;; Code:
 
-(require 'jedi)
-(jedi:setup)
-(setq jedi:complete-on-dot t)
+(require 'use-package)
 
-(require 'company-jedi)
-(add-to-list 'company-backends 'company-jedi)
+(use-package company-jedi
+  :ensure t)
 
-(require 'elpy)
-(add-hook 'python-mode #'elpy-enable)
+(use-package elpy
+  :ensure t
+  :init (elpy-enable))
 
-;; workaround for python repl bug. should be fixed in 25.2
-(with-eval-after-load 'python
-  (defun python-shell-completion-native-try ()
-    "Return non-nil if can trigger native completion."
-    (let ((python-shell-completion-native-enable t)
-	  (python-shell-completion-native-output-timeout
-	   python-shell-completion-native-try-output-timeout))
-      (python-shell-completion-native-get-completions
-       (get-buffer-process (current-buffer))
-       nil "_"))))
+(use-package lsp-pyright
+  :ensure t
+  :requires lsp)
+
+(defun cov-python-mode-hook ()
+  "Python hooks."
+  (require 'lsp-pyright)
+  (require 'company)
+  (add-to-list 'company-backends 'company-jedi)
+  (lsp)
+)
+
+(add-hook 'python-mode #'cov-python-mode-hook)
 
 (provide 'cov-py)
 ;;; cov-py.el ends here

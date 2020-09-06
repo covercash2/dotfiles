@@ -427,7 +427,7 @@ $RATIO is the new size ratio"
 ;(require 'cov-go)
 ;(require 'cov-groovy)
 (require 'cov-rust)
-;(require 'cov-py)
+(require 'cov-py)
 
 (use-package json-mode
   :ensure t)
