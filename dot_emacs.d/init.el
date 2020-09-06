@@ -214,7 +214,7 @@ This functions should be added to the hooks of major modes for programming."
 (defun cov-edit-init ()
   "Open init.el for editing."
   (interactive)
-  (find-file "~/.emacs.d/init.el"))
+  (find-file "~/.local/share/chezmoi/dot_emacs.d/init.el"))
 
 (use-package exec-path-from-shell
   :ensure t
