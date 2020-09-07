@@ -361,12 +361,14 @@ Contains a reference to the variable `cov-preferred-columns'"
 (use-package yaml-mode
   :ensure t)
 
+; snippets
 (use-package yasnippet
   :ensure t
   :hook (prog-mode . yas-minor-mode)
   :config
   (use-package yasnippet-snippets
     :ensure t)
+  ; custom snippet directory
   (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets/")
   (yas-reload-all))
 
@@ -387,6 +389,7 @@ $RATIO is the new size ratio"
   :hook (rust-mode . lsp)
   :commands lsp
   :init
+  ; TODO why?
   (setq gc-cons-threshold 100000000)
   :config
   (setq lsp-signature-auto-activate t)
