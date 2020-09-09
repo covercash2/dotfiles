@@ -1,5 +1,8 @@
 ;;; init.el --- Summary
 ;;; Commentary:
+;;; this file is managed by chezmoi (https://github.com/twpayne/chezmoi).
+;;; if this file is not ~/.local/share/chezmoi/dot_emacs.d/init.el
+;;; it will be overwritten.
 ;;; Code:
 
 (require 'package)
@@ -250,7 +253,9 @@ Contains a reference to the variable `cov-preferred-columns'"
     ;(setq window-size-fixed t)
     ))
 
-(require 'cov-keybind)
+;; writing mode/focus mode
+(use-package olivetti
+  :ensure t)
 
 (require 'erc)
 (defun cov-irc-login ()
@@ -265,11 +270,11 @@ Contains a reference to the variable `cov-preferred-columns'"
 
 (setq erc-autojoin-channels-alist '(("rizon.net" "#ZW9wRxhVTlIz2AzM")))
 
-
 (use-package evil-magit
   :ensure t
-  :config
-  (require 'evil-magit))
+  :config (persp-mode))
+
+(require 'cov-keybind)
 
 (use-package all-the-icons
   :ensure t)
