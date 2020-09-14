@@ -166,9 +166,22 @@ This functions should be added to the hooks of major modes for programming."
 
 (add-hook 'prog-mode-hook 'cov--highlight-todos)
 
-(use-package direnv
+;; Nix
+(use-package nix-sandbox
+  :requires flycheck
   :ensure t
-  :config (direnv-mode))
+  :config
+  (setq flycheck-command-wrapper-function
+	(lambda (command) (apply 'nix-shell-command (nix-current-sandbox) command))
+	flycheck-executable-find
+	(lambda (command) (nix-executable-find (nix-current-sandbox) command))
+	)
+  )
+
+; direnv
+(use-package envrc
+  :ensure t
+  :config (envrc-global-mode))
 
 ;; turn off error bell
 (setq ring-bell-function 'ignore)
