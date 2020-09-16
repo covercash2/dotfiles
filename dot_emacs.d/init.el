@@ -1,5 +1,8 @@
 ;;; init.el --- Summary
 ;;; Commentary:
+;;; this file is managed by chezmoi (https://github.com/twpayne/chezmoi).
+;;; if this file is not ~/.local/share/chezmoi/dot_emacs.d/init.el
+;;; it will be overwritten.
 ;;; Code:
 
 (require 'package)
@@ -163,9 +166,22 @@ This functions should be added to the hooks of major modes for programming."
 
 (add-hook 'prog-mode-hook 'cov--highlight-todos)
 
-(use-package direnv
+;; Nix
+(use-package nix-sandbox
+  :requires flycheck
   :ensure t
-  :config (direnv-mode))
+  :config
+  (setq flycheck-command-wrapper-function
+	(lambda (command) (apply 'nix-shell-command (nix-current-sandbox) command))
+	flycheck-executable-find
+	(lambda (command) (nix-executable-find (nix-current-sandbox) command))
+	)
+  )
+
+; direnv
+(use-package envrc
+  :ensure t
+  :config (envrc-global-mode))
 
 ;; turn off error bell
 (setq ring-bell-function 'ignore)
@@ -250,7 +266,9 @@ Contains a reference to the variable `cov-preferred-columns'"
     ;(setq window-size-fixed t)
     ))
 
-(require 'cov-keybind)
+;; writing mode/focus mode
+(use-package olivetti
+  :ensure t)
 
 (require 'erc)
 (defun cov-irc-login ()
@@ -265,11 +283,11 @@ Contains a reference to the variable `cov-preferred-columns'"
 
 (setq erc-autojoin-channels-alist '(("rizon.net" "#ZW9wRxhVTlIz2AzM")))
 
-
 (use-package evil-magit
   :ensure t
-  :config
-  (require 'evil-magit))
+  :config (persp-mode))
+
+(require 'cov-keybind)
 
 (use-package all-the-icons
   :ensure t)

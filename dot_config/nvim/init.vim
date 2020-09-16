@@ -5,7 +5,6 @@ set number
 set relativenumber
 syntax on
 set background=dark
-set cursorline
 
 " don't resize windows when one closes
 set noequalalways
@@ -21,6 +20,15 @@ set noexpandtab
 let mapleader = "\<space>"
 let maplocalleader = "\\"
 
+inoremap <silent><expr> <c-space> coc#refresh()
+
+" coc settings
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+set shortmess+=c
+
+" coc shortcuts
+nnoremap <silent><nowait> <leader>a :<C-u>CocList diagnostics<cr>
+
 " mappings
 " return to normal mode from terminal mode
 tnoremap <Esc> <C-\><C-n>
@@ -30,12 +38,9 @@ let g:org_todo_keywords = ['TODO', 'WAITING', '|', 'DONE']
 
 """" convenience commands
 " edit the init file in a new buffer
-command! EditRc new ~/.config/nvim/init.vim
+command! EditRc new ~/.local/share/chezmoi/dot_config/nvim/init.vim
 " reload init
 command! ReloadRc source ~/.config/nvim/init.vim
-
-" open org mode reference
-command! OrgHelp vnew ~/notes/vim-orgmode.org
 
 " return to normal mode on focus lost
 function! ReturnToNormalMode()
@@ -45,9 +50,6 @@ function! ReturnToNormalMode()
 endfunction
 
 autocmd FocusLost * call ReturnToNormalMode()
-
-" org mode config
-let g:org_heading_shade_leading_stars = 1
 
 " configure vim-go
 let g:go_highlight_functions = 1
@@ -97,12 +99,16 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'vim-scripts/utl.vim'
 
-Plug 'flazz/vim-colorschemes'
+Plug 'rafi/awesome-vim-colorschemes'
 Plug 'felixhummel/setcolors.vim'
 
+Plug 'airblade/vim-gitgutter'
+
 Plug 'zchee/libclang-python3'
+
+Plug 'joshdick/onedark'
 
 call plug#end()
 
 " set color theme
-" colorscheme gruvbox
+colorscheme gruvbox

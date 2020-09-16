@@ -35,7 +35,11 @@
     :init
     (evil-collection-init)
     :config)
+  (setq evil-respect-visual-line-mode t)
   (evil-mode 1)
+  :bind (:map evil-normal-state-map
+	      ("j" . 'evil-next-visual-line)
+	      ("k" . 'evil-previous-visual-line))
   )
 
 (use-package hydra
@@ -210,6 +214,24 @@ org mode
     ("H" org-insert-todo-heading)
     ("S" org-insert-todo-subheading))
 
+  (defhydra hydra-perspective (:color blue :hint nil)
+    "
+perspective
+ ^buffer^  ^perpective^
+----------------------------------------------------------------------
+  _a_dd    _s_witch
+  _S_et    _b_uffer switch
+  _k_ill   _K_ill
+  ^^       _R_ename
+"
+    ("b" persp-switch-to-buffer)
+    ("k" persp-remove-buffer)
+    ("S" persp-set-buffer)
+    ("a" persp-add-buffer)
+    ("R" persp-rename)
+    ("K" persp-kill)
+    ("s" persp-switch))
+
   (defhydra hydra-leader
     (:exit t :hint nil)
     "
@@ -220,9 +242,11 @@ main menu
  _s_ave         _t_ree           _e_val expression      _l_sp hydra
  _y_asnippet    _p_roject hydra     ^^                     _C-l_int
  ^^             _w_indow hydra      ^^                     _d_ebug
+ ^^             _P_erspective
 
 _<ESC>_, _C-[_, _C-g_: cancel
 "
+    ("P" hydra-perspective/body)
     ("e" eval-expression)
     ("y" hydra-yas/body)
     ("d" hydra-debug/body)
