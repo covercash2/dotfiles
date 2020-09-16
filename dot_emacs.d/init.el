@@ -285,7 +285,9 @@ Contains a reference to the variable `cov-preferred-columns'"
    (setq company-begin-commands '(self-insert-command))
    (use-package company-box
      :ensure t
-     :hook (company-mode . company-box-mode)))
+     ;; TODO investigate box-mode
+     ;;:hook (company-mode . company-box-mode)
+     ))
 
 (use-package company-ansible
   :ensure t
