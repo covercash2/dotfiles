@@ -14,7 +14,7 @@ set smartindent
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
-set noexpandtab
+set expandtab
 
 " set leaders
 let mapleader = "\<space>"
@@ -28,6 +28,7 @@ set shortmess+=c
 
 " coc shortcuts
 nnoremap <silent><nowait> <leader>a :<C-u>CocList diagnostics<cr>
+nnoremap <silent><nowait> <leader>c :<C-u>CocList commands<cr>
 
 " mappings
 " return to normal mode from terminal mode
@@ -106,7 +107,8 @@ Plug 'airblade/vim-gitgutter'
 
 Plug 'zchee/libclang-python3'
 
-Plug 'joshdick/onedark'
+Plug 'elmcast/elm-vim'
+Plug 'dense-analysis/ale'
 
 call plug#end()
 

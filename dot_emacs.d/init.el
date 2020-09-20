@@ -29,6 +29,9 @@
   (use-package quelpa-use-package
     :ensure t))
 
+(use-package chezmoi
+  :quelpa (chezmoi :fetcher github :repo "covercash2/chezmoi-emacs"))
+
 (use-package ron-mode
   :quelpa (ron-mode :fetcher github :repo "rhololkeolke/ron-mode")
   :config
@@ -446,12 +449,22 @@ $RATIO is the new size ratio"
 (use-package bind-key
   :ensure t)
 
+; programming language configuration
 ;(require 'cov-java)
 ;(require 'cov-kotlin)
 ;(require 'cov-go)
 ;(require 'cov-groovy)
 (require 'cov-rust)
 (require 'cov-py)
+
+(use-package elm-mode
+  :ensure t
+  :commands elm-format-on-save-mode elm-company
+  :init
+  (add-hook 'elm-mode-hook 'elm-format-on-save-mode)
+  (add-to-list 'company-backends 'elm-company)
+  :config
+  (setq elm-tags-on-save t))
 
 (use-package json-mode
   :ensure t)
