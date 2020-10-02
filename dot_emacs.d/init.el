@@ -331,6 +331,10 @@ Contains a reference to the variable `cov-preferred-columns'"
   (use-package helm-ls-git
     :ensure t
     :requires helm)
+  (use-package helm-lsp
+    :ensure t
+    :config
+    (define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol))
   (helm-mode 1))
 
 (use-package magit
@@ -454,8 +458,12 @@ $RATIO is the new size ratio"
 ;(require 'cov-kotlin)
 ;(require 'cov-go)
 ;(require 'cov-groovy)
-(require 'cov-rust)
+;(require 'cov-rust)
 (require 'cov-py)
+
+; rust
+(use-package rustic
+  :ensure t)
 
 (use-package elm-mode
   :ensure t
@@ -464,6 +472,7 @@ $RATIO is the new size ratio"
   (add-hook 'elm-mode-hook 'elm-format-on-save-mode)
   (add-to-list 'company-backends 'elm-company)
   :config
+  (setq elm-sort-imports-on-save t)
   (setq elm-tags-on-save t))
 
 (use-package json-mode

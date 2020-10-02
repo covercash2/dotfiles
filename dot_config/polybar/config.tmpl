@@ -28,7 +28,7 @@ secondary	= #e60053
 alert		= #bd2c40
 
 [bar/default]
-modules-right	= wlan temperature cpu memory pulseaudio battery date 
+modules-right	= wlan temperature cpu memory pulseaudio {{- if eq .chezmoi.hostname "chrashbook" }} battery {{- end }} date 
 modules-left	= i3 xwindow
 
 ;https://github.com/polybar/polybar/issues/763#issuecomment-331604987
