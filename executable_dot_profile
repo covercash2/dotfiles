@@ -2,4 +2,7 @@ homebin=~/.local/bin
 
 export EDITOR=/usr/bin/nvim
 
+# setup nix
+source /etc/profile.d/nix.sh
+
 PATH=$homebin:$PATH

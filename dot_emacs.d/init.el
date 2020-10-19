@@ -237,7 +237,9 @@ This functions should be added to the hooks of major modes for programming."
 
 (use-package exec-path-from-shell
   :ensure t
-  :config (exec-path-from-shell-initialize))
+  :config
+  (add-to-list 'exec-path-from-shell-variables "NIX_PATH")
+  (exec-path-from-shell-initialize))
 
 (setq shell-file-name "/bin/bash")
 
@@ -287,8 +289,7 @@ Contains a reference to the variable `cov-preferred-columns'"
 (setq erc-autojoin-channels-alist '(("rizon.net" "#ZW9wRxhVTlIz2AzM")))
 
 (use-package evil-magit
-  :ensure t
-  :config (persp-mode))
+  :ensure t)
 
 (require 'cov-keybind)
 
