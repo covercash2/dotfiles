@@ -29,6 +29,9 @@
   (use-package quelpa-use-package
     :ensure t))
 
+(use-package chezmoi
+  :quelpa (chezmoi :fetcher github :repo "covercash2/chezmoi-emacs"))
+
 (use-package ron-mode
   :quelpa (ron-mode :fetcher github :repo "rhololkeolke/ron-mode")
   :config
@@ -234,7 +237,9 @@ This functions should be added to the hooks of major modes for programming."
 
 (use-package exec-path-from-shell
   :ensure t
-  :config (exec-path-from-shell-initialize))
+  :config
+  (add-to-list 'exec-path-from-shell-variables "NIX_PATH")
+  (exec-path-from-shell-initialize))
 
 (use-package fish-mode
   :ensure t)
@@ -287,8 +292,7 @@ Contains a reference to the variable `cov-preferred-columns'"
 (setq erc-autojoin-channels-alist '(("rizon.net" "#ZW9wRxhVTlIz2AzM")))
 
 (use-package evil-magit
-  :ensure t
-  :config (persp-mode))
+  :ensure t)
 
 (require 'cov-keybind)
 
@@ -331,6 +335,10 @@ Contains a reference to the variable `cov-preferred-columns'"
   (use-package helm-ls-git
     :ensure t
     :requires helm)
+  (use-package helm-lsp
+    :ensure t
+    :config
+    (define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol))
   (helm-mode 1))
 
 (use-package magit
@@ -452,12 +460,27 @@ $RATIO is the new size ratio"
 (use-package bind-key
   :ensure t)
 
+; programming language configuration
 ;(require 'cov-java)
 ;(require 'cov-kotlin)
 ;(require 'cov-go)
 ;(require 'cov-groovy)
-(require 'cov-rust)
+;(require 'cov-rust)
 (require 'cov-py)
+
+; rust
+(use-package rustic
+  :ensure t)
+
+(use-package elm-mode
+  :ensure t
+  :commands elm-format-on-save-mode elm-company
+  :init
+  (add-hook 'elm-mode-hook 'elm-format-on-save-mode)
+  (add-to-list 'company-backends 'elm-company)
+  :config
+  (setq elm-sort-imports-on-save t)
+  (setq elm-tags-on-save t))
 
 (use-package json-mode
   :ensure t)
