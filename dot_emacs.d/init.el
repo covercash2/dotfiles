@@ -236,6 +236,9 @@ This functions should be added to the hooks of major modes for programming."
   :ensure t
   :config (exec-path-from-shell-initialize))
 
+(use-package fish-mode
+  :ensure t)
+
 (setq shell-file-name "/bin/bash")
 
 ;; load scripts directory
@@ -362,6 +365,9 @@ Contains a reference to the variable `cov-preferred-columns'"
 	'(:eval (format " project[%s]"
 			(projectile-project-name))))
   (projectile-mode))
+
+(use-package helm-projectile
+  :ensure t)
 
 (use-package rainbow-delimiters
   :ensure t

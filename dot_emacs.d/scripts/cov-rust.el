@@ -6,16 +6,9 @@
 
 (require 'use-package)
 
-(use-package rust-mode
-  :ensure t
-  :commands rust-enable-format-on-save
-  :init
-  (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
-  :config
-  (setq fill-column 100)
-  ; emacs 27
-  ;(display-fill-column-indicator-mode t)
-  (rust-enable-format-on-save))
+(use-package rustic
+  :ensure t)
+  ;(rust-enable-format-on-save))
 
 (use-package cargo
   :ensure t

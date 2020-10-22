@@ -67,7 +67,7 @@ _SPC_ cancel	_o_nly this   	_d_elete
     ("e" hydra-move-splitter-up)
     ("r" hydra-move-splitter-right)
     ("b" helm-mini)
-    ("f" helm-find-files)
+    ("f" helm-projectile-find-file)
     ("F" follow-mode)
     ("a" (lambda ()
 	   (interactive)
@@ -136,8 +136,9 @@ project
 ------------------------------------------
  _b_uild      _f_ind file       _c_hange project
  _r_un        _s_earch          _k_ill buffers
- _t_est       ^^                _R_ecent files
+ _t_est       _g_rep            _R_ecent files
 "
+    ("g" helm-projectile-grep)
     ("k" projectile-kill-buffers)
     ("R" projectile-recentf)
     ("c" projectile-switch-project)
@@ -254,7 +255,7 @@ _<ESC>_, _C-[_, _C-g_: cancel
     ("s" save-buffer :color red)
     ("b" helm-buffers-list)
     ; projectile
-    ("f" projectile-find-file)
+    ("f" helm-projectile-find-file)
     ("p" hydra-project/body)
     ; TODO hydra-magit
     ("g" magit-status)
