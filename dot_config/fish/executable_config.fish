@@ -64,3 +64,7 @@ for p in $path
 		set PATH $PATH $p
 	end
 end
+
+# starship prompt manager
+# https://starship.rs
+starship init fish | source
