@@ -8,5 +8,6 @@ format = '[$symbol$state($name)]($style) '
 symbol = "❄ "
 impure_msg = ""
 
-[git]
-format = "on [$symbol$branch]($style) "
+[git_branch]
+format = "[$symbol$branch]($style)"
+symbol = ""
