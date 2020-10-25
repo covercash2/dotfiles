@@ -2,3 +2,11 @@
 
 [python]
 symbol = "py "
+
+[nix_shell]
+format = '[$symbol$state($name)]($style) '
+symbol = "❄ "
+impure_msg = ""
+
+[git]
+format = "on [$symbol$branch]($style) "
