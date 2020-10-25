@@ -1,1 +1,4 @@
 # starship prompt manager config file
+
+[python]
+symbol = "py "
