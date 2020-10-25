@@ -1,6 +1,7 @@
 # starship prompt manager config file
 
 [python]
+format = '[${symbol}${pyenv_prefix}${version}( \($virtualenv\))]($style) '
 symbol = "py "
 
 [nix_shell]
