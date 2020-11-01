@@ -35,19 +35,11 @@ end
 # if oh-my-fish is installed
 if test -d $HOME/.local/share/omf
 # fenv is an oh-my-fish plugin
-	set nix_setup /etc/profile.d/nix.sh
-	if test -e $nix_setup
-		fenv source $nix_setup
-	else
-		# nix is not installed
-		logger --priority user.warning "fish can't find nix"
-	end
-
 	if test -e $HOME/.profile
-		fenv $HOME/.profile
+		fenv source $HOME/.profile
 	else
 		logger --priority user.warning --stderr \
-		"fish can't find nix"
+		"could not find ~/.profile"
 	end
 else
 	logger --priority user.warning \
