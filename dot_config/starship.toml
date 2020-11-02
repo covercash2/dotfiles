@@ -9,6 +9,14 @@ format = '[$symbol$state($name)]($style) '
 symbol = "❄ "
 impure_msg = ""
 
+[package]
+format = "[$symbol$version]($style) "
+symbol = "⚙ "
+
+[rust]
+format = "[$symbol$version]($style) "
+symbol = "Ⓡ "
+
 [git_branch]
 format = "[$symbol$branch]($style) "
 symbol = ""
