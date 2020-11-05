@@ -425,7 +425,9 @@ $RATIO is the new size ratio"
   :init
   ; TODO why?
   (setq gc-cons-threshold 100000000)
+  (setq read-process-output-max (* 1024 1024)) ; 1mb
   :config
+  (setq lsp-idle-delay 0.8)
   (setq lsp-signature-auto-activate t)
   (setq lsp-signature-doc-lines 1)
   (setq lsp-rust-server 'rust-analyzer)
@@ -435,19 +437,20 @@ $RATIO is the new size ratio"
 	   ((eq system-type "darwin") ("~/.local/bin/rust-analyzer"))
 	   (t (message "can't get lsp server binary")))
 	   ))
-  (require 'lsp-clients))
-(use-package lsp-ui
-  :ensure t
-  :hook (rust-mode . lsp-ui-mode)
-  :requires lsp-mode
-  :init
-  (add-hook 'lsp-ui-doc-frame-hook
-	    (lambda (frame window)
-	      (cov/change-frame-width (frame window 0.3))))
-  :config
-  (setq lsp-ui-sideline-update-mode 'line)
-  (setq lsp-ui-doc-max-width 80)
-  (setq lsp-ui-doc-position 'top))
+  ;(require 'lsp-clients)
+  )
+;; (use-package lsp-ui
+;;   :ensure t
+;;   :hook (rust-mode . lsp-ui-mode)
+;;   :requires lsp-mode
+;;   :init
+;;   (add-hook 'lsp-ui-doc-frame-hook
+;; 	    (lambda (frame window)
+;; 	      (cov/change-frame-width (frame window 0.3))))
+;;   :config
+;;   (setq lsp-ui-sideline-update-mode 'line)
+;;   (setq lsp-ui-doc-max-width 80)
+;;   (setq lsp-ui-doc-position 'top))
 
 (use-package web-mode
   :ensure t
