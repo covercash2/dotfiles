@@ -6,7 +6,7 @@ disabled = false
 
 [python]
 format = '[${symbol}${pyenv_prefix}${version}( \($virtualenv\))]($style) '
-symbol = "🐍 "
+symbol = "🐍"
 
 [nix_shell]
 format = '[$symbol$state($name)]($style) '
