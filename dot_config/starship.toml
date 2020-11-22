@@ -1,22 +1,30 @@
 # starship prompt manager config file
 
+[status]
+symbol = ""
+disabled = false
+
 [python]
 format = '[${symbol}${pyenv_prefix}${version}( \($virtualenv\))]($style) '
-symbol = "py "
+symbol = "🐍 "
 
 [nix_shell]
 format = '[$symbol$state($name)]($style) '
-symbol = "❄ "
+symbol = "❄️ "
 impure_msg = ""
 
 [package]
 format = "[$symbol$version]($style) "
-symbol = "⚙ "
+symbol = "📦 "
 
 [rust]
 format = "[$symbol$version]($style) "
-symbol = "Ⓡ "
+symbol = "🦀 "
+#symbol = "Ⓡ "
 
 [git_branch]
 format = "[$symbol$branch]($style) "
 symbol = ""
+
+[battery]
+disabled = true

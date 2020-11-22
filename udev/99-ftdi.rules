@@ -1,0 +1,2 @@
+# FT232 USB <-> serial converter
+ATTRS{idVendor}=="0403", ATTRS{idProduct}="6010", MODE:="0666"

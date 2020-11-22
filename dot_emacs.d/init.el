@@ -42,10 +42,15 @@
 
 ;;(add-to-list 'default-frame-alist '(font . "Hack-14"))
 
+(use-package unicode-fonts
+  :ensure t
+  :config
+  (unicode-fonts-setup))
+
 (set-face-attribute 'default nil
 		    :family "Fira Mono"
 		    :weight 'semi-light
-		    :height 140)
+		    :height 130)
 
 (custom-theme-set-faces
  'user
@@ -54,7 +59,7 @@
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
 ;; font/face config
-(setq-default line-spacing 0.0)
+(setq-default line-spacing nil)
 
 ;; init ui
 (setq inhibit-startup-message t)
@@ -78,6 +83,9 @@
 
   (doom-themes-neotree-config)
   (doom-themes-org-config))
+
+(use-package rainbow-mode
+  :ensure t)
 
 ; fix ANSI color codes
 (use-package xterm-color
@@ -420,7 +428,6 @@ $RATIO is the new size ratio"
 
 (use-package lsp-mode
   :ensure t
-  :hook (rust-mode . lsp)
   :commands lsp
   :init
   ; TODO why?
@@ -430,18 +437,10 @@ $RATIO is the new size ratio"
   (setq lsp-idle-delay 0.8)
   (setq lsp-signature-auto-activate t)
   (setq lsp-signature-doc-lines 1)
-  (setq lsp-rust-server 'rust-analyzer)
-  (setq lsp-rust-analyzer-server-command
-	'((cond
-	   ((eq system-type "gnu/linux") ("/usr/bin/rust-analyzer"))
-	   ((eq system-type "darwin") ("~/.local/bin/rust-analyzer"))
-	   (t (message "can't get lsp server binary")))
-	   ))
   ;(require 'lsp-clients)
   )
 ;; (use-package lsp-ui
 ;;   :ensure t
-;;   :hook (rust-mode . lsp-ui-mode)
 ;;   :requires lsp-mode
 ;;   :init
 ;;   (add-hook 'lsp-ui-doc-frame-hook
@@ -468,12 +467,8 @@ $RATIO is the new size ratio"
 ;(require 'cov-kotlin)
 ;(require 'cov-go)
 ;(require 'cov-groovy)
-;(require 'cov-rust)
+(require 'cov-rust)
 (require 'cov-py)
-
-; rust
-(use-package rustic
-  :ensure t)
 
 (use-package elm-mode
   :ensure t

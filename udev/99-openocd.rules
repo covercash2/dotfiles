@@ -1,0 +1,6 @@
+# STMF3DISCOVERY rev A/B - ST-LINK/V2
+#ATTRS{idVendor}=="0483", ATTRS{idProduct}=="3748", MODE:="0666"
+
+# this is my board
+# STM32F3DISCOVERY rev C+ - ST-LINK/V2-1
+ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", MODE:="0666"

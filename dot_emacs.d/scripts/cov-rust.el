@@ -6,9 +6,16 @@
 
 (require 'use-package)
 
+(defun cov-rust-mode-hook ()
+  "Hook for Rust."
+  (set-fill-column 100))
+
+(add-hook 'rust-mode-hook 'cov-rust-mode-hook)
+
 (use-package rustic
-  :ensure t)
-  ;(rust-enable-format-on-save))
+  :ensure t
+  :config
+  (setq rustic-lsp-format t))
 
 (use-package cargo
   :ensure t

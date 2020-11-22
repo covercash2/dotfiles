@@ -11,7 +11,7 @@ set $right	l
 
 # colors
 # class                 border  backgr. text    indicator child_border
-client.focused          #041E60 #2A56BF #FFFFFF #041E60   #2A56BF
+client.focused          #041E60 #2A56BF #FFFFFF #041E60   #AAAAAA
 client.focused_inactive #333333 #5F676A #FFFFFF #484E50   #5F676A
 client.unfocused        #333333 #222222 #888888 #292D2E   #222222
 client.urgent           #FFFFFF #900000 #FFFFFF #900000   #900000
