@@ -1,0 +1,12 @@
+[Unit]
+Description=barrier screen sharing client
+ConditionPathExists=/usr/bin/barrierc
+
+[Service]
+Type=simple
+Restart=on-failure
+RestartSec=3s
+ExecStart=/usr/bin/barrierc --no-daemon --no-tray --enable-crypto 192.168.2.101:24800
+
+[Install]
+WantedBy=default.target
