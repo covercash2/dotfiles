@@ -1,0 +1,13 @@
+[Unit]
+Description=barrier share mouse and keyboard server
+ConditionPathExists=/usr/bin/barriers
+ConditionPathExists=%h/.local/share/barrier/.barrier.conf
+
+[Service]
+Type=simple
+Restart=on-failure
+RestartSec=3s
+ExecStart=/usr/bin/barriers --no-daemon --enable-crypto
+
+[Install]
+WantedBy=default.target

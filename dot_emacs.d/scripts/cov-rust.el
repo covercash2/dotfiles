@@ -14,8 +14,9 @@
 
 (use-package rustic
   :ensure t
+  :requires (lsp flycheck)
   :config
-  (setq rustic-lsp-format t))
+  (setq rustic-format-on-save t))
 
 (use-package cargo
   :ensure t
