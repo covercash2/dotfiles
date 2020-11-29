@@ -59,7 +59,13 @@ end
 
 # starship prompt manager
 # https://starship.rs
-starship init fish | source
+if type -q starship
+    starship init fish | source
+else
+	logger --priority user.warning \
+	"starship prompt manager wasn't detected"
+end
+
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
