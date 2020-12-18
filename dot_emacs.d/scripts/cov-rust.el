@@ -14,6 +14,7 @@
 
 (use-package rustic
   :ensure t
+  :hook rust-mode
   :requires (lsp flycheck)
   :config
   (setq rustic-format-on-save t))
