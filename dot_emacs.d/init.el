@@ -52,7 +52,7 @@
 
 (set-face-attribute 'default nil
 		    :family "Fira Mono"
-		    :weight 'semi-light
+;;		    :weight 'semi-light
 		    :height 130)
 
 (custom-theme-set-faces
