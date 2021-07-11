@@ -20,6 +20,9 @@
 (eval-when-compile
   (require 'use-package))
 
+;; load scripts directory
+(add-to-list 'load-path (expand-file-name "scripts" user-emacs-directory))
+
 (if (eq system-type 'gnu/linux)
     (setq select-enable-clipboard t))
 
@@ -49,7 +52,7 @@
 
 (set-face-attribute 'default nil
 		    :family "Fira Mono"
-		    :weight 'semi-light
+;;		    :weight 'semi-light
 		    :height 130)
 
 (custom-theme-set-faces
@@ -57,6 +60,8 @@
  '(variable-pitch ((t (:family "Cantarell" :slant normal :weight normal :height 150 :width normal)))))
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+
+(require 'cov-keybind)
 
 ;; font/face config
 (setq-default line-spacing nil)
@@ -77,7 +82,7 @@
   :config
   (setq doom-themes-enable-bold t
 	doom-themes-enable-italic t)
-  (load-theme 'doom-dark+ t)
+  (load-theme 'doom-one t)
 
   (doom-themes-visual-bell-config)
 
@@ -254,9 +259,6 @@ This functions should be added to the hooks of major modes for programming."
 
 (setq shell-file-name "/bin/bash")
 
-;; load scripts directory
-(add-to-list 'load-path (expand-file-name "scripts" user-emacs-directory))
-
 (electric-pair-mode)
 
 (defvar cov-preferred-columns 80
@@ -301,8 +303,6 @@ Contains a reference to the variable `cov-preferred-columns'"
 
 (use-package evil-magit
   :ensure t)
-
-(require 'cov-keybind)
 
 (use-package all-the-icons
   :ensure t)
@@ -437,19 +437,7 @@ $RATIO is the new size ratio"
   (setq lsp-idle-delay 0.8)
   (setq lsp-signature-auto-activate t)
   (setq lsp-signature-doc-lines 1)
-  ;(require 'lsp-clients)
   )
-;; (use-package lsp-ui
-;;   :ensure t
-;;   :requires lsp-mode
-;;   :init
-;;   (add-hook 'lsp-ui-doc-frame-hook
-;; 	    (lambda (frame window)
-;; 	      (cov/change-frame-width (frame window 0.3))))
-;;   :config
-;;   (setq lsp-ui-sideline-update-mode 'line)
-;;   (setq lsp-ui-doc-max-width 80)
-;;   (setq lsp-ui-doc-position 'top))
 
 (use-package web-mode
   :ensure t
@@ -460,6 +448,9 @@ $RATIO is the new size ratio"
 	'(("go" . "\\.tmpl\\'"))))
 
 (use-package bind-key
+  :ensure t)
+
+(use-package which-key
   :ensure t)
 
 ; programming language configuration
