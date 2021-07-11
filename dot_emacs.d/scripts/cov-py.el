@@ -11,7 +11,9 @@
 
 (use-package elpy
   :ensure t
-  :init (elpy-enable))
+  :init (elpy-enable)
+  :config
+  (setenv "WORKON_HOME" "~/anaconda3/envs/"))
 
 (use-package lsp-pyright
   :ensure t

@@ -14,11 +14,10 @@
   :init
   (setq evil-want-keybinding nil)
   :config
+  (setq evil-undo-system 'undo-fu)
   (use-package evil-surround
     :ensure t
     :init (global-evil-surround-mode))
-  ;; (use-package evil-magit
-  ;;   :requires magit)
   (use-package evil-org
     :ensure t
     :config
