@@ -7,7 +7,7 @@ if test -d $HOME/.nvm
 	set nodeversion (cat ~/.nvm/alias/default)
 	set nodebin ~/.nvm/versions/node/v$nodeversion/bin/
 
-	logger --priority user.info "node works"
+	logger -p user.info "node works"
 end
 
 # os specific stuff
@@ -21,14 +21,14 @@ switch $os
 			if test -d $makeinfo
 				set path $nodebin $makeinfo $homebin
 
-				logger --priority user.info \
+				logger -p user.info \
 				"makeinfo works"
 			else
-				logger --priority user.warning \
+				logger -p user.warning \
 				"makeinfo doesn't work"
 			end
 	case '*'
-		logger --priority user.warning --stderr \
+		logger -p user.warning --stderr \
 		"weird os detected: $os"
 end
 
@@ -38,11 +38,11 @@ if test -d $HOME/.local/share/omf
 	if test -e $HOME/.profile
 		fenv source $HOME/.profile
 	else
-		logger --priority user.warning --stderr \
+		logger -p user.warning --stderr \
 		"could not find ~/.profile"
 	end
 else
-	logger --priority user.warning \
+	logger -p user.warning \
 	"oh-my-fish wasn't detected"
 end
 
@@ -62,13 +62,13 @@ end
 if type -q starship
     starship init fish | source
 else
-	logger --priority user.warning \
+	logger -p user.warning \
 	"starship prompt manager wasn't detected"
 end
 
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-eval /home/chrash/anaconda3/bin/conda "shell.fish" "hook" $argv | source
+~/anaconda3/bin/conda "shell.fish" "hook" $argv | source
 # <<< conda initialize <<<
 
