@@ -20,4 +20,19 @@ return require('packer').startup(function()
 			}
 		end
 	}
+	use {
+		'neovim/nvim-lspconfig',
+		config = function()
+			require('lspconfig').rust_analyzer.setup{}
+		end
+	}
+	-- bottom bar config
+	use { 
+		'vim-airline/vim-airline',
+		config = function()
+			vim.g.airline_powerline_fonts = 1
+		end
+	}
+	use 'vim-airline/vim-airline-themes'
+	use 'airblade/vim-gitgutter'
 end)
