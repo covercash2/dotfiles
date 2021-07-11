@@ -156,3 +156,8 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 exec_always --no-startup-id $HOME/.config/polybar/run.sh
+
+exec_always --no-startup-id 'alacritty --title scratch-terminal';
+for_window [title="scratch-terminal"] move scratchpad;
+bindsym $mod+F1 [title="scratch-terminal"] scratchpad show;
+
