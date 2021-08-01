@@ -9,6 +9,12 @@ return require('packer').startup(function(use)
 			require('neorg').setup {
 				load = {
 					['core.defaults'] = {},
+					['core.keybinds'] = {
+						config = {
+							default_keybinds = true,
+							neorg_leader = "<Leader>o"
+						}
+					},
 					['core.norg.concealer'] = {}, -- icons
 					['core.norg.dirman'] = {
 						config = {
@@ -52,7 +58,6 @@ return require('packer').startup(function(use)
 			    print("Unsupported OS detected")
 			end
 			local sumneko_binary = sumneko_root .. "/bin/" .. os_string .. "/lua-language-server"
-			print(sumneko_binary)
 			local runtime_path = vim.split(package.path, ";")
 			table.insert(runtime_path, 'lua/?.lua')
 			table.insert(runtime_path, 'lua/?/init.lua')
@@ -92,7 +97,7 @@ return require('packer').startup(function(use)
 		end
 	}
 	-- bottom bar config
-	use { 
+	use {
 		'vim-airline/vim-airline',
 		config = function()
 			vim.g.airline_powerline_fonts = 1
@@ -100,5 +105,14 @@ return require('packer').startup(function(use)
 	}
 	use 'vim-airline/vim-airline-themes'
 	use 'airblade/vim-gitgutter'
+	use {
+		-- embed nvim in the browser
+		'glacambre/firenvim',
+		run = function() vim.fn['firenvim#install'](0) end
+	}
+	use {
+		'plasticboy/vim-markdown',
+		requires = 'godlygeek/tabular'
+	}
 end)
 
