@@ -44,7 +44,7 @@ return require('packer').startup(function(use)
 		'neovim/nvim-lspconfig',
 		config = function()
 			local nvim_lsp = require('lspconfig')
-			local servers = { "rust_analyzer" }
+			local servers = { "rust_analyzer", "pyright" }
 			for _, server in ipairs(servers) do
 				nvim_lsp[server].setup{}
 			end
@@ -113,6 +113,11 @@ return require('packer').startup(function(use)
 	use {
 		'plasticboy/vim-markdown',
 		requires = 'godlygeek/tabular'
+	}
+	use {
+		'iamcco/markdown-preview.nvim',
+		run = 'cd app && yarn install',
+		--cmd = 'MarkdownPreview'
 	}
 end)
 
