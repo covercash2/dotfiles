@@ -45,7 +45,7 @@ return require('packer').startup(function(use)
 		requires  = 'nvim-lua/completion-nvim',
 		config = function()
 			local nvim_lsp = require('lspconfig')
-			local servers = { "rust_analyzer" }
+			local servers = { "rust_analyzer", "pyright" }
 			for _, server in ipairs(servers) do
 				nvim_lsp[server].setup{}
 			end
@@ -119,5 +119,10 @@ return require('packer').startup(function(use)
 	}
 	use 'jiangmiao/auto-pairs'
 	use 'joshdick/onedark.vim'
+	use {
+		'iamcco/markdown-preview.nvim',
+		run = 'cd app && yarn install',
+		--cmd = 'MarkdownPreview'
+	}
 end)
 
