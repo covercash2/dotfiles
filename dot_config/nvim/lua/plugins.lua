@@ -42,6 +42,7 @@ return require('packer').startup(function(use)
 	}
 	use {
 		'neovim/nvim-lspconfig',
+		requires  = 'nvim-lua/completion-nvim',
 		config = function()
 			local nvim_lsp = require('lspconfig')
 			local servers = { "rust_analyzer" }
@@ -59,6 +60,8 @@ return require('packer').startup(function(use)
 			end
 			local sumneko_binary = sumneko_root .. "/bin/" .. os_string .. "/lua-language-server"
 			local runtime_path = vim.split(package.path, ";")
+			local on_attach = require('completion').on_attach
+
 			table.insert(runtime_path, 'lua/?.lua')
 			table.insert(runtime_path, 'lua/?/init.lua')
 			nvim_lsp.sumneko_lua.setup {
@@ -95,7 +98,7 @@ return require('packer').startup(function(use)
 				},
 			}
 		end
-	}
+	} -- lsp-config
 	-- bottom bar config
 	use {
 		'vim-airline/vim-airline',
@@ -114,5 +117,7 @@ return require('packer').startup(function(use)
 		'plasticboy/vim-markdown',
 		requires = 'godlygeek/tabular'
 	}
+	use 'jiangmiao/auto-pairs'
+	use 'joshdick/onedark.vim'
 end)
 
