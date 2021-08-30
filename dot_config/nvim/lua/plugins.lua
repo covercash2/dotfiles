@@ -2,6 +2,7 @@ vim.cmd [[packadd packer.nvim]]
 
 return require('packer').startup(function(use)
 	use 'wbthomason/packer.nvim'
+
 	use {
 		'vhyrro/neorg',
 		requires = 'nvim-lua/plenary.nvim',
@@ -27,6 +28,7 @@ return require('packer').startup(function(use)
 			}
 		end
 	}
+
 	use 'tpope/vim-surround'
 	-- autocomplete for org mode
 	use {
@@ -46,8 +48,40 @@ return require('packer').startup(function(use)
 		config = function()
 			local nvim_lsp = require('lspconfig')
 			local servers = { "rust_analyzer", "pyright" }
+			local on_attach = function(client, bufnr)
+				local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+				local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+				buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+				local opts = { noremap=true, silent=true }
+
+				buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+				buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+				buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+				buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+				buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+				buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+				buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+				buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+				buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+				buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+				buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+				buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+				buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+				buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+				buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+				buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+				buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+
+
+				require('completion').on_attach()
+			end
 			for _, server in ipairs(servers) do
-				nvim_lsp[server].setup{}
+				nvim_lsp[server].setup{
+					on_attach = on_attach,
+					capabilities = capabilities
+				}
 			end
 			local sumneko_root = vim.fn.expand("$HOME") .. "/.config/nvim/lua-language-server"
 			local os_string = ""
@@ -60,7 +94,6 @@ return require('packer').startup(function(use)
 			end
 			local sumneko_binary = sumneko_root .. "/bin/" .. os_string .. "/lua-language-server"
 			local runtime_path = vim.split(package.path, ";")
-			local on_attach = require('completion').on_attach
 
 			table.insert(runtime_path, 'lua/?.lua')
 			table.insert(runtime_path, 'lua/?/init.lua')
@@ -91,7 +124,11 @@ return require('packer').startup(function(use)
 					rootMarkers = {".git/"},
 					languages = {
 						lua = {
-							formatCommand = "lua-format -i --no-keep-simple-function-one-line --no-break-after-operator --column-limit=100 --break-after-table-lb",
+							formatCommand = "lua-format -i " ..
+							"--no-keep-simple-function-one-line" ..
+							"--no-break-after-operator" ..
+							"--column-limit=100" ..
+							"--break-after-table-lb",
 							formatStdin = true,
 						},
 					}
@@ -101,12 +138,14 @@ return require('packer').startup(function(use)
 	} -- lsp-config
 	-- bottom bar config
 	use {
-		'vim-airline/vim-airline',
-		config = function()
-			vim.g.airline_powerline_fonts = 1
-		end
+		'hoob3rt/lualine.nvim',
+		requires = {'kyazdani42/nvim-web-devicons', opt = true},
+		config = {
+			require('lualine').setup {
+				options = {theme = 'ayu_mirage'}
+			}
+		}
 	}
-	use 'vim-airline/vim-airline-themes'
 	use 'airblade/vim-gitgutter'
 	use {
 		-- embed nvim in the browser
@@ -119,10 +158,12 @@ return require('packer').startup(function(use)
 	}
 	use 'jiangmiao/auto-pairs'
 	use 'joshdick/onedark.vim'
+	use 'folke/tokyonight.nvim'
 	use {
 		'iamcco/markdown-preview.nvim',
 		run = 'cd app && yarn install',
 		--cmd = 'MarkdownPreview'
 	}
+	use 'cespare/vim-toml'
 end)
 
