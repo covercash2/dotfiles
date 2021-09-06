@@ -3,11 +3,29 @@ vim.cmd [[packadd packer.nvim]]
 return require('packer').startup(function(use)
 	use 'wbthomason/packer.nvim'
 
-	use 'nvim-treesitter/nvim-treesitter'
-
+	use {
+		'nvim-treesitter/nvim-treesitter',
+		run = ':TSUpdate',
+		config = function()
+			local parser_configs = require('nvim-treesitter.parsers').get_parser_configs()
+			parser_configs.norg = {
+				install_info = {
+					url = "https://github.com/vhyrro/tree-sitter-norg",
+					files = { "src/parser.c", "src/scanner.cc" },
+					branch = "main"
+				}
+			}
+			require('nvim-treesitter.configs').setup {
+				ensure_installed = "maintained",
+				highlight = {
+					enable = true
+				}
+			}
+		end
+	}
 	use {
 		'vhyrro/neorg',
-		requires = 'nvim-lua/plenary.nvim',
+		requires = { 'nvim-lua/plenary.nvim', "nvim-treesitter" },
 		config = function()
 			require('neorg').setup {
 				load = {
