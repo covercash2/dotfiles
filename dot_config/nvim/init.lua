@@ -11,8 +11,6 @@ vim.opt.shiftwidth = 4
 
 vim.g.mapleader = " "
 
-vim.api.nvim_set_keymap('n', '<Leader>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', { noremap = true, silent = true })
-
 require('plugins')
 
 vim.cmd[[colorscheme tokyonight]]
