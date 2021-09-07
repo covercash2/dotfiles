@@ -2,7 +2,6 @@
 # VERSION: 3.0
 SETUVAR ANDROID_HOME:/mnt/space/home/code/libs/android/
 SETUVAR --export EDITOR:/usr/bin/nvim
-SETUVAR --path GOPATH:/usr/local/go
 SETUVAR NDK_HOME:/mnt/space/home/code/libs/android/ndk/20\x2e0\x2e5594570
 SETUVAR NDK_VERSION:20\x2e0\x2e5594570
 SETUVAR __fish_init_2_39_8:\x1d
