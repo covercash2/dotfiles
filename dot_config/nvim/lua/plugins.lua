@@ -27,13 +27,14 @@ return require('packer').startup(function(use)
 		'vhyrro/neorg',
 		requires = { 'nvim-lua/plenary.nvim', "nvim-treesitter" },
 		config = function()
+			require('neorg_keybinds')
 			require('neorg').setup {
 				load = {
 					['core.defaults'] = {},
 					['core.keybinds'] = {
 						config = {
 							default_keybinds = true,
-							neorg_leader = "<Leader>o"
+							neorg_leader = "<leader>o"
 						}
 					},
 					['core.norg.concealer'] = {}, -- icons
