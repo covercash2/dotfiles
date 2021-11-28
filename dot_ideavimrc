@@ -1,0 +1,2 @@
+nmap <C-o> :action Back<CR>
+
