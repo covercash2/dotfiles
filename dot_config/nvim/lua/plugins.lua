@@ -7,44 +7,10 @@ return require('packer').startup(function(use)
 		'nvim-treesitter/nvim-treesitter',
 		run = ':TSUpdate',
 		config = function()
-			local parser_configs = require('nvim-treesitter.parsers').get_parser_configs()
-			parser_configs.norg = {
-				install_info = {
-					url = "https://github.com/vhyrro/tree-sitter-norg",
-					files = { "src/parser.c", "src/scanner.cc" },
-					branch = "main"
-				}
-			}
 			require('nvim-treesitter.configs').setup {
 				ensure_installed = "maintained",
 				highlight = {
 					enable = true
-				}
-			}
-		end
-	}
-	use {
-		'vhyrro/neorg',
-		requires = { 'nvim-lua/plenary.nvim', "nvim-treesitter" },
-		config = function()
-			require('neorg_keybinds')
-			require('neorg').setup {
-				load = {
-					['core.defaults'] = {},
-					['core.keybinds'] = {
-						config = {
-							default_keybinds = true,
-							neorg_leader = "<leader>o"
-						}
-					},
-					['core.norg.concealer'] = {}, -- icons
-					['core.norg.dirman'] = {
-						config = {
-							workspaces = {
-								my_workspace = "~/Notes"
-							}
-						}
-					}
 				}
 			}
 		end
