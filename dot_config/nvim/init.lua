@@ -13,5 +13,5 @@ vim.g.mapleader = " "
 
 require('plugins')
 
-vim.cmd[[colorscheme tokyonight]]
+vim.cmd[[colorscheme onedark]]
 
