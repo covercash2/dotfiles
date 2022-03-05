@@ -3,6 +3,8 @@ Library
 gnu.emacs.daemon.plist
 {{ end }}
 
+README.md
+
 # backup system files
 root_etc
 
