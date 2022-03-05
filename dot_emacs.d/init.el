@@ -51,8 +51,8 @@
   (unicode-fonts-setup))
 
 (set-face-attribute 'default nil
-		    :family "Fira Mono"
-;;		    :weight 'semi-light
+		    :family "FiraMono Nerd Font"
+		    :weight 'semi-light
 		    :height 130)
 
 (custom-theme-set-faces
@@ -129,7 +129,8 @@ end-of-buffer signals; pass the rest to the default handler."
 ;; org mode settings
 ; set agenda key
 (require 'org)
-(add-to-list 'org-agenda-files "~/sync/notes/")
+(defvar notes-dir "~/diamond/notes")
+(add-to-list 'org-agenda-files notes-dir)
 
 (global-set-key (kbd "C-c a") 'org-agenda)
 
@@ -143,12 +144,17 @@ end-of-buffer signals; pass the rest to the default handler."
 
 ; todo keywords
 (setq org-todo-keywords
-      '((sequence "TODO" "WAIT" "|" "DONE")))
+      '((sequence "TODO" "STARTED" "INQA" "BLOCKED" "|" "DONE")))
 
 (defun cov/get-date ()
   "Get the current date."
   (format-time-string "%y.%m.%d %H:%M")
   )
+
+(defun cov/insert-date ()
+  "Insert the current date."
+  (interactive)
+  (insert (cov/get-date)))
 
 (defun cov/on-todo ()
   "Function called when $ORG_STATE is TODO."
@@ -301,8 +307,7 @@ Contains a reference to the variable `cov-preferred-columns'"
 
 (setq erc-autojoin-channels-alist '(("rizon.net" "#ZW9wRxhVTlIz2AzM")))
 
-(use-package evil-magit
-  :ensure t)
+(require 'cov-keybind)
 
 (use-package all-the-icons
   :ensure t)
@@ -358,6 +363,13 @@ Contains a reference to the variable `cov-preferred-columns'"
   :config
   (diff-hl-flydiff-mode)
   (global-diff-hl-mode))
+
+(use-package undo-fu
+  :ensure t
+  :config
+  ;(global-undo-tree-mode)
+  (define-key evil-normal-state-map "u" 'undo-fu-only-undo)
+  (define-key evil-normal-state-map "\C-r" 'undo-fu-only-redo))
 
 (use-package treemacs
   :ensure t
