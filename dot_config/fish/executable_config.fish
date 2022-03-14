@@ -72,3 +72,5 @@ end
 ~/anaconda3/bin/conda "shell.fish" "hook" $argv | source
 # <<< conda initialize <<<
 
+
+source /usr/local/opt/asdf/libexec/asdf.fish
