@@ -72,5 +72,7 @@ end
 ~/anaconda3/bin/conda "shell.fish" "hook" $argv | source
 # <<< conda initialize <<<
 
+status is-login; and pyenv init --path | source
+status is-interactive; and pyenv init - | source
 
 source /usr/local/opt/asdf/libexec/asdf.fish
