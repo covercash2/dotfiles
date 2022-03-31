@@ -1,2 +1,4 @@
 nmap <C-o> :action Back<CR>
 
+set surround
+
