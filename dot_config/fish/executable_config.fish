@@ -8,6 +8,8 @@ if test -d $HOME/.nvm
 	set nodebin ~/.nvm/versions/node/v$nodeversion/bin/
 
 	logger -p user.info "node works"
+else
+	logger -p user.info "nvm/node not configured"
 end
 
 # os specific stuff
@@ -65,12 +67,6 @@ else
 	logger -p user.warning \
 	"starship prompt manager wasn't detected"
 end
-
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-~/anaconda3/bin/conda "shell.fish" "hook" $argv | source
-# <<< conda initialize <<<
 
 status is-login; and pyenv init --path | source
 status is-interactive; and pyenv init - | source
