@@ -71,6 +71,8 @@ end
 status is-login; and pyenv init --path | source
 status is-interactive; and pyenv init - | source
 
-if (which asdf)
-	source /usr/local/opt/asdf/libexec/asdf.fish
-end
+{{- if eq .chezmoi.os "darwin" }}
+source /opt/homebrew/opt/asdf/libexec/asdf.fish
+{{- else }}
+source /usr/local/opt/asdf/libexec/asdf.fish
+{{- end }}
