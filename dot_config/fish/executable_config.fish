@@ -71,4 +71,6 @@ end
 status is-login; and pyenv init --path | source
 status is-interactive; and pyenv init - | source
 
-source /usr/local/opt/asdf/libexec/asdf.fish
+if (which asdf)
+	source /usr/local/opt/asdf/libexec/asdf.fish
+end
