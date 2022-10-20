@@ -3,15 +3,39 @@ vim.cmd [[packadd packer.nvim]]
 return require('packer').startup(function(use)
 	use 'wbthomason/packer.nvim'
 
+	-- markdown editor
+	use {"ellisonleao/glow.nvim"}
+
 	use 'folke/which-key.nvim'
 	use 'sbdchd/neoformat'
+
+	use {
+		"nvim-neorg/neorg",
+		ft = "norg",
+		after = "nvim-treesitter",
+		config = function()
+			require('neorg').setup {
+				load = {
+					["core.defaults"] = {},
+					["core.norg.dirman"] = {
+						config = {
+							workspaces = {
+								work = "~/Notes",
+								home = "~/Notes",
+							}
+						}
+					}
+				}
+			}
+		end
+	}
 
 	use {
 		'nvim-treesitter/nvim-treesitter',
 		run = ':TSUpdate',
 		config = function()
 			require('nvim-treesitter.configs').setup {
-				ensure_installed = "maintained",
+				ensure_installed = {"rust", "python", "norg"},
 				highlight = {
 					enable = true
 				}
@@ -55,7 +79,7 @@ return require('packer').startup(function(use)
 		requires  = 'nvim-lua/completion-nvim',
 		config = function()
 			local nvim_lsp = require('lspconfig')
-			local servers = { "rust_analyzer", "pyright" }
+			local servers = { "rust_analyzer", "pyright", "luau_lsp" }
 			local on_attach = function(client, bufnr)
 				local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
 				local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
@@ -90,57 +114,6 @@ return require('packer').startup(function(use)
 					capabilities = capabilities
 				}
 			end
-			local sumneko_root = vim.fn.expand("$HOME") .. "/.config/nvim/lua-language-server"
-			local os_string = ""
-			if vim.fn.has("mac") == 1 then
-				os_string = "macOS"
-			elseif vim.fn.has("unix") == 1 then
-				os_string = "Linux"
-			else
-			    print("Unsupported OS detected")
-			end
-			local sumneko_binary = sumneko_root .. "/bin/" .. os_string .. "/lua-language-server"
-			local runtime_path = vim.split(package.path, ";")
-
-			table.insert(runtime_path, 'lua/?.lua')
-			table.insert(runtime_path, 'lua/?/init.lua')
-			nvim_lsp.sumneko_lua.setup {
-				cmd = { sumneko_binary, "-E", sumneko_root .. "/main.lua" },
-				on_attach = on_attach,
-				capabilities = capabilities,
-				settings = {
-					Lua = {
-						runtime = {
-							version = "LuaJIT",
-							path = runtime_path,
-						},
-						diagnostics = {
-							globals = {'vim'}
-						},
-						workspace = {
-							library = {[vim.fn.expand('$VIMRUNTIME/lua')] = true, [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true}
-							--library = vim.api.nvim_get_runtime_file('', true)
-						},
-					}
-				}
-			}
-			require('lspconfig').efm.setup {
-				init_options = {documentFormatting = true},
-				filetypes = {"lua"},
-				settings = {
-					rootMarkers = {".git/"},
-					languages = {
-						lua = {
-							formatCommand = "lua-format -i " ..
-							"--no-keep-simple-function-one-line" ..
-							"--no-break-after-operator" ..
-							"--column-limit=100" ..
-							"--break-after-table-lb",
-							formatStdin = true,
-						},
-					}
-				},
-			}
 		end
 	} -- lsp-config
 	-- bottom bar config
@@ -160,7 +133,7 @@ return require('packer').startup(function(use)
 		run = function() vim.fn['firenvim#install'](0) end
 	}
 	use {
-		'plasticboy/vim-markdown',
+		'preservim/vim-markdown',
 		requires = 'godlygeek/tabular'
 	}
 	use 'jiangmiao/auto-pairs'
@@ -173,20 +146,14 @@ return require('packer').startup(function(use)
 	}
 	use 'cespare/vim-toml'
 	use {
-		'nvim-telescope/telescope.nvim',
-		requires = { {'nvim-lua/plenary.nvim'} },
-		config = function(client, bufnr)
-				local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-				local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+		'nvim-telescope/telescope.nvim', tag = '0.1.0',
+		requires = { {'nvim-lua/plenary.nvim'} }
+	}
 
-				buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-				local opts = { noremap=true, silent=true }
-
-				buf_set_keymap('n', '<leader>ff', '<cmd>Telescope find_files<cr>', opts)
-				buf_set_keymap('n', '<leader>fg', '<cmd>Telescope live_grep<cr>', opts)
-				buf_set_keymap('n', '<leader>fb', '<cmd>Telescope buffers<cr>', opts)
-				buf_set_keymap('n', '<leader>fh', '<cmd>Telescope help_tags<cr>', opts)
+	use {
+		'akinsho/git-conflict.nvim',
+		config = function()
+			require('git-conflict').setup()
 		end
 	}
 end)
