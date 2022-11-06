@@ -74,5 +74,5 @@ status is-interactive; and pyenv init - | source
 {{- if eq .chezmoi.os "darwin" }}
 source /opt/homebrew/opt/asdf/libexec/asdf.fish
 {{- else }}
-source /usr/local/opt/asdf/libexec/asdf.fish
+source /opt/asdf-vm/asdf.fish
 {{- end }}
