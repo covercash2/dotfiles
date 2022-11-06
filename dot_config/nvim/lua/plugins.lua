@@ -6,17 +6,42 @@ return require('packer').startup(function(use)
 	-- markdown editor
 	use {"ellisonleao/glow.nvim"}
 
-	use 'folke/which-key.nvim'
+	use {
+		'folke/which-key.nvim',
+		requires = { 'nvim-telescope/telescope.nvim' },
+		config = function() 
+			local wk = require('which-key')
+			wk.setup()
+			local telescope = require('telescope.builtin')
+			wk.register({
+				f = {
+					name = "file",
+					f = { telescope.find_files, "find file" },
+					g = { telescope.live_grep, "grep" },
+					b = { telescope.buffers, "find buffer" },
+					h = { telescope.help_tags, "help tags" },
+				},
+			}, { prefix = '<leader>' })
+		end
+	}
 	use 'sbdchd/neoformat'
 
 	use {
 		"nvim-neorg/neorg",
-		ft = "norg",
-		after = "nvim-treesitter",
+		requires = { 
+			"nvim-lua/plenary.nvim",
+			"hrsh7th/nvim-cmp",
+		},
 		config = function()
-			require('neorg').setup {
+			require("neorg").setup {
 				load = {
 					["core.defaults"] = {},
+					["core.norg.concealer"] = {},
+					["core.norg.completion"] = {
+						config = {
+							engine = "nvim-cmp"
+						}
+					},
 					["core.norg.dirman"] = {
 						config = {
 							workspaces = {
@@ -35,7 +60,7 @@ return require('packer').startup(function(use)
 		run = ':TSUpdate',
 		config = function()
 			require('nvim-treesitter.configs').setup {
-				ensure_installed = {"rust", "python", "norg"},
+				ensure_installed = {"rust", "python", "norg", "cpp", "cmake", "bash", "fish", "make", "markdown"},
 				highlight = {
 					enable = true
 				}
@@ -76,7 +101,9 @@ return require('packer').startup(function(use)
 	}
 	use {
 		'neovim/nvim-lspconfig',
-		requires  = 'nvim-lua/completion-nvim',
+		requires  = {
+			'nvim-lua/completion-nvim'
+		},
 		config = function()
 			local nvim_lsp = require('lspconfig')
 			local servers = { "rust_analyzer", "pyright", "luau_lsp" }
@@ -116,6 +143,7 @@ return require('packer').startup(function(use)
 			end
 		end
 	} -- lsp-config
+
 	-- bottom bar config
 	use {
 		'hoob3rt/lualine.nvim',
@@ -126,7 +154,14 @@ return require('packer').startup(function(use)
 			}
 		end
 	}
-	use 'airblade/vim-gitgutter'
+
+	use { 
+		'lewis6991/gitsigns.nvim',
+		config = function()
+			require('gitsigns').setup()
+		end
+	}
+
 	use {
 		-- embed nvim in the browser
 		'glacambre/firenvim',
@@ -156,5 +191,14 @@ return require('packer').startup(function(use)
 			require('git-conflict').setup()
 		end
 	}
+
+	use {
+		'p00f/clangd_extensions.nvim',
+		requires = 'neovim/nvim-lspconfig',
+		config = function()
+			require('clangd_extensions').setup()
+		end
+	}
+
 end)
 
