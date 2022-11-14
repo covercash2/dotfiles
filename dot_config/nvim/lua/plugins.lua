@@ -8,11 +8,15 @@ return require('packer').startup(function(use)
 
 	use {
 		'folke/which-key.nvim',
-		requires = { 'nvim-telescope/telescope.nvim' },
+		requires = { 
+			'nvim-telescope/telescope.nvim',
+			'nvim-tree/nvim-tree.lua',
+		},
 		config = function() 
 			local wk = require('which-key')
 			wk.setup()
 			local telescope = require('telescope.builtin')
+			local tree = require('nvim-tree.api')
 			wk.register({
 				f = {
 					name = "file",
@@ -21,6 +25,10 @@ return require('packer').startup(function(use)
 					b = { telescope.buffers, "find buffer" },
 					h = { telescope.help_tags, "help tags" },
 				},
+				t = {
+					name = "tree",
+					t = { tree.tree.toggle, "toggle" },
+				}
 			}, { prefix = '<leader>' })
 		end
 	}
@@ -197,6 +205,53 @@ return require('packer').startup(function(use)
 		requires = 'neovim/nvim-lspconfig',
 		config = function()
 			require('clangd_extensions').setup()
+		end
+	}
+
+	use {
+		'Civitasv/cmake-tools.nvim',
+		requires = {
+			'nvim-lua/plenary.nvim',
+			'mfussenegger/nvim-dap',
+		},
+		config = function()
+			require('cmake-tools').setup {
+				cmake_command = "cmake",
+				cmake_build_directory = "build",
+				cmake_generate_options = { "-D", "CMAKE_EXPORT_COMPILE_COMMANDS=1" },
+				cmake_build_options = {},
+				cmake_console_size = 10, -- cmake output window height
+				cmake_show_console = "always", -- "always", "only_on_error"
+				cmake_dap_configuration = { name = "cpp", type = "codelldb", request = "launch" }, -- dap configuration, optional
+				cmake_dap_open_command = require("dap").repl.open, -- optional
+				cmake_variants_message = {
+				  short = { show = true },
+				  long = { show = true, max_length = 40 }
+				}
+			}
+		end
+	}
+
+	use {
+		'nvim-tree/nvim-web-devicons',
+		config = function()
+			require('nvim-web-devicons').setup {
+				default = true
+			}
+		end
+	}
+
+	use {
+		'nvim-tree/nvim-tree.lua',
+		requires = {
+			'nvim-tree/nvim-web-devicons',
+		},
+		config = function()
+			require('nvim-tree').setup {
+				git = {
+					ignore = false,
+				}
+			}
 		end
 	}
 

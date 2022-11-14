@@ -9,6 +9,13 @@ vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 
+-- https://github.com/nvim-tree/nvim-tree.lua#setup
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+-- enable highlight groups
+vim.opt.termguicolors = true
+
 function map(mode, lhs, rhs, opts)
 	local options = { noremap = true }
 	if opts then
