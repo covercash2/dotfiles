@@ -24,6 +24,20 @@ function map(mode, lhs, rhs, opts)
 	vim.api.nvim_set_keymap(mode, lhs, rhs, options)
 end
 
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+	vim.fn.system({
+		"git",
+		"clone",
+		"--filter=blob:none",
+		"https://github.com/folke/lazy.nvim.git",
+		"--branch=stable",
+		lazypath,
+	})
+end
+
+vim.opt.rtp:prepend(lazypath)
+
 require('plugins')
 
 vim.g.mapleader = " "
@@ -32,11 +46,5 @@ local opts = { noremap=true, silent=true }
 
 local builtin = require('telescope.builtin')
 
--- vim.keymap.set('n', '<leader>ff', builtin.find_files, opts)
---vim.keymap.set('n', '<leader>fg', builtin.live_grep, opts)
---vim.keymap.set('n', '<leader>fb', builtin.buffers, opts)
---vim.keymap.set('n', '<leader>fh', builtin.help_tags, opts)
-
-
-vim.cmd[[colorscheme onedark]]
+vim.cmd[[colorscheme tokyonight]]
 

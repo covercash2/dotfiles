@@ -1,18 +1,25 @@
-vim.cmd [[packadd packer.nvim]]
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+	vim.fn.system({
+		"git",
+		"clone",
+		"--filter=blob:none",
+		"https://github.com/folke/lazy.nvim.git",
+		"--branch=stable",
+		lazypath,
+	})
+end
 
-return require('packer').startup(function(use)
-	use 'wbthomason/packer.nvim'
+vim.opt.rtp:prepend(lazypath)
 
-	-- markdown editor
-	use {"ellisonleao/glow.nvim"}
-
-	use {
+local plugins = {
+	{
 		'folke/which-key.nvim',
-		requires = { 
+		dependencies = {
 			'nvim-telescope/telescope.nvim',
 			'nvim-tree/nvim-tree.lua',
 		},
-		config = function() 
+		config = function()
 			local wk = require('which-key')
 			wk.setup()
 			local telescope = require('telescope.builtin')
@@ -31,14 +38,15 @@ return require('packer').startup(function(use)
 				}
 			}, { prefix = '<leader>' })
 		end
-	}
-	use 'sbdchd/neoformat'
-
-	use {
+	},
+	"sbdchd/neoformat",
+	{
 		"nvim-neorg/neorg",
-		requires = { 
+		ft = "norg",
+		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"hrsh7th/nvim-cmp",
+			"nvim-treesitter/nvim-treesitter",
 		},
 		config = function()
 			require("neorg").setup {
@@ -53,34 +61,72 @@ return require('packer').startup(function(use)
 					["core.norg.dirman"] = {
 						config = {
 							workspaces = {
-								work = "~/Notes",
+								work = "~/personal",
 								home = "~/Notes",
 							}
 						}
 					}
 				}
 			}
+			vim.cmd("Neorg sync-parsers")
 		end
-	}
-
-	use {
+	},
+	{
 		'nvim-treesitter/nvim-treesitter',
-		run = ':TSUpdate',
 		config = function()
+			vim.cmd('TSUpdate')
 			require('nvim-treesitter.configs').setup {
-				ensure_installed = {"rust", "python", "norg", "cpp", "cmake", "bash", "fish", "make", "markdown"},
+				ensure_installed = {"lua", "rust", "python", "cpp", "cmake", "bash", "fish", "make", "markdown", "norg"},
 				highlight = {
-					enable = true
+					enable = false
 				}
 			}
 		end
-	}
-
-	use 'tpope/vim-surround'
+	},
+	{
+		"echasnovski/mini.ai",
+		version = "*",
+		lazy = false,
+		config = function()
+			require('mini.ai').setup()
+		end,
+	},
+	{
+		"echasnovski/mini.surround",
+		version = "*",
+		lazy = false,
+		config = function()
+			require('mini.surround').setup()
+		end,
+	},
+	{
+		"echasnovski/mini.pairs",
+		version = "*",
+		lazy = false,
+		config = function()
+			require("mini.pairs").setup()
+		end,
+	},
+	{
+		"echasnovski/mini.trailspace",
+		version = "*",
+		lazy = false,
+		config = function()
+			require("mini.trailspace").setup()
+		end,
+	},
+	{
+		"echasnovski/mini.comment",
+		version = "*",
+		lazy = false,
+		config = function()
+			require("mini.comment").setup()
+		end,
+	},
 	-- autocomplete for org mode
-	use {
+	{
 		'hrsh7th/nvim-cmp',
-		requires = {
+		dependencies = {
 			'neovim/nvim-lspconfig',
 			'hrsh7th/cmp-nvim-lsp',
 			'hrsh7th/cmp-buffer',
@@ -106,16 +152,33 @@ return require('packer').startup(function(use)
 				norg = true;
 			}
 		end
-	}
-	use {
+	},
+	{
 		'neovim/nvim-lspconfig',
-		requires  = {
+		dependencies = {
 			'nvim-lua/completion-nvim'
 		},
 		config = function()
 			local nvim_lsp = require('lspconfig')
 			local servers = { "rust_analyzer", "pyright", "luau_lsp" }
 			local on_attach = function(client, bufnr)
+				vim.o.updatetime = 250
+
+				vim.api.nvim_create_autocmd("CursorHold", {
+					buffer = bufnr,
+					callback = function()
+						local opts = {
+							focusable = false,
+							close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+							border = 'rounded',
+							source = 'always',
+							prefix = ' ',
+							scope = 'cursor',
+						}
+						vim.diagnostic.open_float(nil, opts)
+					end
+				})
+
 				local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
 				local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
@@ -139,7 +202,7 @@ return require('packer').startup(function(use)
 				buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
 				buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
 				buf_set_keymap('n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
-				buf_set_keymap('n', '<leader>bf', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+				buf_set_keymap('n', '<leader>bf', '<cmd>lua vim.lsp.buf.format { async = true }<CR>', opts)
 
 				require('completion').on_attach()
 			end
@@ -150,67 +213,63 @@ return require('packer').startup(function(use)
 				}
 			end
 		end
-	} -- lsp-config
-
+	}, -- lspconfig
 	-- bottom bar config
-	use {
+	{
 		'hoob3rt/lualine.nvim',
-		requires = {'kyazdani42/nvim-web-devicons', opt = true},
+		dependencies = { 'nvim-tree/nvim-web-devicons', opt = true},
 		config = function()
 			require('lualine').setup {
 				options = {theme = 'ayu_mirage'}
 			}
 		end
-	}
-
-	use { 
+	},
+	{ 
 		'lewis6991/gitsigns.nvim',
 		config = function()
 			require('gitsigns').setup()
 		end
-	}
-
-	use {
+	},
+	{
 		-- embed nvim in the browser
 		'glacambre/firenvim',
-		run = function() vim.fn['firenvim#install'](0) end
-	}
-	use {
+		cond = not not vim.g.started_by_firenvim,
+		build = function()
+			require("lazy").load({ plugins = "firenvim", wait = true})
+			vim.fn['firenvim#install'](0)
+		end,
+	},
+	{
 		'preservim/vim-markdown',
-		requires = 'godlygeek/tabular'
-	}
-	use 'jiangmiao/auto-pairs'
-	use 'joshdick/onedark.vim'
-	use 'folke/tokyonight.nvim'
-	use {
+		dependencies = { 'godlygeek/tabular' },
+	},
+	"folke/tokyonight.nvim",
+	{
 		'iamcco/markdown-preview.nvim',
-		run = 'cd app && yarn install',
+		build = 'cd app && yarn install',
 		--cmd = 'MarkdownPreview'
-	}
-	use 'cespare/vim-toml'
-	use {
+	},
+	'cespare/vim-toml',
+	{
 		'nvim-telescope/telescope.nvim', tag = '0.1.0',
-		requires = { {'nvim-lua/plenary.nvim'} }
-	}
-
-	use {
+		dependencies = { 'nvim-lua/plenary.nvim' }
+	},
+	{
 		'akinsho/git-conflict.nvim',
 		config = function()
 			require('git-conflict').setup()
 		end
-	}
-
-	use {
+	},
+	{
 		'p00f/clangd_extensions.nvim',
-		requires = 'neovim/nvim-lspconfig',
+		dependencies = { 'neovim/nvim-lspconfig' },
 		config = function()
 			require('clangd_extensions').setup()
 		end
-	}
-
-	use {
+	},
+	{
 		'Civitasv/cmake-tools.nvim',
-		requires = {
+		dependencies = {
 			'nvim-lua/plenary.nvim',
 			'mfussenegger/nvim-dap',
 		},
@@ -230,20 +289,18 @@ return require('packer').startup(function(use)
 				}
 			}
 		end
-	}
-
-	use {
+	},
+	{
 		'nvim-tree/nvim-web-devicons',
 		config = function()
 			require('nvim-web-devicons').setup {
 				default = true
 			}
 		end
-	}
-
-	use {
+	},
+	{
 		'nvim-tree/nvim-tree.lua',
-		requires = {
+		dependencies = {
 			'nvim-tree/nvim-web-devicons',
 		},
 		config = function()
@@ -253,7 +310,7 @@ return require('packer').startup(function(use)
 				}
 			}
 		end
-	}
+	},
+}
 
-end)
-
+require("lazy").setup(plugins)

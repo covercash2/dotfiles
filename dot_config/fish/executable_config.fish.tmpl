@@ -76,3 +76,8 @@ source /opt/homebrew/opt/asdf/libexec/asdf.fish
 {{- else }}
 source /opt/asdf-vm/asdf.fish
 {{- end }}
+
+#>>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+eval your/path/to/miniconda/bin/conda "shell.fish" "hook" $argv | source
+# <<< conda initialize <<<
