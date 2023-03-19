@@ -168,7 +168,7 @@ local plugins = {
 		lazy = false,
 		config = function()
 			require("mason").setup {
-				ensure_installed = { "lua_ls", "pyright", "elmls" }
+				ensure_installed = { "lua_ls", "pyright", "svelte" }
 			}
 		end
 	},
