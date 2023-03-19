@@ -77,7 +77,7 @@ local plugins = {
 		config = function()
 			vim.cmd('TSUpdate')
 			require('nvim-treesitter.configs').setup {
-				ensure_installed = {"lua", "rust", "python", "cpp", "cmake", "bash", "fish", "make", "markdown", "norg", "kdl"},
+				ensure_installed = {"lua", "rust", "python", "elm", "cpp", "cmake", "bash", "fish", "make", "markdown", "norg", "kdl"},
 				highlight = {
 					enable = false
 				}
@@ -159,6 +159,16 @@ local plugins = {
 				enabled = true;
 				autocomplete = true;
 				norg = true;
+			}
+		end
+	},
+	{
+		'williamboman/mason.nvim',
+		dependencies = { "neovim/nvim-lspconfig", "williamboman/mason-lspconfig.nvim"},
+		lazy = false,
+		config = function()
+			require("mason").setup {
+				ensure_installed = { "lua_ls", "pyright", "elmls" }
 			}
 		end
 	},
@@ -368,8 +378,7 @@ local plugins = {
 		'simrat39/rust-tools.nvim',
 		dependencies = {
 			"nvim-lspconfig",
-			"neovim/nvim-lspconfig"
-			"nvim"
+			"neovim/nvim-lspconfig",
 			"nvim-lua/plenary.nvim",
 			"mfussenegger/nvim-dap",
 		},
