@@ -77,7 +77,7 @@ local plugins = {
 		config = function()
 			vim.cmd('TSUpdate')
 			require('nvim-treesitter.configs').setup {
-				ensure_installed = {"lua", "rust", "python", "elm", "cpp", "cmake", "bash", "fish", "make", "markdown", "norg", "kdl"},
+				ensure_installed = {"lua", "rust", "python", "elm", "cpp", "cmake", "bash", "fish", "make", "markdown", "norg", "kdl", "svelte"},
 				highlight = {
 					enable = false
 				}
