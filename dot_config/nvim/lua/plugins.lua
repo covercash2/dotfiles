@@ -231,6 +231,20 @@ local plugins = {
 			end
 		end
 	}, -- lspconfig
+
+	-- svelte
+	{
+		"leafOfTree/vim-svelte-plugin",
+		config = function()
+			vim.g.vim_svelte_plugin_load_full_syntax = 1
+			vim.g.vim_svelte_plugin_use_typescript = 1
+		end,
+	},
+	{
+		"leafgarland/typescript-vim",
+	},
+	-- svelte
+
 	{
 		"jose-elias-alvarez/null-ls.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
