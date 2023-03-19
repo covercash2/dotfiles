@@ -1,3 +1,4 @@
+-- load `lazy` package manager
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
 	vim.fn.system({
@@ -76,7 +77,7 @@ local plugins = {
 		config = function()
 			vim.cmd('TSUpdate')
 			require('nvim-treesitter.configs').setup {
-				ensure_installed = {"lua", "rust", "python", "cpp", "cmake", "bash", "fish", "make", "markdown", "norg"},
+				ensure_installed = {"lua", "rust", "python", "cpp", "cmake", "bash", "fish", "make", "markdown", "norg", "kdl"},
 				highlight = {
 					enable = false
 				}
@@ -105,6 +106,14 @@ local plugins = {
 		lazy = false,
 		config = function()
 			require("mini.pairs").setup()
+		end,
+	},
+	{
+		"echasnovski/mini.indentscope",
+		version = "*",
+		lazy = false,
+		config = function()
+			require("mini.indentscope").setup()
 		end,
 	},
 	{
@@ -160,7 +169,7 @@ local plugins = {
 		},
 		config = function()
 			local nvim_lsp = require('lspconfig')
-			local servers = { "rust_analyzer", "pyright", "luau_lsp" }
+			local servers = { "pyright", "luau_lsp" }
 			local on_attach = function(client, bufnr)
 				vim.o.updatetime = 250
 
@@ -214,6 +223,45 @@ local plugins = {
 			end
 		end
 	}, -- lspconfig
+	{
+		"tamago324/nlsp-settings.nvim",
+		dependencies = { "neovim/nvim-lspconfig", "williamboman/nvim-lsp-installer" },
+		config = function()
+			local lsp_installer = require("nvim-lsp-installer")
+			local lspconfig = require("lspconfig")
+			local nlspsettings = require("nlspsettings")
+
+			nlspsettings.setup({
+				config_home = vim.fn.stdpath("config") .. "/nlsp-settings",
+				local_settings_dir = ".nlsp-settings",
+				local_settings_root_markers_fallback = { ".git" },
+				append_default_schemas = true,
+				loader = "json",
+			})
+			function on_attach(client, buf_num)
+				local function buf_set_option(...) vim.api.nvim_buf_set_option(buf_num, ...) end
+				buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
+			end
+
+			local global_capabilities = vim.lsp.protocol.make_client_capabilities()
+			global_capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+			lspconfig.util.default_config = vim.tbl_extend("force", lspconfig.util.default_config, {
+				capabilities = global_capabilities,
+			})
+
+			lsp_installer.on_server_ready(function(server)
+				server:setup({
+					on_attach = on_attach
+				})
+			end)
+
+		end
+	},
+	{
+		"j-hui/fidget.nvim",
+		config = true,
+	},
 	-- bottom bar config
 	{
 		'hoob3rt/lualine.nvim',
@@ -224,7 +272,7 @@ local plugins = {
 			}
 		end
 	},
-	{ 
+	{
 		'lewis6991/gitsigns.nvim',
 		config = function()
 			require('gitsigns').setup()
@@ -243,7 +291,12 @@ local plugins = {
 		'preservim/vim-markdown',
 		dependencies = { 'godlygeek/tabular' },
 	},
-	"folke/tokyonight.nvim",
+	{
+		"folke/tokyonight.nvim",
+		config = function()
+			vim.cmd[[colorscheme tokyonight]]
+		end,
+	},
 	{
 		'iamcco/markdown-preview.nvim',
 		build = 'cd app && yarn install',
@@ -311,6 +364,60 @@ local plugins = {
 			}
 		end
 	},
+	{
+		'simrat39/rust-tools.nvim',
+		dependencies = {
+			"nvim-lspconfig",
+			"neovim/nvim-lspconfig"
+			"nvim"
+			"nvim-lua/plenary.nvim",
+			"mfussenegger/nvim-dap",
+		},
+		config = function()
+			rt = require('rust-tools')
+			rt.setup({
+				server = {
+					on_attach = function(_, bufnr)
+						-- code action groups
+						vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
+						-- hover action
+						vim.keymap.set("n", "<Leader><Leader>", rt.hover_actions.hover_actions, { buffer = bufnr })
+					end
+				}
+			})
+
+			local lsp_installer = require("nvim-lsp-installer")
+			local lspconfig = require("lspconfig")
+			local nlspsettings = require("nlspsettings")
+
+			nlspsettings.setup({
+				config_home = vim.fn.stdpath("config") .. "/nlsp-settings",
+				local_settings_dir = ".nlsp-settings",
+				local_settings_root_markers_fallback = { ".git" },
+				append_default_schemas = true,
+				loader = "json",
+			})
+			function on_attach(client, buf_num)
+				local function buf_set_option(...) vim.api.nvim_buf_set_option(buf_num, ...) end
+				buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
+			end
+
+			local global_capabilities = vim.lsp.protocol.make_client_capabilities()
+			global_capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+			lspconfig.util.default_config = vim.tbl_extend("force", lspconfig.util.default_config, {
+				capabilities = global_capabilities,
+			})
+
+			lsp_installer.on_server_ready(function(server)
+				server:setup({
+					on_attach = on_attach
+				})
+			end)
+
+
+		end
+	}
 }
 
 require("lazy").setup(plugins)
