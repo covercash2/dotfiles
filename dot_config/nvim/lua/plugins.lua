@@ -167,9 +167,7 @@ local plugins = {
 		dependencies = { "neovim/nvim-lspconfig", "williamboman/mason-lspconfig.nvim"},
 		lazy = false,
 		config = function()
-			require("mason").setup {
-				ensure_installed = { "lua_ls", "pyright", "svelte" }
-			}
+			require("mason").setup()
 		end
 	},
 	{
@@ -179,7 +177,7 @@ local plugins = {
 		},
 		config = function()
 			local nvim_lsp = require('lspconfig')
-			local servers = { "pyright", "luau_lsp" }
+			local servers = { "pyright", "luau_lsp", "svelte" }
 			local on_attach = function(client, bufnr)
 				vim.o.updatetime = 250
 
