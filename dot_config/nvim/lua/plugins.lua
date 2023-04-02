@@ -13,6 +13,8 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 
+local rust_config = require('rust')
+
 local plugins = {
 	{
 		'folke/which-key.nvim',
@@ -26,6 +28,13 @@ local plugins = {
 			local telescope = require('telescope.builtin')
 			local tree = require('nvim-tree.api')
 			wk.register({
+				a = { vim.lsp.buf.code_action, "code action" },
+				b = {
+					name = "buffer",
+					f = { vim.lsp.buf.format, "format" },
+				},
+				D = { vim.lsp.buf.type_definition, "type definition" },
+				e = { vim.lsp.diagnostic.get_line_diagnostics, "show line diagnostics" },
 				f = {
 					name = "file",
 					f = { telescope.find_files, "find file" },
@@ -33,6 +42,15 @@ local plugins = {
 					b = { telescope.buffers, "find buffer" },
 					h = { telescope.help_tags, "help tags" },
 				},
+				g = {
+					name = "goto",
+					d = { vim.lsp.buf.definition, "definition" },
+					D = { vim.lsp.buf.declration, "declaration" },
+					i = { vim.lsp.buf.implementation, "implementation" },
+					p = { vim.lsp.diagnostic.goto_prev, "previous" },
+					n = { vim.lsp.buf.format, "format" },
+				},
+				r = { vim.lsp.rename, "rename" },
 				t = {
 					name = "tree",
 					t = { tree.tree.toggle, "toggle" },
@@ -40,7 +58,22 @@ local plugins = {
 			}, { prefix = '<leader>' })
 		end
 	},
-	"sbdchd/neoformat",
+	{
+		"HiPhish/nvim-ts-rainbow2",
+		dependencies = {
+			"nvim-treesitter/nvim-treesitter",
+		},
+		config = function()
+			require('nvim-treesitter.configs').setup {
+				rainbow = {
+					enable = true,
+					query = 'rainbow-parens',
+					strategy = require('ts-rainbow').strategy.global,
+				}
+			}
+		end
+	},
+	"tpope/vim-fugitive",
 	{
 		"nvim-neorg/neorg",
 		ft = "norg",
@@ -77,7 +110,7 @@ local plugins = {
 		config = function()
 			vim.cmd('TSUpdate')
 			require('nvim-treesitter.configs').setup {
-				ensure_installed = {"lua", "rust", "python", "elm", "cpp", "cmake", "bash", "fish", "make", "markdown", "norg", "kdl", "svelte"},
+				ensure_installed = {"lua", "rust", "python", "elm", "cpp", "cmake", "bash", "fish", "make", "markdown", "norg", "kdl", "svelte", "css"},
 				highlight = {
 					enable = false
 				}
@@ -132,28 +165,52 @@ local plugins = {
 			require("mini.comment").setup()
 		end,
 	},
-	-- autocomplete for org mode
+	-- snippet
+	{
+		'L3MON4D3/LuaSnip',
+		dependencies = {
+			'rafamadriz/friendly-snippets',
+		},
+		config = function()
+			require('luasnip.loaders.from_vscode').lazy_load()
+		end,
+	},
+	-- autocomplete
 	{
 		'hrsh7th/nvim-cmp',
 		dependencies = {
-			'neovim/nvim-lspconfig',
-			'hrsh7th/cmp-nvim-lsp',
 			'hrsh7th/cmp-buffer',
+			'hrsh7th/cmp-nvim-lua',
+			'hrsh7th/cmp-nvim-lsp',
 			'hrsh7th/cmp-path',
 			'hrsh7th/cmp-cmdline',
-			'hrsh7th/cmp-vsnip',
-			'hrsh7th/vim-vsnip',
+			'neovim/nvim-lspconfig',
+			'L3MON4D3/LuaSnip',
+			'saadparwaiz1/cmp_luasnip',
 		},
 		config = function()
 			vim.o.completeopt = "menu,menuone,noselect"
 			local cmp = require('cmp')
 			cmp.setup {
+				snippet = {
+					expand = function(args)
+						require('luasnip').lsp_expand()
+					end
+				},
 				sources = cmp.config.sources({
 					{ name = 'nvim_lsp' },
-					{ name = 'vsnip' },
-				}, { { name = 'buffer' } });
+					{ name = 'nvim_lsp_signature_help' },
+					{ name = 'nvim_lua' },
+					{ name = 'luasnip' },
+					{ name = 'path' },
+				}, {
+					{ name = 'buffer', keyword_length = 3 },
+				}),
 				mapping = {
-					['<C-Space'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
+					['<C-b>'] = cmp.mapping.scroll_docs(-4),
+					['<C-f>'] = cmp.mapping.scroll_docs(4),
+					['<C-Space'] = cmp.mapping(cmp.mapping.complete()),
+					['<C-e>'] = cmp.mapping.abort(),
 					['<CR>'] = cmp.mapping.confirm({ select = true }),
 				};
 				enabled = true;
@@ -167,7 +224,15 @@ local plugins = {
 		dependencies = { "neovim/nvim-lspconfig", "williamboman/mason-lspconfig.nvim"},
 		lazy = false,
 		config = function()
-			require("mason").setup()
+			require("mason").setup({
+				ui = {
+					icons = {
+							package_installed = "✓",
+							package_pending = "➜",
+							package_uninstalled = "✗"
+					}
+				}
+			})
 		end
 	},
 	{
@@ -244,7 +309,9 @@ local plugins = {
 		"leafgarland/typescript-vim",
 	},
 	-- svelte
-
+	{
+		"github/copilot.vim",
+	},
 	{
 		"jose-elias-alvarez/null-ls.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
@@ -334,6 +401,12 @@ local plugins = {
 		end,
 	},
 	{
+		'folke/trouble.nvim',
+		dependencies = {
+			'nvim-tree/nvim-web-devicons',
+		},
+	},
+	{
 		'iamcco/markdown-preview.nvim',
 		build = 'cd app && yarn install',
 		--cmd = 'MarkdownPreview'
@@ -400,59 +473,7 @@ local plugins = {
 			}
 		end
 	},
-	{
-		'simrat39/rust-tools.nvim',
-		dependencies = {
-			"nvim-lspconfig",
-			"neovim/nvim-lspconfig",
-			"nvim-lua/plenary.nvim",
-			"mfussenegger/nvim-dap",
-		},
-		config = function()
-			rt = require('rust-tools')
-			rt.setup({
-				server = {
-					on_attach = function(_, bufnr)
-						-- code action groups
-						vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
-						-- hover action
-						vim.keymap.set("n", "<Leader><Leader>", rt.hover_actions.hover_actions, { buffer = bufnr })
-					end
-				}
-			})
-
-			local lsp_installer = require("nvim-lsp-installer")
-			local lspconfig = require("lspconfig")
-			local nlspsettings = require("nlspsettings")
-
-			nlspsettings.setup({
-				config_home = vim.fn.stdpath("config") .. "/nlsp-settings",
-				local_settings_dir = ".nlsp-settings",
-				local_settings_root_markers_fallback = { ".git" },
-				append_default_schemas = true,
-				loader = "json",
-			})
-			function on_attach(client, buf_num)
-				local function buf_set_option(...) vim.api.nvim_buf_set_option(buf_num, ...) end
-				buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
-			end
-
-			local global_capabilities = vim.lsp.protocol.make_client_capabilities()
-			global_capabilities.textDocument.completion.completionItem.snippetSupport = true
-
-			lspconfig.util.default_config = vim.tbl_extend("force", lspconfig.util.default_config, {
-				capabilities = global_capabilities,
-			})
-
-			lsp_installer.on_server_ready(function(server)
-				server:setup({
-					on_attach = on_attach
-				})
-			end)
-
-
-		end
-	}
+	rust,
 }
 
 require("lazy").setup(plugins)
