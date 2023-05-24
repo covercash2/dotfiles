@@ -14,6 +14,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 local rust_config = require("rust")
+local file_tree = require("file_tree")
 
 local plugins = {
 	{
@@ -26,7 +27,6 @@ local plugins = {
 			local wk = require("which-key")
 			wk.setup()
 			local telescope = require("telescope.builtin")
-			local tree = require("nvim-tree.api")
 			wk.register({
 				a = { vim.lsp.buf.code_action, "code action" },
 				b = {
@@ -53,7 +53,7 @@ local plugins = {
 				r = { vim.lsp.rename, "rename" },
 				t = {
 					name = "tree",
-					t = { tree.tree.toggle, "toggle" },
+					t = { file_tree.show, "toggle" },
 				},
 			}, { prefix = "<leader>" })
 		end,
@@ -432,12 +432,6 @@ local plugins = {
 		dependencies = { "godlygeek/tabular" },
 	},
 	{
-		"folke/tokyonight.nvim",
-		config = function()
-			vim.cmd([[colorscheme tokyonight]])
-		end,
-	},
-	{
 		"folke/trouble.nvim",
 		dependencies = {
 			"nvim-tree/nvim-web-devicons",
@@ -511,6 +505,7 @@ local plugins = {
 			})
 		end,
 	},
+	file_tree.lazy,
 	rust,
 }
 

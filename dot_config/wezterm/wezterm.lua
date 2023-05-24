@@ -7,8 +7,8 @@ if wezterm.config_builder then
 end
 
 -- https://wezfurlong.org/wezterm/colorschemes/index.html
---config.color_scheme = 'Monokai Remastered'
-config.color_scheme = 'GitHub Dark'
+config.color_scheme = 'Andromeda'
+--config.color_scheme = 'GitHub Dark'
 
 config.window_frame = {
 	active_titlebar_bg = '#020202',
