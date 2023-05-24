@@ -13,20 +13,20 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 
-local rust_config = require('rust')
+local rust_config = require("rust")
 
 local plugins = {
 	{
-		'folke/which-key.nvim',
+		"folke/which-key.nvim",
 		dependencies = {
-			'nvim-telescope/telescope.nvim',
-			'nvim-tree/nvim-tree.lua',
+			"nvim-telescope/telescope.nvim",
+			"nvim-tree/nvim-tree.lua",
 		},
 		config = function()
-			local wk = require('which-key')
+			local wk = require("which-key")
 			wk.setup()
-			local telescope = require('telescope.builtin')
-			local tree = require('nvim-tree.api')
+			local telescope = require("telescope.builtin")
+			local tree = require("nvim-tree.api")
 			wk.register({
 				a = { vim.lsp.buf.code_action, "code action" },
 				b = {
@@ -54,9 +54,9 @@ local plugins = {
 				t = {
 					name = "tree",
 					t = { tree.tree.toggle, "toggle" },
-				}
-			}, { prefix = '<leader>' })
-		end
+				},
+			}, { prefix = "<leader>" })
+		end,
 	},
 	{
 		"HiPhish/nvim-ts-rainbow2",
@@ -64,14 +64,14 @@ local plugins = {
 			"nvim-treesitter/nvim-treesitter",
 		},
 		config = function()
-			require('nvim-treesitter.configs').setup {
+			require("nvim-treesitter.configs").setup({
 				rainbow = {
 					enable = true,
-					query = 'rainbow-parens',
-					strategy = require('ts-rainbow').strategy.global,
-				}
-			}
-		end
+					query = "rainbow-parens",
+					strategy = require("ts-rainbow").strategy.global,
+				},
+			})
+		end,
 	},
 	"tpope/vim-fugitive",
 	{
@@ -83,46 +83,61 @@ local plugins = {
 			"nvim-treesitter/nvim-treesitter",
 		},
 		config = function()
-			require("neorg").setup {
+			require("neorg").setup({
 				load = {
 					["core.defaults"] = {},
 					["core.norg.concealer"] = {},
 					["core.norg.completion"] = {
 						config = {
-							engine = "nvim-cmp"
-						}
+							engine = "nvim-cmp",
+						},
 					},
 					["core.norg.dirman"] = {
 						config = {
 							workspaces = {
 								work = "~/personal",
 								home = "~/Notes",
-							}
-						}
-					}
-				}
-			}
+							},
+						},
+					},
+				},
+			})
 			vim.cmd("Neorg sync-parsers")
-		end
+		end,
 	},
 	{
-		'nvim-treesitter/nvim-treesitter',
+		"nvim-treesitter/nvim-treesitter",
 		config = function()
-			vim.cmd('TSUpdate')
-			require('nvim-treesitter.configs').setup {
-				ensure_installed = {"lua", "rust", "python", "elm", "cpp", "cmake", "bash", "fish", "make", "markdown", "norg", "kdl", "svelte", "css"},
+			vim.cmd("TSUpdate")
+			require("nvim-treesitter.configs").setup({
+				ensure_installed = {
+					"lua",
+					"rust",
+					"python",
+					"elm",
+					"cpp",
+					"cmake",
+					"bash",
+					"fish",
+					"make",
+					"markdown",
+					"norg",
+					"kdl",
+					"svelte",
+					"css",
+				},
 				highlight = {
-					enable = false
-				}
-			}
-		end
+					enable = false,
+				},
+			})
+		end,
 	},
 	{
 		"echasnovski/mini.ai",
 		version = "*",
 		lazy = false,
 		config = function()
-			require('mini.ai').setup()
+			require("mini.ai").setup()
 		end,
 	},
 	{
@@ -130,7 +145,7 @@ local plugins = {
 		version = "*",
 		lazy = false,
 		config = function()
-			require('mini.surround').setup()
+			require("mini.surround").setup()
 		end,
 	},
 	{
@@ -167,81 +182,93 @@ local plugins = {
 	},
 	-- snippet
 	{
-		'L3MON4D3/LuaSnip',
+		"L3MON4D3/LuaSnip",
 		dependencies = {
-			'rafamadriz/friendly-snippets',
+			"rafamadriz/friendly-snippets",
 		},
 		config = function()
-			require('luasnip.loaders.from_vscode').lazy_load()
+			require("luasnip.loaders.from_vscode").lazy_load()
 		end,
 	},
 	-- autocomplete
 	{
-		'hrsh7th/nvim-cmp',
+		"hrsh7th/nvim-cmp",
 		dependencies = {
-			'hrsh7th/cmp-buffer',
-			'hrsh7th/cmp-nvim-lua',
-			'hrsh7th/cmp-nvim-lsp',
-			'hrsh7th/cmp-path',
-			'hrsh7th/cmp-cmdline',
-			'neovim/nvim-lspconfig',
-			'L3MON4D3/LuaSnip',
-			'saadparwaiz1/cmp_luasnip',
+			"hrsh7th/cmp-buffer",
+			"hrsh7th/cmp-nvim-lua",
+			"hrsh7th/cmp-nvim-lsp",
+			"hrsh7th/cmp-path",
+			"hrsh7th/cmp-cmdline",
+			"neovim/nvim-lspconfig",
+			"L3MON4D3/LuaSnip",
+			"saadparwaiz1/cmp_luasnip",
 		},
 		config = function()
 			vim.o.completeopt = "menu,menuone,noselect"
-			local cmp = require('cmp')
-			cmp.setup {
+			local cmp = require("cmp")
+			cmp.setup({
 				snippet = {
 					expand = function(args)
-						require('luasnip').lsp_expand()
-					end
+						require("luasnip").lsp_expand()
+					end,
 				},
 				sources = cmp.config.sources({
-					{ name = 'nvim_lsp' },
-					{ name = 'nvim_lsp_signature_help' },
-					{ name = 'nvim_lua' },
-					{ name = 'luasnip' },
-					{ name = 'path' },
+					{ name = "nvim_lsp" },
+					{ name = "nvim_lsp_signature_help" },
+					{ name = "nvim_lua" },
+					{ name = "luasnip" },
+					{ name = "path" },
 				}, {
-					{ name = 'buffer', keyword_length = 3 },
+					{ name = "buffer", keyword_length = 3 },
 				}),
 				mapping = {
-					['<C-b>'] = cmp.mapping.scroll_docs(-4),
-					['<C-f>'] = cmp.mapping.scroll_docs(4),
-					['<C-Space'] = cmp.mapping(cmp.mapping.complete()),
-					['<C-e>'] = cmp.mapping.abort(),
-					['<CR>'] = cmp.mapping.confirm({ select = true }),
-				};
-				enabled = true;
-				autocomplete = true;
-				norg = true;
-			}
-		end
+					["<C-b>"] = cmp.mapping.scroll_docs(-4),
+					["<C-f>"] = cmp.mapping.scroll_docs(4),
+					["<C-Space"] = cmp.mapping(cmp.mapping.complete()),
+					["<C-e>"] = cmp.mapping.abort(),
+					["<CR>"] = cmp.mapping.confirm({ select = true }),
+				},
+				enabled = true,
+				autocomplete = true,
+				norg = true,
+			})
+		end,
 	},
 	{
-		'williamboman/mason.nvim',
-		dependencies = { "neovim/nvim-lspconfig", "williamboman/mason-lspconfig.nvim"},
+		"williamboman/mason.nvim",
+		dependencies = { "neovim/nvim-lspconfig", "williamboman/mason-lspconfig.nvim" },
 		lazy = false,
+		build = ":MasonUpdate",
 		config = function()
 			require("mason").setup({
 				ui = {
 					icons = {
-							package_installed = "✓",
-							package_pending = "➜",
-							package_uninstalled = "✗"
-					}
-				}
+						package_installed = "✓",
+						package_pending = "➜",
+						package_uninstalled = "✗",
+					},
+				},
 			})
-		end
+			require("mason-lspconfig").setup()
+		end,
 	},
 	{
-		'neovim/nvim-lspconfig',
+		"jay-babu/mason-null-ls.nvim",
 		dependencies = {
-			'nvim-lua/completion-nvim'
+			"williamboman/mason.nvim",
+			"jose-elias-alvarez/null-ls.nvim",
 		},
 		config = function()
-			local nvim_lsp = require('lspconfig')
+			require("mason-null-ls").setup()
+		end,
+	},
+	{
+		"neovim/nvim-lspconfig",
+		dependencies = {
+			"nvim-lua/completion-nvim",
+		},
+		config = function()
+			local nvim_lsp = require("lspconfig")
 			local servers = { "pyright", "luau_lsp", "svelte" }
 			local on_attach = function(client, bufnr)
 				vim.o.updatetime = 250
@@ -252,49 +279,58 @@ local plugins = {
 						local opts = {
 							focusable = false,
 							close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
-							border = 'rounded',
-							source = 'always',
-							prefix = ' ',
-							scope = 'cursor',
+							border = "rounded",
+							source = "always",
+							prefix = " ",
+							scope = "cursor",
 						}
 						vim.diagnostic.open_float(nil, opts)
-					end
+					end,
 				})
 
-				local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-				local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+				local function buf_set_keymap(...)
+					vim.api.nvim_buf_set_keymap(bufnr, ...)
+				end
+				local function buf_set_option(...)
+					vim.api.nvim_buf_set_option(bufnr, ...)
+				end
 
-				buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+				buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
 
-				local opts = { noremap=true, silent=true }
+				local opts = { noremap = true, silent = true }
 
-				buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-				buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-				buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-				buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-				buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-				buf_set_keymap('n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-				buf_set_keymap('n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-				buf_set_keymap('n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
-				buf_set_keymap('n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-				buf_set_keymap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-				buf_set_keymap('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-				buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-				buf_set_keymap('n', '<leader>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-				buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-				buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-				buf_set_keymap('n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
-				buf_set_keymap('n', '<leader>bf', '<cmd>lua vim.lsp.buf.format { async = true }<CR>', opts)
+				buf_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
+				buf_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
+				buf_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
+				buf_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
+				buf_set_keymap("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
+				buf_set_keymap("n", "<leader>wa", "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", opts)
+				buf_set_keymap("n", "<leader>wr", "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", opts)
+				buf_set_keymap(
+					"n",
+					"<leader>wl",
+					"<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>",
+					opts
+				)
+				buf_set_keymap("n", "<leader>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
+				buf_set_keymap("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
+				buf_set_keymap("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
+				buf_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+				buf_set_keymap("n", "<leader>e", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", opts)
+				buf_set_keymap("n", "[d", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", opts)
+				buf_set_keymap("n", "]d", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>", opts)
+				buf_set_keymap("n", "<leader>q", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>", opts)
+				buf_set_keymap("n", "<leader>bf", "<cmd>lua vim.lsp.buf.format { async = true }<CR>", opts)
 
-				require('completion').on_attach()
+				require("completion").on_attach()
 			end
 			for _, server in ipairs(servers) do
-				nvim_lsp[server].setup{
+				nvim_lsp[server].setup({
 					on_attach = on_attach,
-					capabilities = capabilities
-				}
+					capabilities = capabilities,
+				})
 			end
-		end
+		end,
 	}, -- lspconfig
 
 	-- svelte
@@ -322,7 +358,7 @@ local plugins = {
 					null_ls.builtins.formatting.stylua,
 					null_ls.builtins.diagnostics.eslint,
 					null_ls.builtins.completion.spell,
-				}
+				},
 			})
 		end,
 	},
@@ -342,7 +378,9 @@ local plugins = {
 				loader = "json",
 			})
 			function on_attach(client, buf_num)
-				local function buf_set_option(...) vim.api.nvim_buf_set_option(buf_num, ...) end
+				local function buf_set_option(...)
+					vim.api.nvim_buf_set_option(buf_num, ...)
+				end
 				buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
 			end
 
@@ -355,11 +393,10 @@ local plugins = {
 
 			lsp_installer.on_server_ready(function(server)
 				server:setup({
-					on_attach = on_attach
+					on_attach = on_attach,
 				})
 			end)
-
-		end
+		end,
 	},
 	{
 		"j-hui/fidget.nvim",
@@ -367,76 +404,77 @@ local plugins = {
 	},
 	-- bottom bar config
 	{
-		'hoob3rt/lualine.nvim',
-		dependencies = { 'nvim-tree/nvim-web-devicons', opt = true},
+		"hoob3rt/lualine.nvim",
+		dependencies = { "nvim-tree/nvim-web-devicons", opt = true },
 		config = function()
-			require('lualine').setup {
-				options = {theme = 'ayu_mirage'}
-			}
-		end
-	},
-	{
-		'lewis6991/gitsigns.nvim',
-		config = function()
-			require('gitsigns').setup()
-		end
-	},
-	{
-		-- embed nvim in the browser
-		'glacambre/firenvim',
-		cond = not not vim.g.started_by_firenvim,
-		build = function()
-			require("lazy").load({ plugins = "firenvim", wait = true})
-			vim.fn['firenvim#install'](0)
+			require("lualine").setup({
+				options = { theme = "ayu_mirage" },
+			})
 		end,
 	},
 	{
-		'preservim/vim-markdown',
-		dependencies = { 'godlygeek/tabular' },
+		"lewis6991/gitsigns.nvim",
+		config = function()
+			require("gitsigns").setup()
+		end,
+	},
+	{
+		-- embed nvim in the browser
+		"glacambre/firenvim",
+		cond = not not vim.g.started_by_firenvim,
+		build = function()
+			require("lazy").load({ plugins = "firenvim", wait = true })
+			vim.fn["firenvim#install"](0)
+		end,
+	},
+	{
+		"preservim/vim-markdown",
+		dependencies = { "godlygeek/tabular" },
 	},
 	{
 		"folke/tokyonight.nvim",
 		config = function()
-			vim.cmd[[colorscheme tokyonight]]
+			vim.cmd([[colorscheme tokyonight]])
 		end,
 	},
 	{
-		'folke/trouble.nvim',
+		"folke/trouble.nvim",
 		dependencies = {
-			'nvim-tree/nvim-web-devicons',
+			"nvim-tree/nvim-web-devicons",
 		},
 	},
 	{
-		'iamcco/markdown-preview.nvim',
-		build = 'cd app && yarn install',
+		"iamcco/markdown-preview.nvim",
+		build = "cd app && yarn install",
 		--cmd = 'MarkdownPreview'
 	},
-	'cespare/vim-toml',
+	"cespare/vim-toml",
 	{
-		'nvim-telescope/telescope.nvim', tag = '0.1.0',
-		dependencies = { 'nvim-lua/plenary.nvim' }
+		"nvim-telescope/telescope.nvim",
+		tag = "0.1.0",
+		dependencies = { "nvim-lua/plenary.nvim" },
 	},
 	{
-		'akinsho/git-conflict.nvim',
+		"akinsho/git-conflict.nvim",
 		config = function()
-			require('git-conflict').setup()
-		end
+			require("git-conflict").setup()
+		end,
 	},
 	{
-		'p00f/clangd_extensions.nvim',
-		dependencies = { 'neovim/nvim-lspconfig' },
+		"p00f/clangd_extensions.nvim",
+		dependencies = { "neovim/nvim-lspconfig" },
 		config = function()
-			require('clangd_extensions').setup()
-		end
+			require("clangd_extensions").setup()
+		end,
 	},
 	{
-		'Civitasv/cmake-tools.nvim',
+		"Civitasv/cmake-tools.nvim",
 		dependencies = {
-			'nvim-lua/plenary.nvim',
-			'mfussenegger/nvim-dap',
+			"nvim-lua/plenary.nvim",
+			"mfussenegger/nvim-dap",
 		},
 		config = function()
-			require('cmake-tools').setup {
+			require("cmake-tools").setup({
 				cmake_command = "cmake",
 				cmake_build_directory = "build",
 				cmake_generate_options = { "-D", "CMAKE_EXPORT_COMPILE_COMMANDS=1" },
@@ -446,32 +484,32 @@ local plugins = {
 				cmake_dap_configuration = { name = "cpp", type = "codelldb", request = "launch" }, -- dap configuration, optional
 				cmake_dap_open_command = require("dap").repl.open, -- optional
 				cmake_variants_message = {
-				  short = { show = true },
-				  long = { show = true, max_length = 40 }
-				}
-			}
-		end
+					short = { show = true },
+					long = { show = true, max_length = 40 },
+				},
+			})
+		end,
 	},
 	{
-		'nvim-tree/nvim-web-devicons',
+		"nvim-tree/nvim-web-devicons",
 		config = function()
-			require('nvim-web-devicons').setup {
-				default = true
-			}
-		end
+			require("nvim-web-devicons").setup({
+				default = true,
+			})
+		end,
 	},
 	{
-		'nvim-tree/nvim-tree.lua',
+		"nvim-tree/nvim-tree.lua",
 		dependencies = {
-			'nvim-tree/nvim-web-devicons',
+			"nvim-tree/nvim-web-devicons",
 		},
 		config = function()
-			require('nvim-tree').setup {
+			require("nvim-tree").setup({
 				git = {
 					ignore = false,
-				}
-			}
-		end
+				},
+			})
+		end,
 	},
 	rust,
 }

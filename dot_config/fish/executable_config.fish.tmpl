@@ -19,7 +19,7 @@ switch $os
 		# linux found
 	case Darwin
 # load makeinfo from brew
-			set makeinfo /usr/local/opt/texinfo/bin 
+			set makeinfo /usr/local/opt/texinfo/bin
 			if test -d $makeinfo
 				set path $nodebin $makeinfo $homebin
 
@@ -79,5 +79,5 @@ source /opt/asdf-vm/asdf.fish
 
 #>>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-eval your/path/to/miniconda/bin/conda "shell.fish" "hook" $argv | source
+#eval your/path/to/miniconda/bin/conda "shell.fish" "hook" $argv | source
 # <<< conda initialize <<<
