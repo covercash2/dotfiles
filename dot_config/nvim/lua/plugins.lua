@@ -22,6 +22,7 @@ local plugins = {
 		dependencies = {
 			"nvim-telescope/telescope.nvim",
 			"nvim-tree/nvim-tree.lua",
+			"folke/trouble.nvim",
 		},
 		config = function()
 			local wk = require("which-key")
@@ -34,7 +35,15 @@ local plugins = {
 					f = { vim.lsp.buf.format, "format" },
 				},
 				D = { vim.lsp.buf.type_definition, "type definition" },
-				e = { vim.lsp.diagnostic.get_line_diagnostics, "show line diagnostics" },
+				e = {
+					name = "errors",
+					l = {
+						vim.lsp.diagnostic.get_line_diagnostics, "line diagnostics",
+					},
+					t = {
+						vim.cmd("TroubleToggle"), "trouble",
+					}
+				},
 				f = {
 					name = "file",
 					f = { telescope.find_files, "find file" },
@@ -57,6 +66,10 @@ local plugins = {
 				},
 			}, { prefix = "<leader>" })
 		end,
+	},
+	{
+		"folke/trouble.nvim",
+		dependencies = { "nvim-tree/nvim-web-devicons" },
 	},
 	{
 		"HiPhish/nvim-ts-rainbow2",
