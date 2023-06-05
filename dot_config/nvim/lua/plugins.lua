@@ -4,7 +4,7 @@ if not vim.loop.fs_stat(lazypath) then
 	vim.fn.system({
 		"git",
 		"clone",
-		"--filter=blob:none",
+ 		"--filter=blob:none",
 		"https://github.com/folke/lazy.nvim.git",
 		"--branch=stable",
 		lazypath,
@@ -38,11 +38,13 @@ local plugins = {
 				e = {
 					name = "errors",
 					l = {
-						vim.lsp.diagnostic.get_line_diagnostics, "line diagnostics",
+						vim.lsp.diagnostic.get_line_diagnostics,
+						"line diagnostics",
 					},
 					t = {
-						vim.cmd("TroubleToggle"), "trouble",
-					}
+						vim.cmd("TroubleToggle"),
+						"trouble",
+					},
 				},
 				f = {
 					name = "file",
@@ -151,6 +153,13 @@ local plugins = {
 		lazy = false,
 		config = function()
 			require("mini.ai").setup()
+		end,
+	},
+	{
+		"echasnovski/mini.statusline",
+		version = "*",
+		config = function()
+			require('mini.statusline').setup()
 		end,
 	},
 	{
@@ -282,7 +291,7 @@ local plugins = {
 		},
 		config = function()
 			local nvim_lsp = require("lspconfig")
-			local servers = { "pyright", "luau_lsp", "svelte" }
+			local servers = { "pyright", "luau_lsp", "svelte", "tsserver", "rust_analyzer", "eslint" }
 			local on_attach = function(client, bufnr)
 				vim.o.updatetime = 250
 
@@ -415,16 +424,6 @@ local plugins = {
 		"j-hui/fidget.nvim",
 		config = true,
 	},
-	-- bottom bar config
-	{
-		"hoob3rt/lualine.nvim",
-		dependencies = { "nvim-tree/nvim-web-devicons", opt = true },
-		config = function()
-			require("lualine").setup({
-				options = { theme = "ayu_mirage" },
-			})
-		end,
-	},
 	{
 		"lewis6991/gitsigns.nvim",
 		config = function()
@@ -517,6 +516,15 @@ local plugins = {
 				},
 			})
 		end,
+	},
+	{
+		"bluz71/vim-moonfly-colors",
+		name = "moonfly",
+		lazy = false,
+		priority = 1000,
+		config = function()
+			vim.cmd [[colorscheme moonfly]]
+		end
 	},
 	file_tree.lazy,
 	rust,
