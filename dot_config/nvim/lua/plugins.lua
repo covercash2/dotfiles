@@ -4,7 +4,7 @@ if not vim.loop.fs_stat(lazypath) then
 	vim.fn.system({
 		"git",
 		"clone",
- 		"--filter=blob:none",
+		"--filter=blob:none",
 		"https://github.com/folke/lazy.nvim.git",
 		"--branch=stable",
 		lazypath,
@@ -42,7 +42,9 @@ local plugins = {
 						"line diagnostics",
 					},
 					t = {
-						vim.cmd("TroubleToggle"),
+						function()
+							vim.cmd([[TroubleToggle]])
+						end,
 						"trouble",
 					},
 				},
@@ -58,13 +60,16 @@ local plugins = {
 					d = { vim.lsp.buf.definition, "definition" },
 					D = { vim.lsp.buf.declration, "declaration" },
 					i = { vim.lsp.buf.implementation, "implementation" },
+					r = { vim.lsp.buf.references, "references" },
 					p = { vim.lsp.diagnostic.goto_prev, "previous" },
 					n = { vim.lsp.buf.format, "format" },
 				},
-				r = { vim.lsp.rename, "rename" },
+				r = { vim.lsp.buf.rename, "rename" },
 				t = {
 					name = "tree",
 					t = { file_tree.show, "toggle" },
+					b = { file_tree.buffers, "buffers" },
+					g = { file_tree.git, "git status" },
 				},
 			}, { prefix = "<leader>" })
 		end,
@@ -139,12 +144,20 @@ local plugins = {
 					"norg",
 					"kdl",
 					"svelte",
+					"typescript",
 					"css",
 				},
 				highlight = {
 					enable = false,
 				},
 			})
+		end,
+	},
+	{
+		"windwp/nvim-ts-autotag",
+		dependencies = { "nvim-treesitter/nvim-treesitter" },
+		config = function()
+			require("nvim-ts-autotag").setup()
 		end,
 	},
 	{
@@ -159,7 +172,7 @@ local plugins = {
 		"echasnovski/mini.statusline",
 		version = "*",
 		config = function()
-			require('mini.statusline').setup()
+			require("mini.statusline").setup()
 		end,
 	},
 	{
@@ -287,7 +300,10 @@ local plugins = {
 	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
-			"nvim-lua/completion-nvim",
+			"hrsh7th/nvim-cmp",
+			"hrsh7th/cmp-nvim-lsp",
+			"saadparwaiz1/cmp_luasnip",
+			"L3MON4D3/LuaSnip",
 		},
 		config = function()
 			local nvim_lsp = require("lspconfig")
@@ -321,10 +337,6 @@ local plugins = {
 
 				local opts = { noremap = true, silent = true }
 
-				buf_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
-				buf_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-				buf_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
-				buf_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
 				buf_set_keymap("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
 				buf_set_keymap("n", "<leader>wa", "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", opts)
 				buf_set_keymap("n", "<leader>wr", "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", opts)
@@ -335,17 +347,11 @@ local plugins = {
 					opts
 				)
 				buf_set_keymap("n", "<leader>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
-				buf_set_keymap("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
-				buf_set_keymap("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
-				buf_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
 				buf_set_keymap("n", "<leader>e", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", opts)
-				buf_set_keymap("n", "[d", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", opts)
-				buf_set_keymap("n", "]d", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>", opts)
 				buf_set_keymap("n", "<leader>q", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>", opts)
-				buf_set_keymap("n", "<leader>bf", "<cmd>lua vim.lsp.buf.format { async = true }<CR>", opts)
-
-				require("completion").on_attach()
 			end
+
+			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 			for _, server in ipairs(servers) do
 				nvim_lsp[server].setup({
 					on_attach = on_attach,
@@ -518,13 +524,13 @@ local plugins = {
 		end,
 	},
 	{
-		"bluz71/vim-moonfly-colors",
-		name = "moonfly",
+		"bluz71/vim-nightfly-colors",
+		name = "nightfly",
 		lazy = false,
 		priority = 1000,
 		config = function()
-			vim.cmd [[colorscheme moonfly]]
-		end
+			vim.cmd([[colorscheme nightfly]])
+		end,
 	},
 	file_tree.lazy,
 	rust,
