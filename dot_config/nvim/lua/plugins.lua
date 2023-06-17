@@ -133,6 +133,7 @@ local plugins = {
 				ensure_installed = {
 					"lua",
 					"rust",
+					"kotlin",
 					"python",
 					"elm",
 					"cpp",
@@ -144,7 +145,10 @@ local plugins = {
 					"norg",
 					"kdl",
 					"svelte",
+					"javascript",
 					"typescript",
+					"tsx",
+					"json",
 					"css",
 				},
 				highlight = {

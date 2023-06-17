@@ -4,6 +4,7 @@ local config = {
 -- https://wezfurlong.org/wezterm/colorschemes/index.html
 		color_scheme = "Andromeda",
 --	color_scheme = 'GitHub Dark',
+	font = wezterm.font('Fira Code'),
 	colors = {
 		visual_bell = "#777777",
 	},
