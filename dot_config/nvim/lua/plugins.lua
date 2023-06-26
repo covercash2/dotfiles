@@ -288,7 +288,6 @@ local plugins = {
 					},
 				},
 			})
-			require("mason-lspconfig").setup()
 		end,
 	},
 	{
@@ -302,12 +301,20 @@ local plugins = {
 		end,
 	},
 	{
+		"williamboman/nvim-lsp-installer",
+		config = function()
+			require("nvim-lsp-installer").setup {}
+		end
+
+	},
+	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
 			"hrsh7th/nvim-cmp",
 			"hrsh7th/cmp-nvim-lsp",
 			"saadparwaiz1/cmp_luasnip",
 			"L3MON4D3/LuaSnip",
+			"williamboman/nvim-lsp-installer",
 		},
 		config = function()
 			local nvim_lsp = require("lspconfig")
@@ -378,9 +385,6 @@ local plugins = {
 	},
 	-- svelte
 	{
-		"github/copilot.vim",
-	},
-	{
 		"jose-elias-alvarez/null-ls.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
 		config = function()
@@ -395,43 +399,8 @@ local plugins = {
 		end,
 	},
 	{
-		"tamago324/nlsp-settings.nvim",
-		dependencies = { "neovim/nvim-lspconfig", "williamboman/nvim-lsp-installer" },
-		config = function()
-			local lsp_installer = require("nvim-lsp-installer")
-			local lspconfig = require("lspconfig")
-			local nlspsettings = require("nlspsettings")
-
-			nlspsettings.setup({
-				config_home = vim.fn.stdpath("config") .. "/nlsp-settings",
-				local_settings_dir = ".nlsp-settings",
-				local_settings_root_markers_fallback = { ".git" },
-				append_default_schemas = true,
-				loader = "json",
-			})
-			function on_attach(client, buf_num)
-				local function buf_set_option(...)
-					vim.api.nvim_buf_set_option(buf_num, ...)
-				end
-				buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
-			end
-
-			local global_capabilities = vim.lsp.protocol.make_client_capabilities()
-			global_capabilities.textDocument.completion.completionItem.snippetSupport = true
-
-			lspconfig.util.default_config = vim.tbl_extend("force", lspconfig.util.default_config, {
-				capabilities = global_capabilities,
-			})
-
-			lsp_installer.on_server_ready(function(server)
-				server:setup({
-					on_attach = on_attach,
-				})
-			end)
-		end,
-	},
-	{
 		"j-hui/fidget.nvim",
+		tag = "legacy",
 		config = true,
 	},
 	{
