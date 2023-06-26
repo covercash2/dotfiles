@@ -1,0 +1,3 @@
+{{- template "config.nu" . -}}
+
+let-env ASDF_NU_DIR = (brew --prefix asdf | str trim | into string | path join 'libexec')

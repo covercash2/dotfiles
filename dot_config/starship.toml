@@ -20,7 +20,6 @@ symbol = "📦 "
 [rust]
 format = "[$symbol$version]($style) "
 symbol = "🦀 "
-#symbol = "Ⓡ "
 
 [git_branch]
 format = "[$symbol$branch]($style) "
