@@ -87,4 +87,5 @@ let-env NU_PLUGIN_DIRS = [
 # let-env PATH = ($env.PATH | split row (char esep) | prepend '/some/path')
 
 let-env PATH = ($env.PATH | split row (char esep) | prepend ($env.HOME | path join ".cargo/bin"))
+let-env PATH = ($env.PATH | split row (char esep) | prepend ($env.HOME | path join ".local/bin"))
 
