@@ -2,6 +2,9 @@
 Library
 gnu.emacs.daemon.plist
 {{ end }}
+{{ if ne .chezmoi.os "linux" }}
+.config/nushell/*
+{{ end }}
 
 README.md
 
