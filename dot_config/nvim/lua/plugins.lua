@@ -291,16 +291,6 @@ local plugins = {
 		end,
 	},
 	{
-		"jay-babu/mason-null-ls.nvim",
-		dependencies = {
-			"williamboman/mason.nvim",
-			"jose-elias-alvarez/null-ls.nvim",
-		},
-		config = function()
-			require("mason-null-ls").setup()
-		end,
-	},
-	{
 		"williamboman/nvim-lsp-installer",
 		config = function()
 			require("nvim-lsp-installer").setup {}
@@ -384,20 +374,6 @@ local plugins = {
 		"leafgarland/typescript-vim",
 	},
 	-- svelte
-	{
-		"jose-elias-alvarez/null-ls.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
-		config = function()
-			local null_ls = require("null-ls")
-			null_ls.setup({
-				sources = {
-					null_ls.builtins.formatting.stylua,
-					null_ls.builtins.diagnostics.eslint,
-					null_ls.builtins.completion.spell,
-				},
-			})
-		end,
-	},
 	{
 		"j-hui/fidget.nvim",
 		tag = "legacy",
