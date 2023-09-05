@@ -84,9 +84,16 @@ $env.NU_PLUGIN_DIRS = [
 ]
 
 # To add entries to PATH (on Windows you might use Path), you can use the following pattern:
-# let-env PATH = ($env.PATH | split row (char esep) | prepend '/some/path')
+# $env.PATH = ($env.PATH | split row (char esep) | prepend '/some/path')
 
-$env.PATH = ($env.PATH | split row (char esep) | prepend ($env.HOME | path join ".cargo/bin"))
-$env.PATH = ($env.PATH | split row (char esep) | prepend ($env.HOME | path join ".local/bin"))
-$env.PATH = ($env.PATH | split row (char esep) | prepend ($env.HOME | path join ".asdf/bin"))
+$env.user_paths = ([
+	".cargo/bin",
+	".local/bin",
+	".asdf/bin",
+	"google-cloud-sdk/bin"
+] | each {|path| $env.HOME | path join $path })
+
+$env.user_paths | where $it not-in $env.PATH | each { |path|
+	$env.PATH | split row (char esep) | prepend $path
+}
 
