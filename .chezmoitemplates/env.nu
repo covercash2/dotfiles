@@ -93,7 +93,5 @@ $env.user_paths = ([
 	"google-cloud-sdk/bin"
 ] | each {|path| $env.HOME | path join $path })
 
-$env.user_paths | where $it not-in $env.PATH | each { |path|
-	$env.PATH | split row (char esep) | prepend $path
-}
+$env.PATH =	($env.PATH | prepend ($env.user_paths | where $it not-in $env.PATH))
 

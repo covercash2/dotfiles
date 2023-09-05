@@ -1,0 +1,1 @@
+.chezmoitemplates/config.nu
