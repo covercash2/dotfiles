@@ -90,6 +90,7 @@ $env.user_paths = ([
 	".cargo/bin",
 	".local/bin",
 	".asdf/bin",
+	"go/bin",
 	"google-cloud-sdk/bin"
 ] | each {|path| $env.HOME | path join $path })
 

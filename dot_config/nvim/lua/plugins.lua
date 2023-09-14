@@ -140,6 +140,7 @@ local plugins = {
 					"cmake",
 					"bash",
 					"fish",
+					"go",
 					"make",
 					"markdown",
 					"norg",
@@ -308,7 +309,7 @@ local plugins = {
 		},
 		config = function()
 			local nvim_lsp = require("lspconfig")
-			local servers = { "pyright", "luau_lsp", "svelte", "tsserver", "rust_analyzer", "eslint" }
+			local servers = { "pyright", "luau_lsp", "gopls", "svelte", "tsserver", "rust_analyzer", "eslint" }
 			local on_attach = function(client, bufnr)
 				vim.o.updatetime = 250
 
