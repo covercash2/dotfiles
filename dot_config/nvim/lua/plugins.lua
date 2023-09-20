@@ -312,6 +312,7 @@ local plugins = {
 			local on_attach = function(client, bufnr)
 				vim.o.updatetime = 250
 
+				-- show a window when a doc is available
 				vim.api.nvim_create_autocmd("CursorHold", {
 					buffer = bufnr,
 					callback = function()
@@ -353,7 +354,7 @@ local plugins = {
 			end
 
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
-			for _, server in ipairs(servers) do
+			for server in servers do
 				nvim_lsp[server].setup({
 					on_attach = on_attach,
 					capabilities = capabilities,
@@ -361,7 +362,20 @@ local plugins = {
 			end
 		end,
 	}, -- lspconfig
+	{
+		"nvimdev/guard.nvim",
+		config = function()
+			local ft = require('guard.filetype')
 
+			ft('python'):fmt('black')
+				:lint('pylint')
+
+			require('guard').setup({
+				fmt_on_save = true,
+				lsp_as_default_formatter = true,
+			})
+		end,
+	},
 	-- svelte
 	{
 		"leafOfTree/vim-svelte-plugin",
@@ -373,7 +387,6 @@ local plugins = {
 	{
 		"leafgarland/typescript-vim",
 	},
-	-- svelte
 	{
 		"j-hui/fidget.nvim",
 		tag = "legacy",
