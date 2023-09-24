@@ -496,7 +496,7 @@ local plugins = {
 		end,
 	},
 	file_tree.lazy,
-	rust,
+	--rust,
 }
 
 require("lazy").setup(plugins)

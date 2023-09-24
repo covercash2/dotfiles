@@ -176,16 +176,10 @@ let light_theme = {
     shape_vardecl: purple
 }
 
-# External completer example
-# let carapace_completer = {|spans|
-#     carapace $spans.0 nushell $spans | from json
-# }
-
-
 # The default config record. This is where much of your global configuration is setup.
 $env.config = {
   # true or false to enable or disable the welcome banner at startup
-  show_banner: true
+  show_banner: false
   ls: {
     use_ls_colors: true # use the LS_COLORS environment variable to colorize output
     clickable_links: true # enable or disable clickable links. Your terminal has to support links.
@@ -267,7 +261,7 @@ $env.config = {
   history: {
     max_size: 10000 # Session has to be reloaded for this to take effect
     sync_on_enter: true # Enable to share history between multiple sessions, else you have to close the session to write history to file
-    file_format: "plaintext" # "sqlite" or "plaintext"
+    file_format: "sqlite" # "sqlite" or "plaintext"
   }
   completions: {
     case_sensitive: false # set to true to enable case-sensitive completions
@@ -286,8 +280,8 @@ $env.config = {
   }
   cursor_shape: {
     emacs: line # block, underscore, line, blink_block, blink_underscore, blink_line (line is the default)
-    vi_insert: block # block, underscore, line , blink_block, blink_underscore, blink_line (block is the default)
-    vi_normal: blink_line # block, underscore, line, blink_block, blink_underscore, blink_line (underscore is the default)
+    vi_insert: line # block, underscore, line , blink_block, blink_underscore, blink_line (block is the default)
+    vi_normal: blink_underscore # block, underscore, line, blink_block, blink_underscore, blink_line (underscore is the default)
   }
   color_config: $dark_theme   # if you want a light theme, replace `$dark_theme` to `$light_theme`
   use_grid_icons: true
@@ -560,47 +554,12 @@ $env.PROMPT_INDICATOR_VI_NORMAL = "〉"
 $env.PROMPT_MULTILINE_INDICATOR = "::: "
 
 # completions
-def "nu-complete git branches" [] {
-		^git branch | lines | each { |line| $line | str replace '\* ' '' | str trim }
+let carapace_completer = {|spans|
+    carapace $spans.0 nushell $spans | from json
 }
 
-def "nu-complete git remotes" [] {
-		^git remote | lines | each { |line| $line | str trim }
+$env.config.completions.external = {
+    enable: true
+    max_results: 100
+    completer: $carapace_completer
 }
-
-export extern "git push" [
-	remote?: string@"nu-complete git remotes",  # the name of the remote
-	refspec?: string@"nu-complete git branches" # the branch / refspec
-	--verbose(-v)                               # be more verbose
-	--quiet(-q)                                 # be more quiet
-	--repo: string                              # repository
-	--all                                       # push all refs
-	--mirror                                    # mirror all refs
-	--delete(-d)                                # delete refs
-	--tags                                      # push tags (can't be used with --all or --mirror)
-	--dry-run(-n)                               # dry run
-	--porcelain                                 # machine-readable output
-	--force(-f)                                 # force updates
-	--force-with-lease: string                  # require old value of ref to be at this value
-	--recurse-submodules: string                # control recursive pushing of submodules
-	--thin                                      # use thin pack
-	--receive-pack: string                      # receive pack program
-	--exec: string                              # receive pack program
-	--set-upstream(-u)                          # set upstream for git pull/status
-	--progress                                  # force progress reporting
-	--prune                                     # prune locally removed refs
-	--no-verify                                 # bypass pre-push hook
-	--follow-tags                               # push missing but relevant tags
-	--signed: string                            # GPG sign the push
-	--atomic                                    # request atomic transaction on remote side
-	--push-option(-o): string                   # option to transmit
-	--ipv4(-4)                                  # use IPv4 addresses only
-	--ipv6(-6)                                  # use IPv6 addresses only
-]
-
-extern "git checkout" [
-  branch?: string@"nu-complete git branches" # name of the branch to checkout
-  -b: string                                 # create and checkout a new branch
-  -B: string                                 # create/reset and checkout a branch
-  # note: other parameters removed for brevity
-]
