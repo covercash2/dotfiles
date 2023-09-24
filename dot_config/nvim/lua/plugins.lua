@@ -354,7 +354,7 @@ local plugins = {
 			end
 
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
-			for server in servers do
+			for _, server in ipairs(servers) do
 				nvim_lsp[server].setup({
 					on_attach = on_attach,
 					capabilities = capabilities,
