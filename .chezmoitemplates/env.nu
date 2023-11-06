@@ -86,14 +86,12 @@ $env.NU_PLUGIN_DIRS = [
 # To add entries to PATH (on Windows you might use Path), you can use the following pattern:
 # $env.PATH = ($env.PATH | split row (char esep) | prepend '/some/path')
 
-let gopath = (go env | lines | parse "{arg}={value}" | where $it.arg == "GOPATH").value | first
-
 $env.user_paths = ([
 	".cargo/bin",
 	".local/bin",
 	".asdf/bin",
 	"google-cloud-sdk/bin",
-	'go/bin'
+	"go/bin"
 ] | each {|path| $env.HOME | path join $path })
 
 $env.PATH =	($env.PATH | prepend ($env.user_paths | where $it not-in $env.PATH))

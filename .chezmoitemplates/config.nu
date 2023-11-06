@@ -563,3 +563,5 @@ $env.config.completions.external = {
     max_results: 100
     completer: $carapace_completer
 }
+
+use conda.nu
