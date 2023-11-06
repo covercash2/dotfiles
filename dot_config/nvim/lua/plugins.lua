@@ -427,6 +427,16 @@ local plugins = {
 		"nvim-telescope/telescope.nvim",
 		tag = "0.1.4",
 		dependencies = { "nvim-lua/plenary.nvim" },
+		config = function()
+			require('telescope').setup{
+				pickers = {
+					find_files = {
+						-- include hidden files not in .git
+						find_command = { 'rg', '--files', '--iglob', '!.git', '--hidden' },
+					}
+				}
+			}
+		end,
 	},
 	{
 		"akinsho/git-conflict.nvim",
