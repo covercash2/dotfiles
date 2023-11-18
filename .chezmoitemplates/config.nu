@@ -561,10 +561,6 @@ $env.config.completions.external = {
     completer: $carapace_completer
 }
 
-def docker_ps [] {
-
-	}
-
 # convenience commands
 def docker_ps [] {
 	(sudo docker ps --format json) | lines | each {|it| $it | from json}
