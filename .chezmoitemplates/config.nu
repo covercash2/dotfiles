@@ -562,8 +562,8 @@ $env.config.completions.external = {
 }
 
 # convenience commands
-def docker_ps [] {
-	(sudo docker ps --format json) | lines | each {|it| $it | from json}
+def podman_ps [] {
+	(podman ps --format json) | from json
 }
 
 use conda.nu
