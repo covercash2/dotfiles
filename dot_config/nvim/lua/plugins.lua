@@ -504,6 +504,17 @@ local plugins = {
 			vim.cmd([[colorscheme nightfly]])
 		end,
 	},
+	{
+		'LhKipp/nvim-nu',
+		dependencies = {
+			"jose-elias-alvarez/null-ls.nvim"
+		},
+		config = function()
+			require('nu').setup{
+				use_lsp_features = false,
+			}
+		end
+	},
 	file_tree.lazy,
 	--rust,
 }
