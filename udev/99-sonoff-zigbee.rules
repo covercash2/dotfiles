@@ -1,0 +1,2 @@
+# make chrash the owner of the Sonoff Zigbeen device
+SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", ATTRS{serial}=="be9403aa8445ed119aabca8f0a86e0b4", SYMLINK+="ttyUSBSonoffZigbee", MODE="0660", OWNER="chrash", GROUP="uucp"

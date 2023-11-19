@@ -566,4 +566,8 @@ def podman_ps [] {
 	(podman ps --format json) | from json
 }
 
+def lsacl [path: directory = "."] {
+	ls -al $path | select name mode user group
+}
+
 use conda.nu
