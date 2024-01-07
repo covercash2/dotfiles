@@ -65,6 +65,13 @@ local plugins = {
 					n = { vim.lsp.buf.format, "format" },
 				},
 				r = { vim.lsp.buf.rename, "rename" },
+				s = {
+					name = "show",
+					s = {
+						vim.lsp.buf.signature_help,
+						"signature",
+					},
+				},
 				t = {
 					name = "tree",
 					t = { file_tree.show, "toggle" },
@@ -222,12 +229,8 @@ local plugins = {
 	-- snippet
 	{
 		"L3MON4D3/LuaSnip",
-		dependencies = {
-			"rafamadriz/friendly-snippets",
-		},
-		config = function()
-			require("luasnip.loaders.from_vscode").lazy_load()
-		end,
+		version = "v2.*",
+		build = "make install_jsregexp"
 	},
 	-- autocomplete
 	{
@@ -246,9 +249,12 @@ local plugins = {
 			vim.o.completeopt = "menu,menuone,noselect"
 			local cmp = require("cmp")
 			cmp.setup({
+				view = {
+					entries = "custom"
+				},
 				snippet = {
 					expand = function(args)
-						require("luasnip").lsp_expand()
+						require("luasnip").lsp_expand(args.body)
 					end,
 				},
 				sources = cmp.config.sources({
@@ -260,15 +266,33 @@ local plugins = {
 					{ name = "buffer", keyword_length = 3 },
 				}),
 				mapping = {
+					["<C-k>"] = cmp.mapping.select_prev_item(), -- previous suggestion
+					["<C-j>"] = cmp.mapping.select_next_item(), -- next suggestion
 					["<C-b>"] = cmp.mapping.scroll_docs(-4),
 					["<C-f>"] = cmp.mapping.scroll_docs(4),
-					["<C-Space"] = cmp.mapping(cmp.mapping.complete()),
+					["<C-Space>"] = cmp.mapping(cmp.mapping.complete()),
 					["<C-e>"] = cmp.mapping.abort(),
 					["<CR>"] = cmp.mapping.confirm({ select = true }),
 				},
 				enabled = true,
 				autocomplete = true,
 				norg = true,
+			})
+
+			cmp.setup.cmdline({ '/', '?' }, {
+				mapping = cmp.mapping.preset.cmdline(),
+				sources = {
+					{ name = 'buffer' },
+				},
+			})
+
+			cmp.setup.cmdline(':', {
+				mapping = cmp.mapping.preset.cmdline(),
+				sources = cmp.config.sources({
+					{ name = 'path' }
+				}, {
+					{ name = 'cmdline' }
+				})
 			})
 		end,
 	},
