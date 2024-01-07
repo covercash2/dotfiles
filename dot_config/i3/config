@@ -45,7 +45,7 @@ bindsym XF86AudioRaiseVolume exec "pulsemixer --change-volume +5"
 bindsym XF86AudioMicMute exec "pulsemixer --id source-1 --toggle-mute"
 
 # start a terminal
-bindsym $mod+Return exec alacritty
+bindsym $mod+Return exec wezterm
 
 # kill focused window
 bindsym $mod+Shift+q kill

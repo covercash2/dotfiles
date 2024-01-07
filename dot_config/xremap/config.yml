@@ -1,0 +1,4 @@
+modmap:
+  - name: remap_caps_to_control
+    remap:
+      capslock: leftctrl
