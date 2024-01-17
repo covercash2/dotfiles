@@ -23,6 +23,7 @@ local plugins = {
 			"nvim-telescope/telescope.nvim",
 			"nvim-tree/nvim-tree.lua",
 			"folke/trouble.nvim",
+			"nvim-neotest/neotest",
 		},
 		config = function()
 			local wk = require("which-key")
@@ -33,6 +34,17 @@ local plugins = {
 				b = {
 					name = "buffer",
 					f = { vim.lsp.buf.format, "format" },
+				},
+				c = {
+					name = "check",
+					t = {
+						"<cmd>Neotest run<cr>",
+						"run nearest test",
+					},
+					o = {
+						"<cmd>Neotest output-panel toggle<cr>",
+						"toggle test output panel",
+					}
 				},
 				D = { vim.lsp.buf.type_definition, "type definition" },
 				e = {
@@ -557,6 +569,63 @@ local plugins = {
 		end
 	},
 	file_tree.lazy,
+	{
+		"nvim-neotest/neotest",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"antoinemadec/FixCursorHold.nvim",
+			"nvim-treesitter/nvim-treesitter",
+			"nvim-neotest/neotest-jest",
+		},
+		config = function()
+			require('neotest').setup({
+				discovery = {
+					enabled = false,
+				},
+				adapters = {
+					require('neotest-jest')({
+						jest_command = "pnpm test --",
+						jestConfigFile = function()
+							local file = vim.fn.expand('%:p')
+							if string.find(file, "/packages/") then
+								print("found /packages/")
+								local match = string.match(file, "(.-/[^/]+/)src") .. "jest.config.js"
+								print("match: ", match)
+								if vim.fn.filereadable(match) then
+									return match
+								else
+									print("file did not match expected: ", match)
+								end
+							end
+
+							local baseconfig = vim.fn.getcwd() .. "/jest.config.base.js"
+
+							if vim.fn.filereadable(baseconfig) then
+								return baseconfig
+							else
+								print("could not find base config at: ", baseconfig)
+							end
+						end,
+						env = { CI = true },
+						cwd = function(path)
+							return vim.fn.getcwd()
+						end,
+						jest_test_discovery = true,
+					})
+				}
+			})
+		end
+	},
+	{
+		"mxsdev/nvim-dap-vscode-js",
+		dependencies = {
+			"mfussenegger/nvim-dap",
+		},
+	},
+	{
+		"microsoft/vscode-js-debug",
+		build = "npm install --legacy-peer-deps; npx gulp vsDebugServerBundle; mv dist out",
+	},
 	--rust,
 }
 
