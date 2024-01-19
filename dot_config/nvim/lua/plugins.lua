@@ -37,14 +37,26 @@ local plugins = {
 				},
 				c = {
 					name = "check",
+					d = {
+						'<cmd>lua require("neotest").run.run({strategy = "dap"})<cr>',
+						"debug nearest test",
+					},
+					o = {
+						"<cmd>Neotest output<cr>",
+						"open test output window",
+					},
+					p = {
+						"<cmd>Neotest output-panel toggle<cr>",
+						"toggle test output panel",
+					},
+					s = {
+						"<cmd>Neotest summary<cr>",
+						"show summary",
+					},
 					t = {
 						"<cmd>Neotest run<cr>",
 						"run nearest test",
 					},
-					o = {
-						"<cmd>Neotest output-panel toggle<cr>",
-						"toggle test output panel",
-					}
 				},
 				D = { vim.lsp.buf.type_definition, "type definition" },
 				e = {
@@ -76,6 +88,7 @@ local plugins = {
 					p = { vim.lsp.diagnostic.goto_prev, "previous" },
 					n = { vim.lsp.buf.format, "format" },
 				},
+				h = { vim.lsp.buf.hover, "hover window" },
 				r = { vim.lsp.buf.rename, "rename" },
 				s = {
 					name = "show",
@@ -199,6 +212,12 @@ local plugins = {
 		config = function()
 			require("nvim-ts-autotag").setup()
 		end,
+	},
+	{
+		"nvim-treesitter/nvim-treesitter-context",
+		dependencies = {
+			"nvim-treesitter/nvim-treesitter",
+		},
 	},
 	{
 		"echasnovski/mini.ai",
@@ -548,13 +567,25 @@ local plugins = {
 			})
 		end,
 	},
+--	{
+--		"bluz71/vim-nightfly-colors",
+--		name = "nightfly",
+--		lazy = false,
+--		priority = 1000,
+--		config = function()
+--			vim.cmd([[colorscheme nightfly]])
+--		end,
+--	},
+--	{
+--		"catppuccin/nvim", name = "catppucin", priority = 1000,
+--		config = function()
+--			vim.cmd.colorscheme("catppuccin")
+--		end,
+--	},
 	{
-		"bluz71/vim-nightfly-colors",
-		name = "nightfly",
-		lazy = false,
-		priority = 1000,
+		"rebelot/kanagawa.nvim", priority = 1000,
 		config = function()
-			vim.cmd([[colorscheme nightfly]])
+			vim.cmd.colorscheme("kanagawa-dragon")
 		end,
 	},
 	{

@@ -2,8 +2,9 @@ local wezterm = require("wezterm")
 
 local config = {
 -- https://wezfurlong.org/wezterm/colorschemes/index.html
-		color_scheme = "Andromeda",
+--		color_scheme = "Andromeda",
 --	color_scheme = 'GitHub Dark',
+	color_scheme = 'Tokyo Night',
 	font = wezterm.font('Fira Code'),
 	colors = {
 		visual_bell = "#777777",
