@@ -619,9 +619,8 @@ local plugins = {
 						jestConfigFile = function()
 							local file = vim.fn.expand('%:p')
 							if string.find(file, "/packages/") then
-								print("found /packages/")
 								local match = string.match(file, "(.-/[^/]+/)src") .. "jest.config.js"
-								print("match: ", match)
+								print("using config: ", match)
 								if vim.fn.filereadable(match) then
 									return match
 								else
@@ -652,6 +651,12 @@ local plugins = {
 		dependencies = {
 			"mfussenegger/nvim-dap",
 		},
+		config = function()
+			require("dap-vscode-js").setup({
+				adapters = { 'pwa-node' },
+				debugger_path = vim.fn.stdpath("data") .. "/lazy/vscode-js-debug"
+			})
+		end,
 	},
 	{
 		"microsoft/vscode-js-debug",
