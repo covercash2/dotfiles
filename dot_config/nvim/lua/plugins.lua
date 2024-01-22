@@ -498,9 +498,6 @@ local plugins = {
 			vim.g.vim_svelte_plugin_use_typescript = 1
 		end,
 	},
---	{
---		"leafgarland/typescript-vim",
---	},
 	{
 		"j-hui/fidget.nvim",
 		tag = "legacy",
