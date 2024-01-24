@@ -62,6 +62,10 @@ local plugins = {
 						"<cmd>Neotest output-panel toggle<cr>",
 						"toggle test output panel",
 					},
+					q = {
+						"<cmd>Neotest stop<cr>",
+						"stop tests"
+					},
 					s = {
 						"<cmd>Neotest summary<cr>",
 						"show summary",
@@ -116,6 +120,8 @@ local plugins = {
 					g = { telescope.live_grep, "grep" },
 					b = { telescope.buffers, "find buffer" },
 					h = { telescope.help_tags, "help tags" },
+					m = { telescope.marks, "find marks" },
+					r = { telescope.lsp_references, "find references" },
 				},
 				g = {
 					name = "goto",
@@ -149,13 +155,16 @@ local plugins = {
 						end,
 						"go to context"
 					}
-				}
+				},
+				v = {
+					name = "git",
+					b = { 
+						"<cmd>GitBlameToggle<cr>",
+						"toggle git blame",
+					},
+				},
 			}, { prefix = "<leader>" })
 		end,
-	},
-	{
-		"folke/trouble.nvim",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
 	},
 	{
 		url = "https://gitlab.com/HiPhish/rainbow-delimiters.nvim.git",
@@ -190,6 +199,12 @@ local plugins = {
 		end,
 	},
 	"tpope/vim-fugitive",
+	{
+		"f-person/git-blame.nvim",
+		config = function()
+			require('gitblame').setup()
+		end,
+	},
 	{
 		"nvim-neorg/neorg",
 		ft = "norg",
@@ -317,6 +332,35 @@ local plugins = {
 			require("mini.comment").setup()
 		end,
 	},
+	{
+		"ThePrimeagen/harpoon",
+		branch = "harpoon2",
+		dependencies = { 
+			"nvim-lua/plenary.nvim",
+			"nvim-telescope/telescope.nvim",
+		},
+		config = function()
+			local harpoon = require('harpoon')
+			harpoon:setup({})
+
+			local conf = require("telescope.config").values
+			local function toggle_telescope(harpoon_files)
+				local file_paths = {}
+				for _, item in ipairs(harpoon_files.items) do
+					table.insert(file_paths, item.value)
+				end
+
+				require("telescope.pickers").new({}, {
+					prompt_title = "Harpoon",
+					finder = require("telescope.finders").new_table({
+						results = file_paths,
+					}),
+					previewer = conf.file_previewer({}),
+					sorter = conf.generic_sorter({}),
+				}):find()
+			end
+		end,
+	},
 	-- snippet
 	{
 		"L3MON4D3/LuaSnip",
@@ -414,6 +458,7 @@ local plugins = {
 	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
+			"folke/neodev.nvim",
 			"hrsh7th/nvim-cmp",
 			"hrsh7th/cmp-nvim-lsp",
 			"saadparwaiz1/cmp_luasnip",
@@ -518,6 +563,10 @@ local plugins = {
 		dependencies = {
 			"nvim-tree/nvim-web-devicons",
 		},
+	},
+	{
+		"folke/neodev.nvim",
+		opts = {},
 	},
 	{
 		"iamcco/markdown-preview.nvim",
@@ -669,6 +718,8 @@ local plugins = {
 
 							local baseconfig = vim.fn.getcwd() .. "/jest.config.base.js"
 
+							print("using base config: " .. baseconfig)
+
 							if vim.fn.filereadable(baseconfig) then
 								return baseconfig
 							else
@@ -684,6 +735,29 @@ local plugins = {
 				}
 			})
 		end
+	},
+	{
+		"andythigpen/nvim-coverage",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		config = function()
+			local get_lcov_file = function()
+				local file = vim.fn.expand('%:p')
+				if string.find(file, "/packages/") then
+					local match = string.match(file, "(.-/[^/]+/)coverage") .. "lcov.info"
+					print("using coverage report: ", match)
+					if vim.fn.filereadable(match) then
+						return match
+					else
+						print("file did not match expected: ", match)
+					end
+				end
+				print("no coverage file found")
+			end
+
+			require("coverage").setup({
+				lcov_file = get_lcov_file,
+			})
+		end,
 	},
 	{
 		"mxsdev/nvim-dap-vscode-js",
