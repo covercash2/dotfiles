@@ -130,7 +130,12 @@ local get_keybindings = function()
 		},
 		h = {
 			name = "harpoon",
-			a = { harpoon:list():append(), "add mark" },
+			a = { 
+				function()
+					harpoon:list():append()
+				end,
+				"add mark",
+			},
 			h = { harpoon_telescope_config(), "harpoon marks" },
 			j = { harpoon:list():next(), "next mark" },
 			k = { harpoon:list():prev(), "previous mark" },

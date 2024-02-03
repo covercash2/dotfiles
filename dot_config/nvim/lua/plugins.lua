@@ -564,6 +564,7 @@ local plugins = {
 			"antoinemadec/FixCursorHold.nvim",
 			"nvim-treesitter/nvim-treesitter",
 			"nvim-neotest/neotest-jest",
+			"rouge8/neotest-rust",
 		},
 		config = function()
 			require("neotest").setup({
@@ -601,6 +602,9 @@ local plugins = {
 						end,
 						jest_test_discovery = true,
 					}),
+					require('neotest-rust') {
+						dap_adapter = "lldb",
+					},
 				},
 			})
 		end,
