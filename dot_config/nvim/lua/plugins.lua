@@ -15,6 +15,7 @@ vim.opt.rtp:prepend(lazypath)
 
 local rust_config = require("rust")
 local file_tree = require("file_tree")
+local keybindings = require("keybindings")
 
 local plugins = {
 	{
@@ -27,135 +28,13 @@ local plugins = {
 			"nvim-tree/nvim-tree.lua",
 			"folke/trouble.nvim",
 			"nvim-neotest/neotest",
+			"ThePrimeagen/harpoon",
 		},
 		config = function()
 			local wk = require("which-key")
 			wk.setup()
-			local telescope = require("telescope.builtin")
-			local telescope_dap = require("telescope").extensions.dap
-			local dap = require('dap')
-			local dap_widgets = require('dap.ui.widgets')
-			local ts_context = require('treesitter-context')
-			wk.register({
-				a = { vim.lsp.buf.code_action, "code action" },
-				b = {
-					name = "buffer",
-					f = { vim.lsp.buf.format, "format" },
-				},
-				c = {
-					name = "check",
-					d = {
-						'<cmd>lua require("neotest").run.run({strategy = "dap"})<cr>',
-						"debug nearest test",
-					},
-					f = {
-						function()
-							require('neotest').run.run(vim.fn.expand("%"))
-						end,
-						"run all tests in this file",
-					},
-					o = {
-						"<cmd>Neotest output<cr>",
-						"open test output window",
-					},
-					p = {
-						"<cmd>Neotest output-panel toggle<cr>",
-						"toggle test output panel",
-					},
-					s = {
-						"<cmd>Neotest summary<cr>",
-						"show summary",
-					},
-					t = {
-						"<cmd>Neotest run<cr>",
-						"run nearest test",
-					},
-				},
-				D = { vim.lsp.buf.type_definition, "type definition" },
-				d = {
-					name = "debugger",
-					b = { dap.set_breakpoint, "set breakpoint" },
-					c = { telescope_dap.commands, "commands" },
-					C = { telescope_dap.configurations, "configurations" },
-					f = { telescope_dap.frames, "frames" },
-					h = { dap_widgets.hover, "dap hover"},
-					i = { dap.step_into, "step into" },
-					l = { telescope_dap.list_breakpoints, "list breakpoints" },
-					n = { dap.continue, "continue debugger" },
-					o = { dap.step_over, "step over" },
-					O = { dap.step_out, "step out" },
-					p = { dap_widgets.preview, "dap preview" },
-					r = { dap.repl.open, "open REPL" },
-					q = { dap.terminate, "stop dap" },
-					R = { dap.run_last, "run last" },
-					s = { 
-						function()
-							dap_widgets.centered_float(dap_widgets.scopes)
-						end,
-						"dap scopes",
-					},
-					t = { dap.toggle_breakpoint, "toggle breakpoint" },
-					v = { telescope_dap.variables, "variables" },
-				},
-				e = {
-					name = "errors",
-					l = {
-						vim.lsp.diagnostic.get_line_diagnostics,
-						"line diagnostics",
-					},
-					t = {
-						function()
-							vim.cmd([[TroubleToggle]])
-						end,
-						"trouble",
-					},
-				},
-				f = {
-					name = "file",
-					f = { telescope.find_files, "find file" },
-					g = { telescope.live_grep, "grep" },
-					b = { telescope.buffers, "find buffer" },
-					h = { telescope.help_tags, "help tags" },
-				},
-				g = {
-					name = "goto",
-					d = { vim.lsp.buf.definition, "definition" },
-					D = { vim.lsp.buf.declration, "declaration" },
-					i = { vim.lsp.buf.implementation, "implementation" },
-					r = { vim.lsp.buf.references, "references" },
-					p = { vim.lsp.diagnostic.goto_prev, "previous" },
-					n = { vim.lsp.buf.format, "format" },
-				},
-				h = { vim.lsp.buf.hover, "hover window" },
-				r = { vim.lsp.buf.rename, "rename" },
-				s = {
-					name = "show",
-					s = {
-						vim.lsp.buf.signature_help,
-						"signature",
-					},
-				},
-				t = {
-					name = "tree",
-					t = { file_tree.show, "toggle" },
-					b = { file_tree.buffers, "buffers" },
-					g = { file_tree.git, "git status" },
-				},
-				T = {
-					name = "treesitter",
-					g = { 
-						function()
-							ts_context.go_to_context(vim.v.count1)
-						end,
-						"go to context"
-					}
-				}
-			}, { prefix = "<leader>" })
+			wk.register(keybindings(), { prefix = "<leader>" })
 		end,
-	},
-	{
-		"folke/trouble.nvim",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
 	},
 	{
 		url = "https://gitlab.com/HiPhish/rainbow-delimiters.nvim.git",
@@ -166,30 +45,43 @@ local plugins = {
 			local rainbow_delimiters = require("rainbow-delimiters")
 			require("rainbow-delimiters.setup").setup({
 				strategy = {
-						[''] = rainbow_delimiters.strategy['global'],
-						vim = rainbow_delimiters.strategy['local'],
+					[""] = rainbow_delimiters.strategy["global"],
+					vim = rainbow_delimiters.strategy["local"],
 				},
 				query = {
-						[''] = 'rainbow-delimiters',
-						lua = 'rainbow-blocks',
+					[""] = "rainbow-delimiters",
+					lua = "rainbow-blocks",
 				},
 				priority = {
-						[''] = 110,
-						lua = 210,
+					[""] = 110,
+					lua = 210,
 				},
 				highlight = {
-						'RainbowDelimiterGreen',
-						'RainbowDelimiterCyan',
-						'RainbowDelimiterBlue',
-						'RainbowDelimiterViolet',
-						'RainbowDelimiterYellow',
-						'RainbowDelimiterOrange',
-						'RainbowDelimiterRed',
+					"RainbowDelimiterGreen",
+					"RainbowDelimiterCyan",
+					"RainbowDelimiterBlue",
+					"RainbowDelimiterViolet",
+					"RainbowDelimiterGreen",
+					"RainbowDelimiterCyan",
+					"RainbowDelimiterBlue",
+					"RainbowDelimiterViolet",
+					"RainbowDelimiterYellow",
+					"RainbowDelimiterOrange",
+					"RainbowDelimiterRed",
+					"RainbowDelimiterYellow",
+					"RainbowDelimiterOrange",
+					"RainbowDelimiterRed",
 				},
 			})
 		end,
 	},
 	"tpope/vim-fugitive",
+	{
+		"f-person/git-blame.nvim",
+		config = function()
+			require("gitblame").setup()
+		end,
+	},
 	{
 		"nvim-neorg/neorg",
 		ft = "norg",
@@ -267,7 +159,10 @@ local plugins = {
 		},
 		config = {
 			multiline_threshold = 8,
-		}
+		},
+	},
+	{
+		"metakirby5/codi.vim",
 	},
 	{
 		"echasnovski/mini.ai",
@@ -317,11 +212,22 @@ local plugins = {
 			require("mini.comment").setup()
 		end,
 	},
+	{
+		"ThePrimeagen/harpoon",
+		branch = "harpoon2",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+		},
+		config = function()
+			local harpoon = require("harpoon")
+			harpoon:setup()
+		end,
+	},
 	-- snippet
 	{
 		"L3MON4D3/LuaSnip",
 		version = "v2.*",
-		build = "make install_jsregexp"
+		build = "make install_jsregexp",
 	},
 	-- autocomplete
 	{
@@ -341,7 +247,7 @@ local plugins = {
 			local cmp = require("cmp")
 			cmp.setup({
 				view = {
-					entries = "custom"
+					entries = "custom",
 				},
 				snippet = {
 					expand = function(args)
@@ -370,20 +276,20 @@ local plugins = {
 				norg = true,
 			})
 
-			cmp.setup.cmdline({ '/', '?' }, {
+			cmp.setup.cmdline({ "/", "?" }, {
 				mapping = cmp.mapping.preset.cmdline(),
 				sources = {
-					{ name = 'buffer' },
+					{ name = "buffer" },
 				},
 			})
 
-			cmp.setup.cmdline(':', {
+			cmp.setup.cmdline(":", {
 				mapping = cmp.mapping.preset.cmdline(),
 				sources = cmp.config.sources({
-					{ name = 'path' }
+					{ name = "path" },
 				}, {
-					{ name = 'cmdline' }
-				})
+					{ name = "cmdline" },
+				}),
 			})
 		end,
 	},
@@ -407,13 +313,13 @@ local plugins = {
 	{
 		"williamboman/nvim-lsp-installer",
 		config = function()
-			require("nvim-lsp-installer").setup {}
-		end
-
+			require("nvim-lsp-installer").setup({})
+		end,
 	},
 	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
+			"folke/neodev.nvim",
 			"hrsh7th/nvim-cmp",
 			"hrsh7th/cmp-nvim-lsp",
 			"saadparwaiz1/cmp_luasnip",
@@ -422,7 +328,7 @@ local plugins = {
 		},
 		config = function()
 			local nvim_lsp = require("lspconfig")
-			local servers = { "pyright", "luau_lsp", "svelte", "tsserver", "rust_analyzer", "eslint" }
+			local servers = { "pyright", "luau_lsp", "lua_ls", "svelte", "tsserver", "rust_analyzer", "eslint" }
 			local on_attach = function(client, bufnr)
 				vim.o.updatetime = 250
 
@@ -454,7 +360,6 @@ local plugins = {
 				local opts = { noremap = true, silent = true }
 
 				buf_set_keymap("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
-				buf_set_keymap("n", "<leader>wa", "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", opts)
 				buf_set_keymap("n", "<leader>wr", "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", opts)
 				buf_set_keymap(
 					"n",
@@ -477,14 +382,17 @@ local plugins = {
 	}, -- lspconfig
 	{
 		"nvimdev/guard.nvim",
-		dependencies = { "nvimdev/guard-collection"},
+		dependencies = { "nvimdev/guard-collection" },
 		config = function()
-			local ft = require('guard.filetype')
+			local ft = require("guard.filetype")
 
-			ft('python'):fmt('black')
-				:lint('pylint')
+			ft("python"):fmt("black"):lint("pylint")
 
-			require('guard').setup({
+			ft("lua"):fmt("stylua")
+
+			ft("*"):lint("codespell")
+
+			require("guard").setup({
 				fmt_on_save = true,
 				lsp_as_default_formatter = true,
 			})
@@ -498,9 +406,6 @@ local plugins = {
 			vim.g.vim_svelte_plugin_use_typescript = 1
 		end,
 	},
---	{
---		"leafgarland/typescript-vim",
---	},
 	{
 		"j-hui/fidget.nvim",
 		tag = "legacy",
@@ -523,6 +428,10 @@ local plugins = {
 		},
 	},
 	{
+		"folke/neodev.nvim",
+		opts = {},
+	},
+	{
 		"iamcco/markdown-preview.nvim",
 		build = "cd app && yarn install",
 		--cmd = 'MarkdownPreview'
@@ -531,16 +440,19 @@ local plugins = {
 	{
 		"nvim-telescope/telescope.nvim",
 		tag = "0.1.4",
-		dependencies = { "nvim-lua/plenary.nvim" },
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"ThePrimeagen/harpoon",
+		},
 		config = function()
-			require('telescope').setup{
+			require("telescope").setup({
 				pickers = {
 					find_files = {
 						-- include hidden files not in .git
-						find_command = { 'rg', '--files', '--iglob', '!.git', '--hidden' },
-					}
-				}
-			}
+						find_command = { "rg", "--files", "--iglob", "!.git", "--hidden" },
+					},
+				},
+			})
 		end,
 	},
 	{
@@ -551,7 +463,7 @@ local plugins = {
 			"nvim-treesitter/nvim-treesitter",
 		},
 		config = function()
-			require('telescope').load_extension('dap')
+			require("telescope").load_extension("dap")
 		end,
 	},
 	{
@@ -618,28 +530,31 @@ local plugins = {
 		priority = 1000,
 	},
 	{
-		"catppuccin/nvim", name = "catppucin", priority = 1000,
+		"catppuccin/nvim",
+		name = "catppucin",
+		priority = 1000,
 	},
 	{
-		"rebelot/kanagawa.nvim", priority = 1000,
+		"rebelot/kanagawa.nvim",
+		priority = 1000,
 		config = function()
 			vim.cmd.colorscheme("kanagawa")
 		end,
 	},
 	{
 		"nvim-lualine/lualine.nvim",
-		dependencies = { 'nvim-tree/nvim-web-devicons' },
+		dependencies = { "nvim-tree/nvim-web-devicons" },
 		config = {
 			theme = "auto",
 		},
 	},
 	{
-		'LhKipp/nvim-nu',
+		"LhKipp/nvim-nu",
 		config = function()
-			require('nu').setup{
+			require("nu").setup({
 				use_lsp_features = false,
-			}
-		end
+			})
+		end,
 	},
 	file_tree.lazy,
 	{
@@ -649,17 +564,18 @@ local plugins = {
 			"antoinemadec/FixCursorHold.nvim",
 			"nvim-treesitter/nvim-treesitter",
 			"nvim-neotest/neotest-jest",
+			"rouge8/neotest-rust",
 		},
 		config = function()
-			require('neotest').setup({
+			require("neotest").setup({
 				discovery = {
 					enabled = false,
 				},
 				adapters = {
-					require('neotest-jest')({
+					require("neotest-jest")({
 						jest_command = "pnpm test --",
 						jestConfigFile = function()
-							local file = vim.fn.expand('%:p')
+							local file = vim.fn.expand("%:p")
 							if string.find(file, "/packages/") then
 								local match = string.match(file, "(.-/[^/]+/)src") .. "jest.config.js"
 								print("using config: ", match)
@@ -672,6 +588,8 @@ local plugins = {
 
 							local baseconfig = vim.fn.getcwd() .. "/jest.config.base.js"
 
+							print("using base config: " .. baseconfig)
+
 							if vim.fn.filereadable(baseconfig) then
 								return baseconfig
 							else
@@ -683,10 +601,36 @@ local plugins = {
 							return vim.fn.getcwd()
 						end,
 						jest_test_discovery = true,
-					})
-				}
+					}),
+					require('neotest-rust') {
+						dap_adapter = "lldb",
+					},
+				},
 			})
-		end
+		end,
+	},
+	{
+		"andythigpen/nvim-coverage",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		config = function()
+			local get_lcov_file = function()
+				local file = vim.fn.expand("%:p")
+				if string.find(file, "/packages/") then
+					local match = string.match(file, "(.-/[^/]+/)coverage") .. "lcov.info"
+					print("using coverage report: ", match)
+					if vim.fn.filereadable(match) then
+						return match
+					else
+						print("file did not match expected: ", match)
+					end
+				end
+				print("no coverage file found")
+			end
+
+			require("coverage").setup({
+				lcov_file = get_lcov_file,
+			})
+		end,
 	},
 	{
 		"mxsdev/nvim-dap-vscode-js",
@@ -695,8 +639,8 @@ local plugins = {
 		},
 		config = function()
 			require("dap-vscode-js").setup({
-				adapters = { 'pwa-node' },
-				debugger_path = vim.fn.stdpath("data") .. "/lazy/vscode-js-debug"
+				adapters = { "pwa-node" },
+				debugger_path = vim.fn.stdpath("data") .. "/lazy/vscode-js-debug",
 			})
 		end,
 	},
