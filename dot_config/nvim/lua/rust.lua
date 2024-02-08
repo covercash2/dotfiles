@@ -18,7 +18,7 @@ rust = {
 			vim.o.updatetime = 250
 
 			vim.api.nvim_create_autocmd("CursorHold", {
-				buffer = bufnr,
+				buffer = buf_num,
 				callback = function()
 					local opts = {
 						focusable = false,
@@ -35,7 +35,7 @@ rust = {
 
 		local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
-		rt = require('rust-tools')
+		local rt = require('rust-tools')
 
 		rt.setup({
 			server = {
