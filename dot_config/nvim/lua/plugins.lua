@@ -29,6 +29,7 @@ local plugins = {
 			"folke/trouble.nvim",
 			"nvim-neotest/neotest",
 			"ThePrimeagen/harpoon",
+			"kazhala/close-buffers.nvim",
 		},
 		config = function()
 			local wk = require("which-key")
@@ -328,7 +329,7 @@ local plugins = {
 		},
 		config = function()
 			local nvim_lsp = require("lspconfig")
-			local servers = { "pyright", "luau_lsp", "lua_ls", "svelte", "tsserver", "rust_analyzer", "eslint" }
+			local servers = { "pyright", "luau_lsp", "lua_ls", "svelte", "tsserver", "eslint" }
 			local on_attach = function(client, bufnr)
 				vim.o.updatetime = 250
 
@@ -415,6 +416,12 @@ local plugins = {
 		"lewis6991/gitsigns.nvim",
 		config = function()
 			require("gitsigns").setup()
+		end,
+	},
+	{
+		"dsummersl/nvim-sluice",
+		config = function()
+			require("sluice").setup({})
 		end,
 	},
 	{
@@ -546,6 +553,14 @@ local plugins = {
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		config = {
 			theme = "auto",
+			sections = {
+				lualine_c = {
+					function()
+						return vim.api.nvim_buf_get_name(0)
+					end,
+				},
+				lualine_x = { "filetype" },
+			},
 		},
 	},
 	{
@@ -564,7 +579,7 @@ local plugins = {
 			"antoinemadec/FixCursorHold.nvim",
 			"nvim-treesitter/nvim-treesitter",
 			"nvim-neotest/neotest-jest",
-			"rouge8/neotest-rust",
+			"mrcjkb/rustaceanvim",
 		},
 		config = function()
 			require("neotest").setup({
@@ -602,9 +617,7 @@ local plugins = {
 						end,
 						jest_test_discovery = true,
 					}),
-					require('neotest-rust') {
-						dap_adapter = "lldb",
-					},
+					require("rustaceanvim.neotest"),
 				},
 			})
 		end,
@@ -648,7 +661,11 @@ local plugins = {
 		"microsoft/vscode-js-debug",
 		build = "npm install --legacy-peer-deps; npx gulp vsDebugServerBundle; mv dist out",
 	},
-	--rust,
+	{
+		"mrcjkb/rustaceanvim",
+		version = "^4",
+		ft = { "rust" },
+	},
 }
 
 require("lazy").setup(plugins)

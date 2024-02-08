@@ -30,12 +30,25 @@ local get_keybindings = function()
 	local dap = require("dap")
 	local dap_widgets = require("dap.ui.widgets")
 	local ts_context = require("treesitter-context")
-	local harpoon = require('harpoon')
+	local harpoon = require("harpoon")
+	local close_buffers = require("close_buffers")
 	local keybindings = {
 		a = { vim.lsp.buf.code_action, "code action" },
 		b = {
 			name = "buffer",
 			f = { vim.lsp.buf.format, "format" },
+			h = {
+				function()
+					close_buffers.delete({ type = "hidden" })
+				end,
+				"close hidden buffers",
+			},
+			o = {
+				function()
+					close_buffers.delete({ type = "other" })
+				end,
+				"close other buffers",
+			},
 		},
 		c = {
 			name = "check",
@@ -130,7 +143,7 @@ local get_keybindings = function()
 		},
 		h = {
 			name = "harpoon",
-			a = { 
+			a = {
 				function()
 					harpoon:list():append()
 				end,

@@ -1,18 +1,19 @@
-rust = {
-	'simrat39/rust-tools.nvim',
+local rust = {
+	"simrat39/rust-tools.nvim",
 	dependencies = {
-		'neovim/nvim-lspconfig',
+		"neovim/nvim-lspconfig",
 		"hrsh7th/nvim-cmp",
 		"L3MON4D3/LuaSnip",
 		"neovim/nvim-lspconfig",
 		"nvim-lua/plenary.nvim",
 		"mfussenegger/nvim-dap",
 	},
-	opts = {
-	},
+	opts = {},
 	config = function()
 		local lsp_attach = function(client, buf_num)
-			local function buf_set_option(...) vim.api.nvim_buf_set_option(buf_num, ...) end
+			local function buf_set_option(...)
+				vim.api.nvim_buf_set_option(buf_num, ...)
+			end
 			buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
 
 			vim.o.updatetime = 250
@@ -23,19 +24,19 @@ rust = {
 					local opts = {
 						focusable = false,
 						close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
-						border = 'rounded',
-						source = 'always',
-						prefix = ' ',
-						scope = 'cursor',
+						border = "rounded",
+						source = "always",
+						prefix = " ",
+						scope = "cursor",
 					}
 					vim.diagnostic.open_float(nil, opts)
-				end
+				end,
 			})
 		end
 
-		local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+		local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
-		local rt = require('rust-tools')
+		local rt = require("rust-tools")
 
 		rt.setup({
 			server = {
@@ -47,7 +48,15 @@ rust = {
 					vim.keymap.set("n", "<Leader><Leader>", rt.hover_actions.hover_actions, { buffer = bufnr })
 
 					lsp_attach(client, bufnr)
-				end
+				end,
+				settings = {
+					checkOnSave = {
+						command = "clippy",
+					},
+					cargo = {
+						allFeatures = true,
+					},
+				},
 			},
 			hover_actions = {
 				auto_focus = true,
@@ -55,6 +64,6 @@ rust = {
 		})
 
 		rt.hover_range.hover_range()
-
-	end
+	end,
 }
+return rust
