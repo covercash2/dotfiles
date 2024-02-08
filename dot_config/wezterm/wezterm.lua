@@ -1,17 +1,19 @@
 local wezterm = require("wezterm")
 
 local config = {
--- https://wezfurlong.org/wezterm/colorschemes/index.html
---		color_scheme = "Andromeda",
---	color_scheme = 'GitHub Dark',
-	color_scheme = 'Tokyo Night',
-	font = wezterm.font('Fira Code'),
+	-- https://wezfurlong.org/wezterm/colorschemes/index.html
+	--		color_scheme = "Andromeda",
+	--	color_scheme = 'GitHub Dark',
+	color_scheme = "Tokyo Night",
+	font = wezterm.font("Fira Code"),
 	colors = {
 		visual_bell = "#777777",
 	},
+	use_fancy_tab_bar = false,
+	hide_tab_bar_if_only_one_tab = true,
 	window_frame = {
+		font_size = 13.0,
 		active_titlebar_bg = "#020202",
-		font_size = 11.0,
 		inactive_titlebar_bg = "#555555",
 	},
 	visual_bell = {
