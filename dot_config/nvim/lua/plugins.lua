@@ -391,7 +391,13 @@ local plugins = {
 
 			ft("lua"):fmt("stylua")
 
-			ft("*"):lint("codespell")
+			ft("*"):lint({
+				cmd = 'codespell',
+				args = {
+					'--ignore-words-list',
+					'crate',
+				},
+			})
 
 			require("guard").setup({
 				fmt_on_save = true,
