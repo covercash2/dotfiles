@@ -116,6 +116,9 @@ local plugins = {
 	},
 	{
 		"nvim-treesitter/nvim-treesitter",
+		dependencies = {
+			"apple/pkl-neovim",
+		},
 		config = function()
 			vim.cmd("TSUpdate")
 			require("nvim-treesitter.configs").setup({
@@ -132,6 +135,7 @@ local plugins = {
 					"make",
 					"markdown",
 					"norg",
+					"nu",
 					"kdl",
 					"svelte",
 					"javascript",
@@ -141,7 +145,7 @@ local plugins = {
 					"css",
 				},
 				highlight = {
-					enable = false,
+					enable = true,
 				},
 			})
 		end,

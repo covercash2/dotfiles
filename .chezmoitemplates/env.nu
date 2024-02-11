@@ -87,6 +87,7 @@ $env.NU_PLUGIN_DIRS = [
 # $env.PATH = ($env.PATH | split row (char esep) | prepend '/some/path')
 
 $env.user_paths = ([
+	"bin",
 	".cargo/bin",
 	".local/bin",
 	".asdf/bin",
