@@ -97,3 +97,8 @@ $env.user_paths = ([
 
 $env.PATH =	($env.PATH | prepend ($env.user_paths | where $it not-in $env.PATH))
 
+if (which zoxide | is-empty) {
+	"zoxide not installed"
+} else {
+	zoxide init nushell | save --force ~/.zoxide.nu
+}

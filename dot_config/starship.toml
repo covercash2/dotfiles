@@ -1,29 +1,22 @@
 # starship prompt manager config file
+"$schema" = 'https://starship.rs/config-schema.json'
 
-[status]
-symbol = ""
+format = """
+$all\
+$fill\
+$time\
+$line_break\
+$jobs\
+$battery\
+$status\
+$os\
+$container\
+$shell
+"""
+
+[fill]
+symbol = " "
+
+[time]
 disabled = false
-
-[python]
-format = '[${symbol}${pyenv_prefix}${version}( \($virtualenv\))]($style) '
-symbol = "🐍"
-
-[nix_shell]
-format = '[$symbol$state($name)]($style) '
-symbol = "❄️ "
-impure_msg = ""
-
-[package]
-format = "[$symbol$version]($style) "
-symbol = "📦 "
-
-[rust]
-format = "[$symbol$version]($style) "
-symbol = "🦀 "
-
-[git_branch]
-format = "[$symbol$branch]($style) "
-symbol = ""
-
-[battery]
-disabled = true
+format = '[$time]($style) '
