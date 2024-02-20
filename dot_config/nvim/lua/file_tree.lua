@@ -14,18 +14,12 @@ local lazy_config = {
 	end,
 }
 
--- show without focus
-function show_neotree ()
-	require('neo-tree')
-	vim.cmd("Neotree action=show")
-end
-
-function focus_neotree ()
+local function focus_neotree ()
 	require("neo-tree")
 	vim.cmd("Neotree action=focus")
 end
 
-function close_neotree ()
+local function close_neotree ()
 	require('neo-tree')
 	vim.cmd("Neotree action=close")
 end

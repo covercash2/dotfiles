@@ -15,6 +15,7 @@ vim.opt.rtp:prepend(lazypath)
 
 local rust_config = require("rust")
 local file_tree = require("file_tree")
+local test_config = require("test_config")
 local keybindings = require("keybindings")
 
 local plugins = {
@@ -449,6 +450,12 @@ local plugins = {
 		opts = {},
 	},
 	{
+		"rcarriga/nvim-notify",
+		config = {
+			timeout = 1500,
+		},
+	},
+	{
 		"folke/noice.nvim",
 		event = "VeryLazy",
 		dependencies = {
@@ -612,56 +619,7 @@ local plugins = {
 		end,
 	},
 	file_tree.lazy,
-	{
-		"nvim-neotest/neotest",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"antoinemadec/FixCursorHold.nvim",
-			"nvim-treesitter/nvim-treesitter",
-			"nvim-neotest/neotest-jest",
-			"mrcjkb/rustaceanvim",
-		},
-		config = function()
-			require("neotest").setup({
-				discovery = {
-					enabled = false,
-				},
-				adapters = {
-					require("neotest-jest")({
-						jest_command = "pnpm test --",
-						jestConfigFile = function()
-							local file = vim.fn.expand("%:p")
-							if string.find(file, "/packages/") then
-								local match = string.match(file, "(.-/[^/]+/)src") .. "jest.config.js"
-								print("using config: ", match)
-								if vim.fn.filereadable(match) then
-									return match
-								else
-									print("file did not match expected: ", match)
-								end
-							end
-
-							local baseconfig = vim.fn.getcwd() .. "/jest.config.base.js"
-
-							print("using base config: " .. baseconfig)
-
-							if vim.fn.filereadable(baseconfig) then
-								return baseconfig
-							else
-								print("could not find base config at: ", baseconfig)
-							end
-						end,
-						env = { CI = true },
-						cwd = function(path)
-							return vim.fn.getcwd()
-						end,
-						jest_test_discovery = true,
-					}),
-					require("rustaceanvim.neotest"),
-				},
-			})
-		end,
-	},
+	test_config.neotest,
 	{
 		"andythigpen/nvim-coverage",
 		dependencies = { "nvim-lua/plenary.nvim" },
