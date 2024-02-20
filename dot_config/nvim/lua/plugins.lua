@@ -171,6 +171,10 @@ local plugins = {
 		"metakirby5/codi.vim",
 	},
 	{
+		'numToStr/Comment.nvim',
+		opts = {},
+	},
+	{
 		"echasnovski/mini.ai",
 		version = "*",
 		lazy = false,
