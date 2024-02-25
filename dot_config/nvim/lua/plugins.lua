@@ -13,10 +13,27 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 
-local rust_config = require("rust")
 local file_tree = require("file_tree")
 local test_config = require("test_config")
 local keybindings = require("keybindings")
+
+local auto_show_hover = function(bufnr)
+	-- show a window when a doc is available
+	vim.api.nvim_create_autocmd("CursorHold", {
+		buffer = bufnr,
+		callback = function()
+			local opts = {
+				focusable = false,
+				close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+				border = "rounded",
+				source = "always",
+				prefix = " ",
+				scope = "cursor",
+			}
+			vim.diagnostic.open_float(nil, opts)
+		end,
+	})
+end
 
 local plugins = {
 	{
@@ -171,7 +188,7 @@ local plugins = {
 		"metakirby5/codi.vim",
 	},
 	{
-		'numToStr/Comment.nvim',
+		"numToStr/Comment.nvim",
 		opts = {},
 	},
 	{
@@ -340,23 +357,8 @@ local plugins = {
 			local nvim_lsp = require("lspconfig")
 			local servers = { "pyright", "luau_lsp", "lua_ls", "svelte", "tsserver", "eslint" }
 			local on_attach = function(client, bufnr)
-				vim.o.updatetime = 250
-
 				-- show a window when a doc is available
-				vim.api.nvim_create_autocmd("CursorHold", {
-					buffer = bufnr,
-					callback = function()
-						local opts = {
-							focusable = false,
-							close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
-							border = "rounded",
-							source = "always",
-							prefix = " ",
-							scope = "cursor",
-						}
-						vim.diagnostic.open_float(nil, opts)
-					end,
-				})
+				auto_show_hover(bufnr)
 
 				local function buf_set_keymap(...)
 					vim.api.nvim_buf_set_keymap(bufnr, ...)
@@ -440,10 +442,6 @@ local plugins = {
 		end,
 	},
 	{
-		"preservim/vim-markdown",
-		dependencies = { "godlygeek/tabular" },
-	},
-	{
 		"folke/trouble.nvim",
 		dependencies = {
 			"nvim-tree/nvim-web-devicons",
@@ -491,8 +489,12 @@ local plugins = {
 	},
 	{
 		"iamcco/markdown-preview.nvim",
-		build = "cd app && yarn install",
-		--cmd = 'MarkdownPreview'
+		build = "cd app; yarn install",
+		ft = {"markdown" },
+		cmd = { 'MarkdownPreview', 'MarkdownPreviewToggle', "MarkdownPreviewStop" },
+		init = function()
+			vim.g.mkdp_filetypes = { "markdown" }
+		end,
 	},
 	"cespare/vim-toml",
 	{
@@ -667,6 +669,15 @@ local plugins = {
 		"mrcjkb/rustaceanvim",
 		version = "^4",
 		ft = { "rust" },
+		config = function()
+			vim.g.rustaceanvim = {
+				server = {
+					on_attach = function(client, bufnr)
+						auto_show_hover(bufnr)
+					end,
+				},
+			}
+		end,
 	},
 }
 

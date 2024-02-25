@@ -33,7 +33,6 @@ local get_keybindings = function()
 	local harpoon = require("harpoon")
 	local close_buffers = require("close_buffers")
 	local keybindings = {
-		a = { vim.lsp.buf.code_action, "code action" },
 		b = {
 			name = "buffer",
 			f = { vim.lsp.buf.format, "format" },
@@ -141,7 +140,7 @@ local get_keybindings = function()
 			p = { vim.lsp.diagnostic.goto_prev, "previous" },
 			n = { vim.lsp.buf.format, "format" },
 		},
-		h = {
+		H = {
 			name = "harpoon",
 			a = {
 				function()
@@ -153,21 +152,19 @@ local get_keybindings = function()
 			j = { harpoon:list():next(), "next mark" },
 			k = { harpoon:list():prev(), "previous mark" },
 		},
-		H = { vim.lsp.buf.hover, "hover window" },
+		h = { vim.lsp.buf.hover, "hover window" },
 		l = {
 			name = "lsp",
 			A = {
 				vim.lsp.buf.add_workspace_folder,
 				"add workspace",
 			},
+			a = { vim.lsp.buf.code_action, "code action" },
 			R = {
 				vim.lsp.buf.remove_workspace_folder,
 				"remove workspace folder",
 			},
-		},
-		r = { vim.lsp.buf.rename, "rename" },
-		s = {
-			name = "show",
+			r = { vim.lsp.buf.rename, "rename" },
 			s = {
 				vim.lsp.buf.signature_help,
 				"signature",
