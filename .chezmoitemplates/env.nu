@@ -2,6 +2,8 @@
 #
 # version = 0.80.1
 
+$env.STARSHIP_SHELL = "nu"
+
 def create_left_prompt [] {
     mut home = ""
     try {
@@ -42,6 +44,8 @@ def create_right_prompt [] {
 
     ([$last_exit_code, (char space), $time_segment] | str join)
 }
+
+$env.STARSHIP_SHELL = "nu"
 
 # Use nushell functions to define your right and left prompt
 $env.PROMPT_COMMAND = {|| create_left_prompt }
@@ -93,7 +97,7 @@ $env.user_paths = ([
 	".asdf/bin",
 	"google-cloud-sdk/bin",
 	"go/bin"
-] | each {|path| $env.HOME | path join $path })
+] | each {|path| $nu.home-path | path join $path })
 
 $env.PATH =	($env.PATH | prepend ($env.user_paths | where $it not-in $env.PATH))
 
