@@ -1,6 +1,7 @@
 local wezterm = require("wezterm")
 
 local config = {
+	--default_prog = { '/opt/homebrew/bin/nu' },
 	-- https://wezfurlong.org/wezterm/colorschemes/index.html
 	--		color_scheme = "Andromeda",
 	--	color_scheme = 'GitHub Dark',
