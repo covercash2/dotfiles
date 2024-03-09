@@ -46,7 +46,6 @@ local plugins = {
 			"nvim-tree/nvim-tree.lua",
 			"folke/trouble.nvim",
 			"nvim-neotest/neotest",
-			"ThePrimeagen/harpoon",
 			"kazhala/close-buffers.nvim",
 		},
 		config = function()
@@ -237,17 +236,6 @@ local plugins = {
 		lazy = false,
 		config = function()
 			require("mini.comment").setup()
-		end,
-	},
-	{
-		"ThePrimeagen/harpoon",
-		branch = "harpoon2",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-		},
-		config = function()
-			local harpoon = require("harpoon")
-			harpoon:setup()
 		end,
 	},
 	-- snippet
@@ -502,7 +490,6 @@ local plugins = {
 		tag = "0.1.4",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
-			"ThePrimeagen/harpoon",
 		},
 		config = function()
 			require("telescope").setup({

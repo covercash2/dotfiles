@@ -1,6 +1,6 @@
 zsh=~/.oh-my-zsh
 
-if [[ `uname` == Darwin ]]
+if [[ `/usr/bin/uname` == Darwin ]]
 then
 	java=`/usr/libexec/java_home`
 else

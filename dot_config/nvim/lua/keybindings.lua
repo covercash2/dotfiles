@@ -1,28 +1,3 @@
-local harpoon_telescope_config = function()
-	local harpoon = require("harpoon")
-	local telescope = require("telescope.config").values
-
-	local toggle_telescope = function()
-		local file_paths = {}
-		for _, item in ipairs(harpoon:list().items) do
-			table.insert(file_paths, item.value)
-		end
-
-		require("telescope.pickers")
-			.new({}, {
-				prompt_title = "Harpoon",
-				finder = require("telescope.finders").new_table({
-					results = file_paths,
-				}),
-				previewer = telescope.file_previewer({}),
-				sorter = telescope.generic_sorter({}),
-			})
-			:find()
-	end
-
-	return toggle_telescope
-end
-
 local get_keybindings = function()
 	local file_tree = require("file_tree")
 	local telescope = require("telescope.builtin")
@@ -30,7 +5,6 @@ local get_keybindings = function()
 	local dap = require("dap")
 	local dap_widgets = require("dap.ui.widgets")
 	local ts_context = require("treesitter-context")
-	local harpoon = require("harpoon")
 	local close_buffers = require("close_buffers")
 	local keybindings = {
 		b = {
@@ -139,18 +113,6 @@ local get_keybindings = function()
 			r = { vim.lsp.buf.references, "references" },
 			p = { vim.lsp.diagnostic.goto_prev, "previous" },
 			n = { vim.lsp.buf.format, "format" },
-		},
-		H = {
-			name = "harpoon",
-			a = {
-				function()
-					harpoon:list():append()
-				end,
-				"add mark",
-			},
-			h = { harpoon_telescope_config(), "harpoon marks" },
-			j = { harpoon:list():next(), "next mark" },
-			k = { harpoon:list():prev(), "previous mark" },
 		},
 		h = { vim.lsp.buf.hover, "hover window" },
 		l = {
