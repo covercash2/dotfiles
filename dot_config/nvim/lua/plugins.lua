@@ -151,6 +151,7 @@ local plugins = {
 					"fish",
 					"make",
 					"markdown",
+					"markdown_inline",
 					"norg",
 					"nu",
 					"kdl",
@@ -483,6 +484,9 @@ local plugins = {
 		init = function()
 			vim.g.mkdp_filetypes = { "markdown" }
 		end,
+	},
+	{
+		"jghauser/follow-md-links.nvim",
 	},
 	"cespare/vim-toml",
 	{
