@@ -24,7 +24,7 @@ vim.api.nvim_create_autocmd("InsertLeave", {
 	command = [[silent! update]],
 })
 
-vim.o.updatetime = 250
+vim.o.updatetime = 100
 
 -- set leader key to space
 vim.g.mapleader = " "

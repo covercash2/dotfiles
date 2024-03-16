@@ -14,8 +14,11 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 local file_tree = require("file_tree")
-local test_config = require("test_config")
+-- local test_config = require("test_config")
 local keybindings = require("keybindings")
+
+-- debug tables with vim.inspect
+-- print(vim.inspect(test_config.neotest()))
 
 local auto_show_hover = function(bufnr)
 	-- show a window when a doc is available
@@ -478,8 +481,8 @@ local plugins = {
 	{
 		"iamcco/markdown-preview.nvim",
 		build = "cd app; yarn install",
-		ft = {"markdown" },
-		cmd = { 'MarkdownPreview', 'MarkdownPreviewToggle', "MarkdownPreviewStop" },
+		ft = { "markdown" },
+		cmd = { "MarkdownPreview", "MarkdownPreviewToggle", "MarkdownPreviewStop" },
 		init = function()
 			vim.g.mkdp_filetypes = { "markdown" }
 		end,
@@ -612,7 +615,7 @@ local plugins = {
 		end,
 	},
 	file_tree.lazy,
-	test_config.neotest,
+	--test_config.neotest(),
 	{
 		"andythigpen/nvim-coverage",
 		dependencies = { "nvim-lua/plenary.nvim" },
