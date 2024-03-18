@@ -14,7 +14,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 local file_tree = require("file_tree")
-local test_config = require("test_config")
+--local test_config = require("test_config")
 local keybindings = require("keybindings")
 
 local auto_show_hover = function(bufnr)
@@ -98,37 +98,6 @@ local plugins = {
 		"f-person/git-blame.nvim",
 		config = function()
 			require("gitblame").setup()
-		end,
-	},
-	{
-		"nvim-neorg/neorg",
-		ft = "norg",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"hrsh7th/nvim-cmp",
-			"nvim-treesitter/nvim-treesitter",
-		},
-		config = function()
-			require("neorg").setup({
-				load = {
-					["core.defaults"] = {},
-					["core.norg.concealer"] = {},
-					["core.norg.completion"] = {
-						config = {
-							engine = "nvim-cmp",
-						},
-					},
-					["core.norg.dirman"] = {
-						config = {
-							workspaces = {
-								work = "~/personal",
-								home = "~/Notes",
-							},
-						},
-					},
-				},
-			})
-			vim.cmd("Neorg sync-parsers")
 		end,
 	},
 	{
@@ -344,7 +313,16 @@ local plugins = {
 		},
 		config = function()
 			local nvim_lsp = require("lspconfig")
-			local servers = { "pyright", "luau_lsp", "lua_ls", "svelte", "tsserver", "eslint" }
+			local servers = {
+				"pyright",
+				"luau_lsp",
+				"lua_ls",
+				"svelte",
+				"tsserver",
+				"eslint",
+				"html",
+				"rust_analyzer",
+			}
 			local on_attach = function(client, bufnr)
 				-- show a window when a doc is available
 				auto_show_hover(bufnr)
@@ -479,8 +457,8 @@ local plugins = {
 	{
 		"iamcco/markdown-preview.nvim",
 		build = "cd app; yarn install",
-		ft = {"markdown" },
-		cmd = { 'MarkdownPreview', 'MarkdownPreviewToggle', "MarkdownPreviewStop" },
+		ft = { "markdown" },
+		cmd = { "MarkdownPreview", "MarkdownPreviewToggle", "MarkdownPreviewStop" },
 		init = function()
 			vim.g.mkdp_filetypes = { "markdown" }
 		end,
@@ -616,7 +594,7 @@ local plugins = {
 		end,
 	},
 	file_tree.lazy,
-	test_config.neotest,
+	--test_config.neotest,
 	{
 		"andythigpen/nvim-coverage",
 		dependencies = { "nvim-lua/plenary.nvim" },
@@ -656,20 +634,20 @@ local plugins = {
 		"microsoft/vscode-js-debug",
 		build = "npm install --legacy-peer-deps; npx gulp vsDebugServerBundle; mv dist out",
 	},
-	{
-		"mrcjkb/rustaceanvim",
-		version = "^4",
-		ft = { "rust" },
-		config = function()
-			vim.g.rustaceanvim = {
-				server = {
-					on_attach = function(client, bufnr)
-						auto_show_hover(bufnr)
-					end,
-				},
-			}
-		end,
-	},
+	-- {
+	-- 	"mrcjkb/rustaceanvim",
+	-- 	version = "^4",
+	-- 	ft = { "rust" },
+	-- 	-- config = function()
+	-- 	-- 	vim.g.rustaceanvim = {
+	-- 	-- 		server = {
+	-- 	-- 			on_attach = function(client, bufnr)
+	-- 	-- 				auto_show_hover(bufnr)
+	-- 	-- 			end,
+	-- 	-- 		},
+	-- 	-- 	}
+	-- 	-- end,
+	-- },
 }
 
 require("lazy").setup(plugins)
