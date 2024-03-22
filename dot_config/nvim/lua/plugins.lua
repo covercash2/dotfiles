@@ -296,12 +296,6 @@ local plugins = {
 		end,
 	},
 	{
-		"williamboman/nvim-lsp-installer",
-		config = function()
-			require("nvim-lsp-installer").setup({})
-		end,
-	},
-	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
 			"folke/neodev.nvim",
@@ -309,12 +303,12 @@ local plugins = {
 			"hrsh7th/cmp-nvim-lsp",
 			"saadparwaiz1/cmp_luasnip",
 			"L3MON4D3/LuaSnip",
-			"williamboman/nvim-lsp-installer",
 		},
 		config = function()
 			local nvim_lsp = require("lspconfig")
 			local servers = {
 				"pyright",
+				"jsonls",
 				"luau_lsp",
 				"lua_ls",
 				"svelte",
@@ -454,6 +448,25 @@ local plugins = {
 				inc_rename = false, -- enables an input dialog for inc-rename.nvim
 				lsp_doc_border = false, -- add a border to hover docs and signature help
 			},
+			routes = {
+				-- hide `written` messages
+				{
+					filter = {
+						event = "msg_show",
+						kind = "",
+						find = "written",
+					},
+					opts = { skip = true },
+				},
+				-- hide search virtual text, e.g. number found
+				{
+					filter = {
+						event = "msg_show",
+						kind = "search_count",
+					},
+					opts = { skip = true },
+				},
+			},
 		},
 	},
 	{
@@ -574,18 +587,29 @@ local plugins = {
 	},
 	{
 		"nvim-lualine/lualine.nvim",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
-		config = {
-			theme = "auto",
-			sections = {
-				lualine_c = {
-					function()
-						return vim.api.nvim_buf_get_name(0)
-					end,
-				},
-				lualine_x = { "filetype" },
-			},
+		dependencies = {
+			"nvim-tree/nvim-web-devicons",
+			"folke/noice.nvim",
 		},
+		config = function()
+			require("lualine").setup({
+					theme = "auto",
+					sections = {
+						lualine_c = {
+							function()
+								return vim.api.nvim_buf_get_name(0)
+							end,
+						},
+						lualine_x = {
+							"filetype",
+							{
+								require("noice").api.statusline.mode.get,
+								cond = require("noice").api.statusline.mod.has,
+							},
+						},
+					},
+				})
+			end,
 	},
 	{
 		"LhKipp/nvim-nu",
@@ -650,6 +674,35 @@ local plugins = {
 	-- 	-- 	}
 	-- 	-- end,
 	-- },
+	{
+		"ryo33/nvim-cmp-rust",
+		dependencies = {
+			"hrsh7th/nvim-cmp",
+		},
+		config = function()
+			local compare = require("cmp.config.compare")
+			local cmp_rust = require("cmp-rust")
+			require("cmp").setup.filetype({ "rust" }, {
+				sorting = {
+					priority_weight = 2,
+					comparators = {
+						cmp_rust.deprioritize_postfix,
+						cmp_rust.deprioritize_borrow,
+						cmp_rust.deprioritize_deref,
+						cmp_rust.deprioritize_common_traits,
+						compare.offset,
+						compare.exact,
+						compare.score,
+						compare.recently_used,
+						compare.locality,
+						compare.sort_text,
+						compare.length,
+						compare.order,
+					},
+				},
+			})
+		end,
+	},
 }
 
 require("lazy").setup(plugins)
