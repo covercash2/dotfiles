@@ -369,6 +369,8 @@ local plugins = {
 
 			ft("lua"):fmt("stylua")
 
+			ft("html"):fmt("prettier")
+
 			ft("*"):lint({
 				cmd = "codespell",
 				args = {
