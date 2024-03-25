@@ -307,15 +307,15 @@ local plugins = {
 		config = function()
 			local nvim_lsp = require("lspconfig")
 			local servers = {
-				"pyright",
+				"eslint",
+				"html",
 				"jsonls",
 				"luau_lsp",
 				"lua_ls",
+				"pyright",
+				"rust_analyzer",
 				"svelte",
 				"tsserver",
-				"eslint",
-				"html",
-				"rust_analyzer",
 			}
 			local on_attach = function(client, bufnr)
 				-- show a window when a doc is available
@@ -363,7 +363,35 @@ local plugins = {
 
 			ft("lua"):fmt("stylua")
 
-			ft("html"):fmt("prettier")
+			local djlint = {
+				cmd = "djlint",
+				args = { "-", "--profiles=jinja" },
+				stdin = true,
+			}
+
+			-- H006 25:12 Img tag should have height and width attributes. <img
+			-- H013 25:12 Img tag should have an alt attribute. <img
+			-- T003 32:0 Endblock should have name. Ex: {% endblock body %}. {% endblock %}
+			-- Linted 1 file, found 3 errors.
+
+			ft("html,htmldjango"):fmt("djhtml"):lint({
+				cmd = "djlint",
+				stdin = true,
+				args = { "-", "--profile=jinja" },
+				parse = function(result, bufnr)
+					local lint = require("guard.lint")
+					local diags = {}
+					local lines = vim.split(result, "\n")
+					for i, line in ipairs(lines) do
+						local lnum = line:match("^%u%d+%s(%d+)") -- probably wrong regex
+						if lnum then
+							diags[#diags + 1] =
+								lint.diag_fmt(bufnr, tonumber(lnum) - 1, 0, lines[i]:gsub("\t", ""), 2, "djlint")
+						end
+					end
+					return diags
+				end,
+			})
 
 			ft("*"):lint({
 				cmd = "codespell",
@@ -593,23 +621,23 @@ local plugins = {
 		},
 		config = function()
 			require("lualine").setup({
-					theme = "auto",
-					sections = {
-						lualine_c = {
-							function()
-								return vim.api.nvim_buf_get_name(0)
-							end,
-						},
-						lualine_x = {
-							"filetype",
-							{
-								require("noice").api.statusline.mode.get,
-								cond = require("noice").api.statusline.mod.has,
-							},
+				theme = "auto",
+				sections = {
+					lualine_c = {
+						function()
+							return vim.api.nvim_buf_get_name(0)
+						end,
+					},
+					lualine_x = {
+						"filetype",
+						{
+							require("noice").api.statusline.mode.get,
+							cond = require("noice").api.statusline.mod.has,
 						},
 					},
-				})
-			end,
+				},
+			})
+		end,
 	},
 	{
 		"LhKipp/nvim-nu",
