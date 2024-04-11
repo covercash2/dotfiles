@@ -313,7 +313,6 @@ local plugins = {
 				"luau_lsp",
 				"lua_ls",
 				"pyright",
-				"rust_analyzer",
 				"svelte",
 				"tsserver",
 			}
@@ -362,6 +361,12 @@ local plugins = {
 			ft("python"):fmt("black"):lint("pylint")
 
 			ft("lua"):fmt("stylua")
+
+			ft("yaml"):fmt({
+				cmd = "yamlfmt",
+				stdin = true,
+				args = { "-" },
+			})
 
 			local djlint = {
 				cmd = "djlint",
@@ -688,20 +693,20 @@ local plugins = {
 		"microsoft/vscode-js-debug",
 		build = "npm install --legacy-peer-deps; npx gulp vsDebugServerBundle; mv dist out",
 	},
-	-- {
-	-- 	"mrcjkb/rustaceanvim",
-	-- 	version = "^4",
-	-- 	ft = { "rust" },
-	-- 	-- config = function()
-	-- 	-- 	vim.g.rustaceanvim = {
-	-- 	-- 		server = {
-	-- 	-- 			on_attach = function(client, bufnr)
-	-- 	-- 				auto_show_hover(bufnr)
-	-- 	-- 			end,
-	-- 	-- 		},
-	-- 	-- 	}
-	-- 	-- end,
-	-- },
+	{
+		"mrcjkb/rustaceanvim",
+		version = "^4",
+		ft = { "rust" },
+		-- config = function()
+		-- 	vim.g.rustaceanvim = {
+		-- 		server = {
+		-- 			on_attach = function(client, bufnr)
+		-- 				auto_show_hover(bufnr)
+		-- 			end,
+		-- 		},
+		-- 	}
+		-- end,
+	},
 	{
 		"ryo33/nvim-cmp-rust",
 		dependencies = {

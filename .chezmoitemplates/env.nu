@@ -52,7 +52,13 @@ $env.user_paths = ([
 $env.PATH =	($env.PATH | prepend ($env.user_paths | where $it not-in $env.PATH))
 
 if (which zoxide | is-empty) {
-	"zoxide not installed"
+	print "zoxide not found"
 } else {
 	zoxide init nushell | save --force ~/.zoxide.nu
+}
+
+if (which nvim | is-empty) {
+	print "nvim not found"
+} else {
+	$env.EDITOR = (which nvim | get path.0)
 }
