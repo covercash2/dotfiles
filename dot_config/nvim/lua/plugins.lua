@@ -107,6 +107,7 @@ local plugins = {
 		},
 		config = function()
 			vim.cmd("TSUpdate")
+			vim.treesitter.language.register("javascript", "dataviewjs")
 			require("nvim-treesitter.configs").setup({
 				ensure_installed = {
 					"lua",
@@ -373,11 +374,6 @@ local plugins = {
 				args = { "-", "--profiles=jinja" },
 				stdin = true,
 			}
-
-			-- H006 25:12 Img tag should have height and width attributes. <img
-			-- H013 25:12 Img tag should have an alt attribute. <img
-			-- T003 32:0 Endblock should have name. Ex: {% endblock body %}. {% endblock %}
-			-- Linted 1 file, found 3 errors.
 
 			ft("html,htmldjango"):fmt("djhtml"):lint({
 				cmd = "djlint",
@@ -735,6 +731,40 @@ local plugins = {
 				},
 			})
 		end,
+	},
+	{
+		"epwalsh/obsidian.nvim",
+		version = "*",
+		lazy = true,
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-treesitter/nvim-treesitter",
+			"hrsh7th/nvim-cmp",
+		},
+		event = {
+			"BufReadPre " .. vim.fn.expand("~") .. "/obsidian/**.md",
+			"BufNewFile " .. vim.fn.expand("~") .. "/obsidian/**.md",
+		},
+		opts = {
+			workspaces = {
+				{
+					name = "core",
+					path = "~/obsidian/core",
+				},
+				{
+					name = "work",
+					path = "~/obsidian/work",
+				},
+				{
+					name = "DnD",
+					path = "~/obsidian/DnD/",
+				},
+			},
+		},
+		completion = {
+			nvim_cmp = true,
+			min_chars = 1,
+		},
 	},
 }
 
