@@ -101,6 +101,19 @@ local plugins = {
 		end,
 	},
 	{
+		-- auto close pairs, brackets, parens, quotes, etc
+		"m4xshen/autoclose.nvim",
+		opts = {
+			keys = {
+				["<"] = { escape = false, close = true, pair = "<>" },
+			},
+			options = {
+				disable_when_touch = true,
+				pair_spaces = true,
+			},
+		},
+	},
+	{
 		"nvim-treesitter/nvim-treesitter",
 		dependencies = {
 			"apple/pkl-neovim",
@@ -141,6 +154,7 @@ local plugins = {
 	{
 		"windwp/nvim-ts-autotag",
 		dependencies = { "nvim-treesitter/nvim-treesitter" },
+		ft = { "markdown", "html", "jsx", "svelte", "typescript" },
 		config = function()
 			require("nvim-ts-autotag").setup()
 		end,
@@ -175,14 +189,6 @@ local plugins = {
 		lazy = false,
 		config = function()
 			require("mini.surround").setup()
-		end,
-	},
-	{
-		"echasnovski/mini.pairs",
-		version = "*",
-		lazy = false,
-		config = function()
-			require("mini.pairs").setup()
 		end,
 	},
 	{
