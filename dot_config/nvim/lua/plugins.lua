@@ -35,6 +35,14 @@ local auto_show_hover = function(bufnr)
 	})
 end
 
+local recording_symbol = function()
+	local register = vim.fn.reg_recording()
+	if register == "" then
+		return ""
+	end
+	return "󰑋 " .. register
+end
+
 local plugins = {
 	{
 		"folke/which-key.nvim",
@@ -106,6 +114,7 @@ local plugins = {
 		opts = {
 			keys = {
 				["<"] = { escape = false, close = true, pair = "<>" },
+				["'"] = { escape = true, close = false, pair = "''", disabled_filtetypes = { "rust" } },
 			},
 			options = {
 				disable_when_touch = true,
@@ -393,7 +402,7 @@ local plugins = {
 						local lnum = line:match("^%u%d+%s(%d+)") -- probably wrong regex
 						if lnum then
 							diags[#diags + 1] =
-								lint.diag_fmt(bufnr, tonumber(lnum) - 1, 0, lines[i]:gsub("\t", ""), 2, "djlint")
+									lint.diag_fmt(bufnr, tonumber(lnum) - 1, 0, lines[i]:gsub("\t", ""), 2, "djlint")
 						end
 					end
 					return diags
@@ -477,11 +486,11 @@ local plugins = {
 				},
 			},
 			presets = {
-				bottom_search = true, -- use a classic bottom cmdline for search
-				command_palette = true, -- position the cmdline and popupmenu together
+				bottom_search = true,     -- use a classic bottom cmdline for search
+				command_palette = true,   -- position the cmdline and popupmenu together
 				long_message_to_split = true, -- long messages will be sent to a split
-				inc_rename = false, -- enables an input dialog for inc-rename.nvim
-				lsp_doc_border = false, -- add a border to hover docs and signature help
+				inc_rename = false,       -- enables an input dialog for inc-rename.nvim
+				lsp_doc_border = false,   -- add a border to hover docs and signature help
 			},
 			routes = {
 				-- hide `written` messages
@@ -570,10 +579,10 @@ local plugins = {
 				cmake_build_directory = "build",
 				cmake_generate_options = { "-D", "CMAKE_EXPORT_COMPILE_COMMANDS=1" },
 				cmake_build_options = {},
-				cmake_console_size = 10, -- cmake output window height
-				cmake_show_console = "always", -- "always", "only_on_error"
+				cmake_console_size = 10,                                                       -- cmake output window height
+				cmake_show_console = "always",                                                 -- "always", "only_on_error"
 				cmake_dap_configuration = { name = "cpp", type = "codelldb", request = "launch" }, -- dap configuration, optional
-				cmake_dap_open_command = require("dap").repl.open, -- optional
+				cmake_dap_open_command = require("dap").repl.open,                             -- optional
 				cmake_variants_message = {
 					short = { show = true },
 					long = { show = true, max_length = 40 },
@@ -620,11 +629,11 @@ local plugins = {
 			vim.cmd.colorscheme("kanagawa")
 		end,
 	},
+
 	{
 		"nvim-lualine/lualine.nvim",
 		dependencies = {
 			"nvim-tree/nvim-web-devicons",
-			"folke/noice.nvim",
 		},
 		config = function()
 			require("lualine").setup({
@@ -636,11 +645,7 @@ local plugins = {
 						end,
 					},
 					lualine_x = {
-						"filetype",
-						{
-							require("noice").api.statusline.mode.get,
-							cond = require("noice").api.statusline.mod.has,
-						},
+						recording_symbol
 					},
 				},
 			})
@@ -699,6 +704,7 @@ local plugins = {
 		"mrcjkb/rustaceanvim",
 		version = "^4",
 		ft = { "rust" },
+		lazy = false,
 		-- config = function()
 		-- 	vim.g.rustaceanvim = {
 		-- 		server = {
