@@ -166,6 +166,12 @@ plugins {
     compact-bar { path "compact-bar"; }
 }
 
+ui {
+	pane_frames {
+		rounded_corners true
+	}
+}
+
 session_serialization false
 
 // Choose what to do when zellij receives SIGTERM, SIGINT, SIGQUIT or SIGHUP
@@ -218,7 +224,7 @@ default_shell "nu"
 // Choose the theme that is specified in the themes section.
 // Default: default
 //
-// theme "default"
+theme "tokyo-night"
 
 // The name of the default layout to load on startup
 // Default: "default"

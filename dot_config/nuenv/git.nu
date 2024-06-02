@@ -58,11 +58,17 @@ def "git log" [
 	let columns = $default_columns
 	let pattern = derive_pattern $columns
 	let column_names = derive_names $columns
-	let raw = run-external --redirect-stdout "git" "log" "-n" $lines $"--pretty=($pattern)"
+	let raw = run-external "git" "log" "-n" $lines $"--pretty=($pattern)"
 	let raw_table = $raw | lines | split column $delimeter | rename ...$column_names
 	let with_date = $raw_table | upsert date {|d| $d.date | into datetime }
 
 	let output = $with_date
 
 	$output
+}
+
+# format a branch name with a date suitable for filenames
+def "git branch filename" [] {
+	let branch = (git branch --show-current) | str replace --all '/' '.'
+	$'($branch)_(date now | format date "%Y-%m-%d_%H:%M:%S")'
 }
