@@ -14,7 +14,6 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 local file_tree = require("file_tree")
---local test_config = require("test_config")
 local keybindings = require("keybindings")
 
 local auto_show_hover = function(bufnr)
@@ -109,7 +108,7 @@ local plugins = {
 		end,
 	},
 	{
-		-- auto close pairs, brackets, parens, quotes, etc
+		-- auto close pairs, brackets, parentheses, quotes, etc
 		"m4xshen/autoclose.nvim",
 		opts = {
 			keys = {
@@ -367,7 +366,7 @@ local plugins = {
 				})
 			end
 		end,
-	}, -- lspconfig
+	}, -- `lspconfig`
 	{
 		"nvimdev/guard.nvim",
 		dependencies = { "nvimdev/guard-collection" },
@@ -409,18 +408,19 @@ local plugins = {
 				end,
 			})
 
-			ft("*"):lint({
-				cmd = "codespell",
-				args = {
-					"--ignore-words-list",
-					"crate",
-				},
-			})
-
 			require("guard").setup({
 				fmt_on_save = true,
 				lsp_as_default_formatter = true,
 			})
+		end,
+	},
+	{
+		"ravibrock/spellwarn.nvim",
+		event = "VeryLazy",
+		config = function()
+			require("spellwarn").setup()
+			vim.opt.spell = true
+			vim.opt.spelllang = "en"
 		end,
 	},
 	-- svelte
@@ -482,7 +482,7 @@ local plugins = {
 				override = {
 					["vim.lsp.util.convert_input_to_markdown_lines"] = true,
 					["vim.lsp.util.stylize_markdown"] = true,
-					["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+					["cmp.entry.get_documentation"] = true,
 				},
 			},
 			presets = {
@@ -551,11 +551,11 @@ local plugins = {
 			"folke/neodev.nvim",
 		},
 		config = function()
-			require('neodev').setup({
-				library = { plugins = { "nvim-dap-ui" }, types = true }
+			require("neodev").setup({
+				library = { plugins = { "nvim-dap-ui" }, types = true },
 			})
-			require('dapui').setup()
-		end
+			require("dapui").setup()
+		end,
 	},
 	{
 		"nvim-telescope/telescope-dap.nvim",
