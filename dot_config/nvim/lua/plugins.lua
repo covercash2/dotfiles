@@ -418,9 +418,16 @@ local plugins = {
 		"ravibrock/spellwarn.nvim",
 		event = "VeryLazy",
 		config = function()
-			require("spellwarn").setup()
+			local opts = {
+				prefix = "spelling: ",
+			}
 			vim.opt.spell = true
 			vim.opt.spelllang = "en"
+			local spellfile = vim.fn.stdpath("config") .. "/spell/en.utf-8.add"
+			print(spellfile)
+			print(vim.fn.filereadable(spellfile))
+			vim.opt.spellfile = spellfile
+			require("spellwarn").setup(opts)
 		end,
 	},
 	-- svelte
