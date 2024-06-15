@@ -414,22 +414,22 @@ local plugins = {
 			})
 		end,
 	},
-	{
-		"ravibrock/spellwarn.nvim",
-		event = "VeryLazy",
-		config = function()
-			local opts = {
-				prefix = "spelling: ",
-			}
-			vim.opt.spell = true
-			vim.opt.spelllang = "en"
-			local spellfile = vim.fn.stdpath("config") .. "/spell/en.utf-8.add"
-			print(spellfile)
-			print(vim.fn.filereadable(spellfile))
-			vim.opt.spellfile = spellfile
-			require("spellwarn").setup(opts)
-		end,
-	},
+	-- {
+	-- 	"ravibrock/spellwarn.nvim",
+	-- 	event = "VeryLazy",
+	-- 	config = function()
+	-- 		local opts = {
+	-- 			prefix = "spelling: ",
+	-- 		}
+	-- 		vim.opt.spell = true
+	-- 		vim.opt.spelllang = "en"
+	-- 		local spellfile = vim.fn.stdpath("config") .. "/spell/en.utf-8.add"
+	-- 		print(spellfile)
+	-- 		print(vim.fn.filereadable(spellfile))
+	-- 		vim.opt.spellfile = spellfile
+	-- 		require("spellwarn").setup(opts)
+	-- 	end,
+	-- },
 	-- svelte
 	{
 		"leafOfTree/vim-svelte-plugin",
@@ -473,6 +473,7 @@ local plugins = {
 	},
 	{
 		"folke/noice.nvim",
+		enabled = false,
 		event = "VeryLazy",
 		dependencies = {
 			-- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
