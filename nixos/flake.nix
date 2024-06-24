@@ -11,6 +11,7 @@
 			system = "x86_64-linux";
 
 			modules = [
+				./wall-e-hardware-configuration.nix
 				./configuration.nix
 			];
 		};

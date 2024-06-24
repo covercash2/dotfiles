@@ -6,7 +6,7 @@
 {
   imports =
     [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
+      # ./wall-e-hardware-configuration.nix
     ];
 
   nixpkgs.config.allowUnfree = true;
@@ -94,13 +94,15 @@
       lua-language-server
       neovim
       nerdfonts
+			nil # nix lsp
 
-      slurp # select a region in Wayland
+      slurp # select a region of the screen in Wayland
       starship
       tree
       wezterm
       wl-clipboard
       wofi # runner a la rofi, Spotlight
+      zellij # terminal multiplexer
       zoxide # cd replacement with a memory
     ];
   };
