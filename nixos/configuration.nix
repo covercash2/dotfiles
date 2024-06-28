@@ -79,6 +79,7 @@
     shell = pkgs.nushell;
     packages = with pkgs; [
       asdf-vm # toolchain management
+      bitwarden
       carapace # command line completion
       chezmoi # dotfiles manager
       discord
