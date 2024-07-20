@@ -9,11 +9,14 @@
       # ./wall-e-hardware-configuration.nix
     ];
 
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
   nixpkgs.config.allowUnfree = true;
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.kernelModules = ["nvidia" "nvidia-drm" "nvidia-uvm"];
 
   hardware.graphics = {
     enable = true;
@@ -23,16 +26,13 @@
     package = config.boot.kernelPackages.nvidiaPackages.stable;
     modesetting.enable = true;
 
+    # power management options are unstable
     powerManagement.enable = false;
     powerManagement.finegrained = false;
-    open = true;
-    prime = {
-      intelBusId = "PCI:1:0:0";
-      nvidiaBusId = "PCI:0:2:0";
-    };
+    # use the open source kernel module
+    open = false;
   };
 
-  networking.hostName = "wall-e"; # Define your hostname.
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
