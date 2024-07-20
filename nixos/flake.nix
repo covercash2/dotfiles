@@ -13,6 +13,7 @@
 			modules = [
 				./wall-e-hardware-configuration.nix
 				./configuration.nix
+				./modules/wall-e.nix
 			];
 		};
 	};
