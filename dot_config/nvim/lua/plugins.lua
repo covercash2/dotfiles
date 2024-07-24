@@ -1,12 +1,13 @@
 -- load `lazy` package manager
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
+if not (vim.loop or vim.uv).fs_stat(lazypath) then
+	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
 	vim.fn.system({
 		"git",
 		"clone",
 		"--filter=blob:none",
-		"https://github.com/folke/lazy.nvim.git",
 		"--branch=stable",
+		lazyrepo,
 		lazypath,
 	})
 end
@@ -181,6 +182,13 @@ local plugins = {
 	},
 	{
 		"numToStr/Comment.nvim",
+		opts = {},
+	},
+	{
+		"folke/todo-comments.nvim",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+		},
 		opts = {},
 	},
 	{
@@ -377,11 +385,11 @@ local plugins = {
 
 			ft("lua"):fmt("stylua")
 
-			ft("yaml"):fmt({
-				cmd = "yamlfmt",
-				stdin = true,
-				args = { "-" },
-			})
+			-- ft("yaml"):fmt({
+			-- 	cmd = "yamlfmt",
+			-- 	stdin = true,
+			-- 	args = { "-" },
+			-- })
 
 			local djlint = {
 				cmd = "djlint",
@@ -846,4 +854,8 @@ local plugins = {
 	},
 }
 
-require("lazy").setup(plugins)
+require("lazy").setup({
+	spec = plugins,
+	install = { colorscheme = { "habamax" } },
+	checker = { enabled = true },
+})
