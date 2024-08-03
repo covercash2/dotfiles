@@ -16,5 +16,16 @@
 				./modules/wall-e.nix
 			];
 		};
+		nixosConfigurations.green = nixpkgs.lib.nixosSystem {
+
+			system = "x86_64-linux";
+
+			modules = [
+				./green-hardware-configuration.nix
+				./configuration.nix
+				./modules/green.nix
+				./modules/openssh.nix
+			];
+		};
 	};
 }
