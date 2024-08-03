@@ -4,11 +4,6 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      # ./wall-e-hardware-configuration.nix
-    ];
-
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   nixpkgs.config.allowUnfree = true;
@@ -66,16 +61,13 @@
     pulse.enable = true;
   };
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  services.libinput.enable = true;
-
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.chrash = {
     isNormalUser = true;
-    extraGroups = [ 
+    extraGroups = [
         "wheel" # Enable ‘sudo’ for the user.
         "networkmanager" # allow wifi connections
-    ]; 
+    ];
     shell = pkgs.nushell;
     packages = with pkgs; [
       asdf-vm # toolchain management
@@ -84,7 +76,6 @@
       chezmoi # dotfiles manager
       discord
       fastfetch # neofetch replacement
-      fira-code
       firefox
       gcc
       grim # Wayland image grabber
@@ -94,8 +85,7 @@
       lshw
       lua-language-server
       neovim
-      nerdfonts
-			nil # nix lsp
+      nil # nix lsp
 
       slurp # select a region of the screen in Wayland
       starship
@@ -113,12 +103,22 @@
   environment.systemPackages = with pkgs; [
     git
     neovim
+    nushell
     wget
+    pciutils
   ];
+
+	fonts.packages = with pkgs; [
+		nerdfonts
+		noto-fonts
+		noto-fonts-emoji
+		fira-code
+		fira-code-symbols
+	];
 
   programs.hyprland.enable = true;
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
-	environment.variables.EDITOR = "nvim";
+  environment.variables.EDITOR = "nvim";
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

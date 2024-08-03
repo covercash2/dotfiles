@@ -10,4 +10,6 @@
           nvidiaBusId = "PCI:0:2:0";
         };
     };
+    # enable touchpad support
+    services.libinput.enable = true;
 }
