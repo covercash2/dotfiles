@@ -9,6 +9,16 @@
 
 	services.tailscale.enable = true;
 
+  # media hosting
+	services.jellyfin = {
+		enable = true;
+		openFirewall = true;
+		cacheDir = "/mnt/media/jellyfin/cache";
+		configDir = "/mnt/media/jellyfin/config";
+		dataDir = "/mnt/media/jellyfin/data";
+		logDir = "/mnt/media/jellyfin/logs";
+	};
+
 	networking.firewall = {
 		enable = true;
 		allowedTCPPorts = [
