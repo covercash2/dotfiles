@@ -25,6 +25,7 @@
 				./configuration.nix
 				./modules/green.nix
 				./modules/openssh.nix
+				./modules/zigbee_receiver.nix
 			];
 		};
 	};
