@@ -37,5 +37,16 @@
     podman-tui
     podman-compose
 	];
+
+	users.groups = {
+		iot = {
+			gid = 1001;
+		};
+	};
+  users.users.chrash = {
+    extraGroups = [
+      "iot"
+    ];
+  };
 }
 
