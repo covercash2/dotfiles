@@ -104,8 +104,9 @@
     git
     neovim
     nushell
-    wget
+		ov
     pciutils
+    wget
   ];
 
 	fonts.packages = with pkgs; [
@@ -119,6 +120,7 @@
   programs.hyprland.enable = true;
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
   environment.variables.EDITOR = "nvim";
+  environment.variables.PAGER = "ov";
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
