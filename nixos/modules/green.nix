@@ -17,9 +17,23 @@
 		];
 	};
 
-	fileSystems."/mnt/space" = {
-		device = "/dev/disk/by-label/Space";
-		fsType = "ext4";
+	fileSystems = {
+		# extra space
+    # old home folder, extra files, miscellaneous space
+		"/mnt/space" = {
+			device = "/dev/disk/by-label/Space";
+			fsType = "ext4";
+		};
+    # media: movies, some other miscellaneous files
+		"/mnt/media" = {
+			device = "/dev/disk/by-label/media";
+			fsType = "ext4";
+		};
+    # games: fast (SATA SSD) storage for games etc
+		"/mnt/games" = {
+			device = "/dev/disk/by-label/games";
+			fsType = "btrfs";
+		};
 	};
 
 	virtualisation.containers.enable = true;
@@ -33,6 +47,7 @@
 	};
 
 	environment.systemPackages = with pkgs; [
+		btrfs-progs
     dive
     podman-tui
     podman-compose
@@ -40,7 +55,7 @@
 
 	users.groups = {
 		iot = {
-			gid = 1001;
+			gid = 992;
 		};
 	};
   users.users.chrash = {
