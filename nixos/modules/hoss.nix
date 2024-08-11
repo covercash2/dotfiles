@@ -3,16 +3,33 @@
 {
   networking.hostName = "hoss";
 
-  services.tailscale.enable = true;
+  hardware = {
+    bluetooth = {
+      enable = true;
+      powerOnBoot = true;
+    };
+  };
+
+  services = {
+    tailscale.enable = true;
+    blueman.enable = true;
+  };
 
   networking.firewall = {
     enable = true;
   };
 
-	fileSystems = {
-		"/mnt/space" = {
-			device = "/dev/disk/by-label/space";
-			fsType = "ext4";
-		};
-	};
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true;
+    dedicatedServer.openFirewall = true;
+    localNetworkGameTransfers.openFirewall = true;
+  };
+
+  fileSystems = {
+    "/mnt/space" = {
+      device = "/dev/disk/by-label/space";
+      fsType = "ext4";
+    };
+  };
 }

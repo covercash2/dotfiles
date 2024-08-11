@@ -42,15 +42,20 @@
     useXkbConfig = true; # use xkb.options in tty.
   };
 
-  # this is used to enable video drivers,
-  # even though X isn't used in this config
-  services.xserver.videoDrivers = [ "nvidia" ];
-  services.displayManager.enable = false;
+  services = {
+    # this is used to enable video drivers,
+    # even though X isn't used in this config
+    xserver.videoDrivers = [ "nvidia" ];
+    displayManager.enable = false;
 
-  # Enable sound.
-  services.pipewire = {
-    enable = true;
-    pulse.enable = true;
+    # Enable sound.
+    pipewire = {
+      enable = true;
+      pulse.enable = true;
+    };
+
+    gvfs.enable = true; # Mount, trash, and other functionalities
+    tumbler.enable = true; # Thumbnail support for images
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -85,6 +90,7 @@
       wezterm
       wl-clipboard
       wofi # runner a la rofi, Spotlight
+      xdg-utils # e.g. xdg-open
       zellij # terminal multiplexer
       zoxide # cd replacement with a memory
     ];
@@ -108,6 +114,31 @@
     fira-code
     fira-code-symbols
   ];
+
+  programs = {
+    thunar.enable = true;
+  };
+
+  xdg = {
+    # enable different desktop integration features
+    # https://github.com/flatpak/xdg-desktop-portal
+    portal = {
+      enable = true;
+    };
+    mime = {
+      defaultApplications = {
+        "inode/directory" = "thunar.desktop";
+
+        "default-web-browser" = [ "firefox.desktop" ];
+        "text/html" = [ "firefox.desktop" ];
+        "x-scheme-handler/http" = [ "firefox.desktop" ];
+        "x-scheme-handler/https" = [ "firefox.desktop" ];
+        "x-scheme-handler/about" = [ "firefox.desktop" ];
+        "x-scheme-handler/unknown" = [ "firefox.desktop" ];
+      };
+    };
+    terminal-exec.enable = true;
+  };
 
   programs.hyprland.enable = true;
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
