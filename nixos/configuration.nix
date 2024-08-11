@@ -96,18 +96,18 @@
     git
     neovim
     nushell
-		ov
+    ov
     pciutils
     wget
   ];
 
-	fonts.packages = with pkgs; [
-		nerdfonts
-		noto-fonts
-		noto-fonts-emoji
-		fira-code
-		fira-code-symbols
-	];
+  fonts.packages = with pkgs; [
+    nerdfonts
+    noto-fonts
+    noto-fonts-emoji
+    fira-code
+    fira-code-symbols
+  ];
 
   programs.hyprland.enable = true;
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
