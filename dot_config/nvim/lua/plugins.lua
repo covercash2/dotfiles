@@ -46,6 +46,7 @@ end
 local plugins = {
 	{
 		"folke/which-key.nvim",
+		event = "VeryLazy",
 		dependencies = {
 			"nvim-telescope/telescope.nvim",
 			"nvim-telescope/telescope-dap.nvim",
@@ -385,12 +386,6 @@ local plugins = {
 
 			ft("lua"):fmt("stylua")
 
-			-- ft("yaml"):fmt({
-			-- 	cmd = "yamlfmt",
-			-- 	stdin = true,
-			-- 	args = { "-" },
-			-- })
-
 			local djlint = {
 				cmd = "djlint",
 				args = { "-", "--profiles=jinja" },
@@ -417,7 +412,7 @@ local plugins = {
 			})
 
 			require("guard").setup({
-				fmt_on_save = true,
+				fmt_on_save = false,
 				lsp_as_default_formatter = true,
 			})
 		end,
@@ -735,7 +730,7 @@ local plugins = {
 		dependencies = {
 			"mfussenegger/nvim-dap",
 		},
-		version = "^4",
+		version = "^5",
 		ft = { "rust" },
 		lazy = false,
 		config = function()

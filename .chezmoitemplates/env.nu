@@ -62,3 +62,9 @@ if (which nvim | is-empty) {
 } else {
 	$env.EDITOR = (which nvim | get path.0)
 }
+
+if (which ov | is-empty) {
+	print "ov pager not found"
+} else {
+	$env.PAGER = (which ov | get path.0)
+}
