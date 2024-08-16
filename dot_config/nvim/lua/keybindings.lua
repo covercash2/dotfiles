@@ -97,7 +97,7 @@ local get_keybindings = function()
 		{ "<leader>fm", telescope.marks,          desc = "find marks" },
 		{ "<leader>fr", telescope.lsp_references, desc = "find references" },
 		{ "<leader>fs", telescope.treesitter,     desc = "structure (treesitter)" },
- 
+
 		{
 			"<leader>g",
 			group = "goto"
@@ -145,9 +145,10 @@ local get_keybindings = function()
 		},
 
 		{ "<leader>v",  group = "git" },
-		b = {
+		{
+			"<leader>b",
 			"<cmd>GitBlameToggle<cr>",
-			"toggle git blame",
+			desc = "toggle git blame",
 		},
 		{ "<leader>vs", telescope.git_status, desc = "git status" },
 	}
