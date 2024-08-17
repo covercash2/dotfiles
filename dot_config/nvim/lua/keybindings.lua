@@ -111,7 +111,7 @@ local get_keybindings = function()
 		{
 			"<leader>h",
 			vim.lsp.buf.hover,
-			"hover window"
+			desc = "hover window"
 		},
 
 		{
