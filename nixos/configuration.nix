@@ -13,6 +13,9 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelModules = ["nvidia" "nvidia-drm" "nvidia-uvm"];
 
+  # recommended for PipeWire: https://nixos.wiki/wiki/PipeWire
+  security.rtkit.enable = true;
+
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
@@ -51,6 +54,10 @@
     # Enable sound.
     pipewire = {
       enable = true;
+      alsa = {
+        enable = true;
+        support32Bit = true;
+      };
       pulse.enable = true;
     };
 
@@ -76,6 +83,7 @@
       firefox
       gcc
       grim # Wayland image grabber
+      helvum # PipeWire patch bay
 
       kitty
       libgcc
@@ -83,6 +91,7 @@
       lua-language-server
       neovim
       nil # nix lsp
+      pavucontrol # volume control for pulse audio
 
       slurp # select a region of the screen in Wayland
       starship
