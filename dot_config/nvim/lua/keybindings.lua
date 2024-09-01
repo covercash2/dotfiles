@@ -1,4 +1,5 @@
 local get_keybindings = function()
+	local ai = require('ai')
 	local file_tree = require("file_tree")
 	local telescope = require("telescope.builtin")
 	local telescope_dap = require("telescope").extensions.dap
@@ -11,11 +12,16 @@ local get_keybindings = function()
 	-- just define them like normal,
 	-- and let which-key figure shit out
 	local keybindings = {
+		{ "<leader>a", group = "ai" },
+		ai.keys,
+		-- ai.keys.chat,
+		-- ai.keys.pick_prompt,
+		-- ai.keys.code_review,
+
 		{ "<leader>b",  group = "buffer" },
 		{ "<leader>bf", vim.lsp.buf.format,                                       desc = "format buffer" },
 		{ "<leader>bh", function() close_buffers.delete({ type = "hidden" }) end, desc = "close hidden buffers" },
 		{ "<leader>bh", function() close_buffers.delete({ type = "other" }) end,  desc = "close other buffers" },
-
 
 		{ "<leader>c",  group = "check" },
 		{

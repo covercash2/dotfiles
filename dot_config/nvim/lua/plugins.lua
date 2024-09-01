@@ -16,6 +16,7 @@ vim.opt.rtp:prepend(lazypath)
 
 local file_tree = require("file_tree")
 local keybindings = require("keybindings")
+local ai = require("ai")
 
 local auto_show_hover = function(bufnr)
 	-- show a window when a doc is available
@@ -175,7 +176,7 @@ local plugins = {
 		dependencies = {
 			"nvim-treesitter/nvim-treesitter",
 		},
-		config = {
+		opts = {
 			multiline_threshold = 8,
 		},
 	},
@@ -472,7 +473,7 @@ local plugins = {
 	},
 	{
 		"rcarriga/nvim-notify",
-		config = {
+		opts = {
 			timeout = 1500,
 		},
 	},
@@ -574,10 +575,12 @@ local plugins = {
 		"nvim-telescope/telescope-dap.nvim",
 		dependencies = {
 			"nvim-telescope/telescope.nvim",
+			'nvim-telescope/telescope-ui-select.nvim',
 			"mfussenegger/nvim-dap",
 			"nvim-treesitter/nvim-treesitter",
 		},
 		config = function()
+			require('telescope').load_extension("ui-select")
 			require("telescope").load_extension("dap")
 		end,
 	},
@@ -648,13 +651,18 @@ local plugins = {
 		"catppuccin/nvim",
 		name = "catppucin",
 		priority = 1000,
+		lazy = false,
+		config = function()
+			vim.cmd.colorscheme("kanagawa")
+		end,
 	},
 	{
 		"rebelot/kanagawa.nvim",
 		priority = 1000,
-		config = function()
-			vim.cmd.colorscheme("kanagawa")
-		end,
+		-- lazy = false,
+		-- config = function()
+		-- 	vim.cmd.colorscheme("kanagawa")
+		-- end,
 	},
 
 	{
@@ -849,10 +857,11 @@ local plugins = {
 			min_chars = 1,
 		},
 	},
+	ai.spec,
 }
 
 require("lazy").setup({
 	spec = plugins,
-	install = { colorscheme = { "habamax" } },
+	install = { colorscheme = { "kanagawa" } },
 	checker = { enabled = true },
 })
