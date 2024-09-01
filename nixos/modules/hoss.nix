@@ -2,6 +2,7 @@
 
 {
   networking.hostName = "hoss";
+  nixpkgs.config.cudaSupport = true;
 
   hardware = {
     bluetooth = {
@@ -13,15 +14,15 @@
   services = {
     tailscale.enable = true;
     blueman.enable = true;
-		ollama = {
-			enable = true;
-			user = "ollama";
-			models = "/mnt/space/ollama/models";
-			home = "/mnt/space/ollama";
-			host = "0.0.0.0";
-			port = 11434;
-			openFirewall = true;
-		};
+    ollama = {
+      enable = true;
+      user = "ollama";
+      models = "/mnt/space/ollama/models";
+      home = "/mnt/space/ollama";
+      host = "0.0.0.0";
+      port = 11434;
+      openFirewall = true;
+    };
   };
 
   networking.firewall = {
@@ -34,6 +35,10 @@
     dedicatedServer.openFirewall = true;
     localNetworkGameTransfers.openFirewall = true;
   };
+
+  environment.systemPackages = with pkgs; [
+    cudatoolkit
+  ];
 
   fileSystems = {
     "/mnt/space" = {
