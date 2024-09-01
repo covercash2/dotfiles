@@ -23,6 +23,7 @@
         ./green-hardware-configuration.nix
         ./configuration.nix
         ./modules/green.nix
+        ./modules/adguard.nix
         ./modules/openssh.nix
         ./modules/zigbee_receiver.nix
       ];
