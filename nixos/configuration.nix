@@ -77,7 +77,8 @@
       asdf-vm # toolchain management
       bitwarden
       carapace # command line completion
-      chezmoi # dotfiles manager
+      chezmoi  # dotfiles manager
+      dig      # domain name server
       discord
       fastfetch # neofetch replacement
       firefox
