@@ -9,4 +9,10 @@
     openFirewall = true;
     mutableSettings = true;
   };
+
+  networking.firewall = {
+    allowedTCPPorts = [
+      53 # unsecured DNS
+    ];
+  };
 }
