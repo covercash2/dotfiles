@@ -7,34 +7,45 @@
   boot.kernelParams = [ "module_blacklist=i915" ];
 
   networking = {
-		hostName = "green";
-		useDHCP = false;
-		interfaces.enp5s0 = {
-			ipv4.addresses = [{
-				address = "192.168.2.216";
-				prefixLength = 24;
-			}];
-		};
-	};
-
-
-  services.tailscale.enable = true;
-
-  # media hosting
-  services.jellyfin = {
-    enable = true;
-    openFirewall = true;
-    cacheDir = "/mnt/media/jellyfin/cache";
-    configDir = "/mnt/media/jellyfin/config";
-    dataDir = "/mnt/media/jellyfin/data";
-    logDir = "/mnt/media/jellyfin/logs";
+    hostName = "green";
+    useDHCP = false;
+    interfaces.enp5s0 = {
+      ipv4.addresses = [{
+        address = "192.168.2.216";
+        prefixLength = 24;
+      }];
+    };
   };
+
+  services = {
+    tailscale.enable = true;
+    # media hosting
+    jellyfin = {
+      enable = true;
+      openFirewall = true;
+      cacheDir = "/mnt/media/jellyfin/cache";
+      configDir = "/mnt/media/jellyfin/config";
+      dataDir = "/mnt/media/jellyfin/data";
+      logDir = "/mnt/media/jellyfin/logs";
+    };
+
+    grafana = {
+      enable = true;
+      settings = {
+        server = {
+          http_addr = "0.0.0.0";
+        };
+      };
+    };
+  };
+
 
   networking.firewall = {
     enable = true;
     allowedTCPPorts = [
       30000 # foundry VTT
       8123  # home assistant
+      3000  # Grafana
     ];
   };
 
@@ -72,6 +83,7 @@
     dive
     podman-tui
     podman-compose
+    zenith-nvidia
   ];
 
   users.groups = {
