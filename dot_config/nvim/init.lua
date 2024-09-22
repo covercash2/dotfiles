@@ -1,7 +1,6 @@
 vim.o.number = true
 --vim.o.relativenumber = true
 
-vim.api.nvim_set_option("smartindent", true)
 vim.opt.smartindent = true
 vim.opt.tabstop = 2
 vim.opt.softtabstop = 2

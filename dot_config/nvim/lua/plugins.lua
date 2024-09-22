@@ -341,7 +341,7 @@ local plugins = {
 				"lua_ls",
 				"pyright",
 				"svelte",
-				"tsserver",
+				"ts_ls",
 			}
 			local on_attach = function(client, bufnr)
 				-- show a window when a doc is available
@@ -456,10 +456,18 @@ local plugins = {
 		end,
 	},
 	{
-		"dsummersl/nvim-sluice",
-		config = function()
-			require("sluice").setup({})
-		end,
+		"dstein64/nvim-scrollview",
+		opts = {
+			current_only = false,
+			signs_on_startup = {
+				"search",
+				"diagnostics",
+				"marks",
+				"cursor",
+				"conflicts",
+				"latestchange"
+			},
+		},
 	},
 	{
 		"folke/trouble.nvim",
