@@ -133,29 +133,30 @@ local plugins = {
 		config = function()
 			vim.cmd("TSUpdate")
 			vim.treesitter.language.register("javascript", "dataviewjs")
+			vim.treesitter.language.register("json", "dataviewjs")
 			require("nvim-treesitter.configs").setup({
 				ensure_installed = {
-					"lua",
-					"rust",
-					"kotlin",
-					"python",
-					"elm",
-					"cpp",
-					"cmake",
 					"bash",
+					"cmake",
+					"cpp",
+					"css",
+					"elm",
 					"fish",
+					"javascript",
+					"json",
+					"kdl",
+					"kotlin",
+					"lua",
 					"make",
 					"markdown",
 					"markdown_inline",
 					"norg",
 					"nu",
-					"kdl",
+					"python",
+					"rust",
 					"svelte",
-					"javascript",
-					"typescript",
 					"tsx",
-					"json",
-					"css",
+					"typescript",
 				},
 				highlight = {
 					enable = true,
