@@ -12,7 +12,7 @@ local get_keybindings = function()
 	-- just define them like normal,
 	-- and let which-key figure shit out
 	local keybindings = {
-		{ "<leader>a", group = "ai" },
+		{ "<leader>a",  group = "ai" },
 		ai.keys,
 		-- ai.keys.chat,
 		-- ai.keys.pick_prompt,
@@ -97,16 +97,14 @@ local get_keybindings = function()
 			group = "find"
 		},
 		{
-			"<leader>fg",
+			"<leader>v",
 			group = "git",
 		},
 		{ "<leader>ff", telescope.find_files,     desc = "find file" },
-		-- { "<leader>fg", telescope.live_grep,      desc = "grep" },
 		{ "<leader>fb", telescope.buffers,        desc = "find buffer" },
 		{ "<leader>fH", telescope.help_tags,      desc = "help tags" },
 		{ "<leader>fm", telescope.marks,          desc = "find marks" },
 		{ "<leader>fr", telescope.lsp_references, desc = "find references" },
-		{ "<leader>fs", telescope.treesitter,     desc = "structure (treesitter)" },
 
 		{
 			"<leader>g",
@@ -135,6 +133,15 @@ local get_keybindings = function()
 		{ "<leader>ls", vim.lsp.buf.signature_help,          desc = "signature help" },
 
 		{
+			"<leader>r",
+			group = "run",
+		},
+		{
+			"<leader>s",
+			group = "settings",
+		},
+
+		{
 			"<leader>t",
 			group = "tree"
 		},
@@ -153,6 +160,7 @@ local get_keybindings = function()
 			end,
 			desc = "go to context",
 		},
+		{ "<leader>Ts", telescope.treesitter, desc = "structure (treesitter)" },
 
 		{ "<leader>v",  group = "git" },
 	}
