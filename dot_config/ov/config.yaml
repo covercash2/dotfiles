@@ -1,0 +1,17 @@
+
+Keybind:
+  down:
+    - "enter"
+    - "down"
+    - "ctrl+n"
+    - "j"
+  up:
+    - "up"
+    - "ctrl+p"
+    - "k"
+  left:
+    - "left"
+    - "h"
+  right:
+    - "right"
+    - "l"
