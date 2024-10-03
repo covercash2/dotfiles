@@ -96,8 +96,12 @@ local get_keybindings = function()
 			"<leader>f",
 			group = "find"
 		},
+		{
+			"<leader>fg",
+			group = "git",
+		},
 		{ "<leader>ff", telescope.find_files,     desc = "find file" },
-		{ "<leader>fg", telescope.live_grep,      desc = "grep" },
+		-- { "<leader>fg", telescope.live_grep,      desc = "grep" },
 		{ "<leader>fb", telescope.buffers,        desc = "find buffer" },
 		{ "<leader>fH", telescope.help_tags,      desc = "help tags" },
 		{ "<leader>fm", telescope.marks,          desc = "find marks" },
@@ -151,12 +155,6 @@ local get_keybindings = function()
 		},
 
 		{ "<leader>v",  group = "git" },
-		{
-			"<leader>b",
-			"<cmd>GitBlameToggle<cr>",
-			desc = "toggle git blame",
-		},
-		{ "<leader>vs", telescope.git_status, desc = "git status" },
 	}
 	return keybindings
 end

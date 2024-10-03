@@ -1,4 +1,4 @@
--- load `lazy` package manager
+-- load `lazy` packaeze manager
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.loop or vim.uv).fs_stat(lazypath) then
 	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
@@ -107,6 +107,9 @@ local plugins = {
 	"tpope/vim-fugitive",
 	{
 		"f-person/git-blame.nvim",
+		keys = {
+			{ "<leader>vB", "<cmd>GitBlameToggle<cr>", desc = "toggle git blame" },
+		},
 		config = function()
 			require("gitblame").setup()
 		end,
@@ -554,6 +557,11 @@ local plugins = {
 		tag = "0.1.4",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
+		},
+		keys = {
+			{ "<leader>vc", function() require('telescope.builtin').git_commits() end,  desc = "list git commits" },
+			{ "<leader>vd", function() require('telescope.builtin').git_bcommits() end, desc = "list git commits for this buffer" },
+			{ "<leader>vb", function() require('telescope.builtin').git_branches() end, desc = "list git branches" },
 		},
 		config = function()
 			require("telescope").setup({
