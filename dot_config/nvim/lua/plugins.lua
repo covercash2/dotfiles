@@ -418,10 +418,11 @@ local plugins = {
 				end,
 			})
 
-			require("guard").setup({
+			vim.g.guard_config = {
 				fmt_on_save = false,
+				save_on_fmt = true,
 				lsp_as_default_formatter = true,
-			})
+			}
 		end,
 	},
 	-- {
