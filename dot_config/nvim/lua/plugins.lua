@@ -57,7 +57,7 @@ local plugins = {
 			"folke/trouble.nvim",
 			"nvim-neotest/neotest",
 			"kazhala/close-buffers.nvim",
-			'echasnovski/mini.icons',
+			"echasnovski/mini.icons",
 		},
 		config = function()
 			local wk = require("which-key")
@@ -206,7 +206,7 @@ local plugins = {
 			require("mini.ai").setup()
 		end,
 	},
-	{ 'echasnovski/mini.icons', version = false },
+	{ "echasnovski/mini.icons", version = false },
 	{
 		"echasnovski/mini.surround",
 		version = "*",
@@ -411,7 +411,7 @@ local plugins = {
 						local lnum = line:match("^%u%d+%s(%d+)") -- probably wrong regex
 						if lnum then
 							diags[#diags + 1] =
-									lint.diag_fmt(bufnr, tonumber(lnum) - 1, 0, lines[i]:gsub("\t", ""), 2, "djlint")
+								lint.diag_fmt(bufnr, tonumber(lnum) - 1, 0, lines[i]:gsub("\t", ""), 2, "djlint")
 						end
 					end
 					return diags
@@ -469,7 +469,7 @@ local plugins = {
 				"marks",
 				"cursor",
 				"conflicts",
-				"latestchange"
+				"latestchange",
 			},
 		},
 	},
@@ -512,11 +512,11 @@ local plugins = {
 				},
 			},
 			presets = {
-				bottom_search = true,     -- use a classic bottom cmdline for search
-				command_palette = true,   -- position the cmdline and popupmenu together
+				bottom_search = true, -- use a classic bottom cmdline for search
+				command_palette = true, -- position the cmdline and popupmenu together
 				long_message_to_split = true, -- long messages will be sent to a split
-				inc_rename = false,       -- enables an input dialog for inc-rename.nvim
-				lsp_doc_border = false,   -- add a border to hover docs and signature help
+				inc_rename = false, -- enables an input dialog for inc-rename.nvim
+				lsp_doc_border = false, -- add a border to hover docs and signature help
 			},
 			routes = {
 				-- hide `written` messages
@@ -560,24 +560,103 @@ local plugins = {
 		},
 		keys = {
 			-- v for version/git
-			{ "<leader>vc", function() require('telescope.builtin').git_commits() end,     desc = "list git commits" },
-			{ "<leader>vd", function() require('telescope.builtin').git_bcommits() end,    desc = "list git commits for this buffer" },
-			{ "<leader>vb", function() require('telescope.builtin').git_branches() end,    desc = "list git branches" },
+			{
+				"<leader>vc",
+				function()
+					require("telescope.builtin").git_commits()
+				end,
+				desc = "list git commits",
+			},
+			{
+				"<leader>vd",
+				function()
+					require("telescope.builtin").git_bcommits()
+				end,
+				desc = "list git commits for this buffer",
+			},
+			{
+				"<leader>vb",
+				function()
+					require("telescope.builtin").git_branches()
+				end,
+				desc = "list git branches",
+			},
+			{
+				"<leader>vs",
+				function()
+					require("telescope.builtin").git_status()
+				end,
+				desc = "list git branches",
+			},
 
 			-- f for find
-			{ "<leader>fG", function() require('telescope.builtin').grep_string() end,     desc = "find string in files" },
-			{ "<leader>fg", function() require('telescope.builtin').live_grep() end,       desc = "search in files" },
-			{ "<leader>fS", function() require('telescope.builtin').spell_suggest() end,   desc = "fix spelling" },
+			{
+				"<leader>fG",
+				function()
+					require("telescope.builtin").grep_string()
+				end,
+				desc = "find string in files",
+			},
+			{
+				"<leader>fg",
+				function()
+					require("telescope.builtin").live_grep()
+				end,
+				desc = "search in files",
+			},
+			{
+				"<leader>fS",
+				function()
+					require("telescope.builtin").spell_suggest()
+				end,
+				desc = "fix spelling",
+			},
 
 			-- r for run
-			{ "<leader>rc", function() require('telescope.builtin').commands() end,        desc = "list commands" },
-			{ "<leader>rh", function() require('telescope.builtin').command_history() end, desc = "list recent commands" },
+			{
+				"<leader>rc",
+				function()
+					require("telescope.builtin").commands()
+				end,
+				desc = "list commands",
+			},
+			{
+				"<leader>rh",
+				function()
+					require("telescope.builtin").command_history()
+				end,
+				desc = "list recent commands",
+			},
 
 			-- s for settings
-			{ "<leader>sc", function() require('telescope.builtin').colorscheme() end,     desc = "list colorschemes" },
-			{ "<leader>sm", function() require('telescope.builtin').man_pages() end,       desc = "search man pages" },
-			{ "<leader>so", function() require('telescope.builtin').vim_options() end,     desc = "list vim options" },
-			{ "<leader>sq", function() require('telescope.builtin').quickfix() end,        desc = "list quickfixes" },
+			{
+				"<leader>sc",
+				function()
+					require("telescope.builtin").colorscheme()
+				end,
+				desc = "list colorschemes",
+			},
+			{
+				"<leader>sm",
+				function()
+					require("telescope.builtin").man_pages()
+				end,
+				desc = "search man pages",
+			},
+			{
+				"<leader>so",
+				function()
+					require("telescope.builtin").vim_options()
+				end,
+				desc = "list vim options",
+			},
+			{
+				"<leader>sq",
+				function()
+					require("telescope.builtin").quickfix()
+				end,
+				desc = "list quickfixes",
+			},
 		},
 		config = function()
 			require("telescope").setup({
@@ -623,12 +702,12 @@ local plugins = {
 		"nvim-telescope/telescope-dap.nvim",
 		dependencies = {
 			"nvim-telescope/telescope.nvim",
-			'nvim-telescope/telescope-ui-select.nvim',
+			"nvim-telescope/telescope-ui-select.nvim",
 			"mfussenegger/nvim-dap",
 			"nvim-treesitter/nvim-treesitter",
 		},
 		config = function()
-			require('telescope').load_extension("ui-select")
+			require("telescope").load_extension("ui-select")
 			require("telescope").load_extension("dap")
 		end,
 	},
@@ -657,10 +736,10 @@ local plugins = {
 				cmake_build_directory = "build",
 				cmake_generate_options = { "-D", "CMAKE_EXPORT_COMPILE_COMMANDS=1" },
 				cmake_build_options = {},
-				cmake_console_size = 10,                                                       -- cmake output window height
-				cmake_show_console = "always",                                                 -- "always", "only_on_error"
+				cmake_console_size = 10, -- cmake output window height
+				cmake_show_console = "always", -- "always", "only_on_error"
 				cmake_dap_configuration = { name = "cpp", type = "codelldb", request = "launch" }, -- dap configuration, optional
-				cmake_dap_open_command = require("dap").repl.open,                             -- optional
+				cmake_dap_open_command = require("dap").repl.open, -- optional
 				cmake_variants_message = {
 					short = { show = true },
 					long = { show = true, max_length = 40 },
@@ -797,6 +876,13 @@ local plugins = {
 					on_attach = function(client, bufnr)
 						auto_show_hover(bufnr)
 					end,
+					default_settings = {
+						['rust-analyzer'] = {
+							cargo = {
+								features = "all",
+							},
+						},
+					},
 				},
 			}
 			-- https://github.com/helix-editor/helix/wiki/Debugger-Configurations#install-debuggers
@@ -815,8 +901,8 @@ local plugins = {
 						local rustc_sysroot = vim.fn.trim(vim.fn.system("rustc --print sysroot"))
 
 						local script_import = 'command script import "'
-								.. rustc_sysroot
-								.. "lib/rustlib/etc/lldb_lookup.py"
+							.. rustc_sysroot
+							.. "lib/rustlib/etc/lldb_lookup.py"
 						local commands_file = rustc_sysroot .. "/lib/rustlib/etc/lldb_commands"
 
 						local commands = {}
@@ -911,5 +997,5 @@ local plugins = {
 require("lazy").setup({
 	spec = plugins,
 	install = { colorscheme = { "kanagawa" } },
-	checker = { enabled = true },
+	checker = { enabled = false },
 })
