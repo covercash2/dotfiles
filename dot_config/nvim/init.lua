@@ -20,6 +20,7 @@ vim.g.loaded_netrwPlugin = 1
 -- enable highlight groups
 vim.opt.termguicolors = true
 
+require("date")
 require("plugins")
 
 vim.api.nvim_create_autocmd("InsertLeave", {

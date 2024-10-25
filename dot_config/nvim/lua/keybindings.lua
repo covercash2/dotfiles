@@ -123,6 +123,16 @@ local get_keybindings = function()
 		},
 
 		{
+			"<leader>i",
+			group = "insert",
+		},
+
+		{
+			"<leader>id",
+			group = "date",
+		},
+
+		{
 			"<leader>l",
 			group = "lsp"
 		},
