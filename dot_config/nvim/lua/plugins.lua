@@ -137,6 +137,7 @@ local plugins = {
 			vim.cmd("TSUpdate")
 			vim.treesitter.language.register("javascript", "dataviewjs")
 			vim.treesitter.language.register("json", "dataviewjs")
+			vim.treesitter.language.register("tmpl", "gotmpl")
 			require("nvim-treesitter.configs").setup({
 				ensure_installed = {
 					"bash",
