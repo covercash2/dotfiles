@@ -72,3 +72,18 @@ def "git branch filename" [] {
 	let branch = (git branch --show-current) | str replace --all '/' '.'
 	$'($branch)_(date now | format date "%Y-%m-%d_%H:%M:%S")'
 }
+
+def "git find" [
+	search_dir: path = ~
+] {
+	fd -H ^\.git$ ($search_dir | path expand)
+	| lines
+	| path dirname
+	| path relative-to ~
+}
+
+def "git find outdated" [
+	search_dir: path = ~
+] {
+	git find
+}

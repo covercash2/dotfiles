@@ -130,6 +130,9 @@ local plugins = {
 		},
 	},
 	{
+		"andrewradev/linediff.vim",
+	},
+	{
 		"nvim-treesitter/nvim-treesitter",
 		dependencies = {
 			"apple/pkl-neovim",
@@ -340,9 +343,9 @@ local plugins = {
 		config = function()
 			local nvim_lsp = require("lspconfig")
 			local servers = {
+				"biome", -- javascript stuff
 				"eslint",
 				"html",
-				"jsonls",
 				"luau_lsp",
 				"lua_ls",
 				"nil_ls",

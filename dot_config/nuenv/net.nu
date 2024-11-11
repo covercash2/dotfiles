@@ -7,3 +7,10 @@ def "net ports" [] {
 
 	$lines
 }
+
+def "net port" [
+	port: string
+] {
+	net ports
+	| where {|x| $x.Local | str ends-with $port }
+}
