@@ -17,6 +17,7 @@ vim.opt.rtp:prepend(lazypath)
 local file_tree = require("file_tree")
 local keybindings = require("keybindings")
 local ai = require("ai")
+local spider = require("spider_move")
 
 local auto_show_hover = function(bufnr)
 	-- show a window when a doc is available
@@ -994,6 +995,7 @@ local plugins = {
 		},
 	},
 	ai.spec,
+	spider.spec,
 }
 
 require("lazy").setup({
