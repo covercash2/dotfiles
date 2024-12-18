@@ -80,6 +80,7 @@
       chezmoi  # dotfiles manager
       dig      # domain name server
       discord
+			dust      # like du but Rust
       fastfetch # neofetch replacement
       firefox
       gcc
@@ -94,6 +95,7 @@
       nil # nix lsp
       pavucontrol # volume control for pulse audio
 
+			ripgrep
       slurp # select a region of the screen in Wayland
       starship
       tree
@@ -118,10 +120,9 @@
   ];
 
   fonts.packages = with pkgs; [
-    nerdfonts
     noto-fonts
     noto-fonts-emoji
-    fira-code
+    nerd-fonts.fira-code
     fira-code-symbols
   ];
 

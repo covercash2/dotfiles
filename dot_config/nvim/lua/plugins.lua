@@ -345,6 +345,7 @@ local plugins = {
 				"jsonls",
 				"luau_lsp",
 				"lua_ls",
+				"nil_ls",
 				"pyright",
 				"svelte",
 				"ts_ls",

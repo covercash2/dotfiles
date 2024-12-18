@@ -1,6 +1,6 @@
 # my server config
 
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   # disable intel integrated graphics kernel module
@@ -8,8 +8,8 @@
 
   networking = {
     hostName = "green";
-    useDHCP = false;
     interfaces.enp5s0 = {
+			useDHCP = false;
       ipv4.addresses = [{
         address = "192.168.2.216";
         prefixLength = 24;
@@ -77,6 +77,15 @@
       defaultNetwork.settings.dns_enabled = true;
     };
   };
+	virtualisation.oci-containers.containers = {
+		actual_budget = {
+			image = "docker.io/actualbudget/actual-server:latest";
+			ports = ["5006:5006"];
+			volumes = ["/mnt/media/actual_budget/data:/data"];
+
+			pull = "newer";
+		};
+	};
 
   environment.systemPackages = with pkgs; [
     btrfs-progs

@@ -26,6 +26,7 @@
         ./modules/adguard.nix
         ./modules/openssh.nix
         ./modules/zigbee_receiver.nix
+				# ./modules/actualbudget.nix
       ];
     };
     nixosConfigurations.hoss = nixpkgs.lib.nixosSystem {
