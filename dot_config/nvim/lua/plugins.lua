@@ -18,6 +18,9 @@ local file_tree = require("file_tree")
 local keybindings = require("keybindings")
 local ai = require("ai")
 local spider = require("spider_move")
+local nushell = require('nushell')
+local test_config = require('test_config')
+local typescript = require('typescript')
 
 local auto_show_hover = function(bufnr)
 	-- show a window when a doc is available
@@ -350,6 +353,7 @@ local plugins = {
 				"lua_ls",
 				"nil_ls",
 				"pyright",
+				"ruff",
 				"svelte",
 				"ts_ls",
 			}
@@ -417,7 +421,7 @@ local plugins = {
 						local lnum = line:match("^%u%d+%s(%d+)") -- probably wrong regex
 						if lnum then
 							diags[#diags + 1] =
-								lint.diag_fmt(bufnr, tonumber(lnum) - 1, 0, lines[i]:gsub("\t", ""), 2, "djlint")
+									lint.diag_fmt(bufnr, tonumber(lnum) - 1, 0, lines[i]:gsub("\t", ""), 2, "djlint")
 						end
 					end
 					return diags
@@ -519,11 +523,11 @@ local plugins = {
 				},
 			},
 			presets = {
-				bottom_search = true, -- use a classic bottom cmdline for search
-				command_palette = true, -- position the cmdline and popupmenu together
+				bottom_search = true,     -- use a classic bottom cmdline for search
+				command_palette = true,   -- position the cmdline and popupmenu together
 				long_message_to_split = true, -- long messages will be sent to a split
-				inc_rename = false, -- enables an input dialog for inc-rename.nvim
-				lsp_doc_border = false, -- add a border to hover docs and signature help
+				inc_rename = false,       -- enables an input dialog for inc-rename.nvim
+				lsp_doc_border = false,   -- add a border to hover docs and signature help
 			},
 			routes = {
 				-- hide `written` messages
@@ -743,10 +747,10 @@ local plugins = {
 				cmake_build_directory = "build",
 				cmake_generate_options = { "-D", "CMAKE_EXPORT_COMPILE_COMMANDS=1" },
 				cmake_build_options = {},
-				cmake_console_size = 10, -- cmake output window height
-				cmake_show_console = "always", -- "always", "only_on_error"
+				cmake_console_size = 10,                                                       -- cmake output window height
+				cmake_show_console = "always",                                                 -- "always", "only_on_error"
 				cmake_dap_configuration = { name = "cpp", type = "codelldb", request = "launch" }, -- dap configuration, optional
-				cmake_dap_open_command = require("dap").repl.open, -- optional
+				cmake_dap_open_command = require("dap").repl.open,                             -- optional
 				cmake_variants_message = {
 					short = { show = true },
 					long = { show = true, max_length = 40 },
@@ -821,15 +825,11 @@ local plugins = {
 		end,
 	},
 	{
-		"LhKipp/nvim-nu",
-		config = function()
-			require("nu").setup({
-				use_lsp_features = false,
-			})
-		end,
+		"nvimtools/none-ls.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		opts = {},
 	},
 	file_tree.lazy,
-	--test_config.neotest,
 	{
 		"andythigpen/nvim-coverage",
 		dependencies = { "nvim-lua/plenary.nvim" },
@@ -852,22 +852,6 @@ local plugins = {
 				lcov_file = get_lcov_file,
 			})
 		end,
-	},
-	{
-		"mxsdev/nvim-dap-vscode-js",
-		dependencies = {
-			"mfussenegger/nvim-dap",
-		},
-		config = function()
-			require("dap-vscode-js").setup({
-				adapters = { "pwa-node" },
-				debugger_path = vim.fn.stdpath("data") .. "/lazy/vscode-js-debug",
-			})
-		end,
-	},
-	{
-		"microsoft/vscode-js-debug",
-		build = "npm install --legacy-peer-deps; npx gulp vsDebugServerBundle; mv dist out",
 	},
 	{
 		"mrcjkb/rustaceanvim",
@@ -908,8 +892,8 @@ local plugins = {
 						local rustc_sysroot = vim.fn.trim(vim.fn.system("rustc --print sysroot"))
 
 						local script_import = 'command script import "'
-							.. rustc_sysroot
-							.. "lib/rustlib/etc/lldb_lookup.py"
+								.. rustc_sysroot
+								.. "lib/rustlib/etc/lldb_lookup.py"
 						local commands_file = rustc_sysroot .. "/lib/rustlib/etc/lldb_commands"
 
 						local commands = {}
@@ -1000,6 +984,11 @@ local plugins = {
 	},
 	ai.spec,
 	spider.spec,
+	test_config.neotest,
+	nushell.spec,
+	typescript.dap,
+	typescript.debug,
+	typescript.neotest,
 }
 
 require("lazy").setup({
