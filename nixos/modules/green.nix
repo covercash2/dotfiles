@@ -81,8 +81,7 @@
 		actual_budget = {
 			image = "docker.io/actualbudget/actual-server:latest";
 			ports = ["5006:5006"];
-			volumes = ["/mnt/media/actual_budget/data:/data"];
-
+			volumes = ["/mnt/media/actual_budget"];
 			pull = "newer";
 		};
 	};
