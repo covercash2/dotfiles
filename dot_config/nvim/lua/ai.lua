@@ -1,6 +1,6 @@
 local opts = {
 	model = "mistral-nemo",
-	url = "http://hoss:11434",
+	url = "http://192.168.2.136:11434",
 	show_prompt = true,
 	show_model = true,
 	prompts = {

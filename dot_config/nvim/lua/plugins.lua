@@ -17,10 +17,12 @@ vim.opt.rtp:prepend(lazypath)
 local file_tree = require("file_tree")
 local keybindings = require("keybindings")
 local ai = require("ai")
+local json = require('json')
 local spider = require("spider_move")
 local nushell = require('nushell')
 local test_config = require('test_config')
 local typescript = require('typescript')
+local ui = require('ui')
 
 local auto_show_hover = function(bufnr)
 	-- show a window when a doc is available
@@ -342,6 +344,7 @@ local plugins = {
 			"hrsh7th/cmp-nvim-lsp",
 			"saadparwaiz1/cmp_luasnip",
 			"L3MON4D3/LuaSnip",
+			"SmiteshP/nvim-navic",
 		},
 		config = function()
 			local nvim_lsp = require("lspconfig")
@@ -357,31 +360,18 @@ local plugins = {
 				"svelte",
 				"ts_ls",
 			}
+			local navic = require('nvim-navic')
 			local on_attach = function(client, bufnr)
 				-- show a window when a doc is available
 				auto_show_hover(bufnr)
 
-				local function buf_set_keymap(...)
-					vim.api.nvim_buf_set_keymap(bufnr, ...)
+				-- TODO: what is this for
+				vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+
+				-- get file navigation info
+				if client.server_capabilities.documentSymbolProvider then
+					navic.attach(client, bufnr)
 				end
-				local function buf_set_option(...)
-					vim.api.nvim_buf_set_option(bufnr, ...)
-				end
-
-				buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
-
-				local opts = { noremap = true, silent = true }
-
-				buf_set_keymap("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
-				buf_set_keymap("n", "<leader>wr", "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", opts)
-				buf_set_keymap(
-					"n",
-					"<leader>wl",
-					"<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>",
-					opts
-				)
-				buf_set_keymap("n", "<leader>e", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", opts)
-				buf_set_keymap("n", "<leader>q", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>", opts)
 			end
 
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
@@ -402,12 +392,6 @@ local plugins = {
 			ft("python"):fmt("black"):lint("pylint")
 
 			ft("lua"):fmt("stylua")
-
-			local djlint = {
-				cmd = "djlint",
-				args = { "-", "--profiles=jinja" },
-				stdin = true,
-			}
 
 			ft("html,htmldjango"):fmt("djhtml"):lint({
 				cmd = "djlint",
@@ -983,12 +967,16 @@ local plugins = {
 		},
 	},
 	ai.spec,
+	json.jsonpath,
+	json.jq_playground,
 	spider.spec,
 	test_config.neotest,
 	nushell.spec,
+	require("oil_config").spec,
 	typescript.dap,
 	typescript.debug,
 	typescript.neotest,
+	ui.winbar,
 }
 
 require("lazy").setup({
