@@ -9,7 +9,7 @@
   networking = {
     hostName = "green";
     interfaces.enp5s0 = {
-			useDHCP = false;
+      useDHCP = false;
       ipv4.addresses = [{
         address = "192.168.2.216";
         prefixLength = 24;
@@ -36,6 +36,37 @@
           http_addr = "0.0.0.0";
         };
       };
+    };
+    # metrics
+    prometheus = {
+      enable = true;
+      scrapeConfigs = [
+        {
+          job_name = "prometheus";
+          scrape_interval = "5s";
+          static_configs = [
+            {
+              targets = ["localhost:9090"];
+            }
+          ];
+        }
+        {
+          job_name = "homeassistant";
+          static_configs = [
+            {
+              targets = ["localhost:8123"];
+            }
+          ];
+        }
+        {
+          job_name = "green_system";
+          static_configs = [
+            {
+              targets = ["localhost:9100"];
+            }
+          ];
+        }
+      ];
     };
   };
 
@@ -77,14 +108,22 @@
       defaultNetwork.settings.dns_enabled = true;
     };
   };
-	virtualisation.oci-containers.containers = {
-		actual_budget = {
-			image = "docker.io/actualbudget/actual-server:latest";
-			ports = ["5006:5006"];
-			volumes = ["/mnt/media/actual_budget"];
-			pull = "newer";
-		};
-	};
+  virtualisation.oci-containers.containers = {
+    actual_budget = {
+      image = "docker.io/actualbudget/actual-server:latest";
+      ports = ["5006:5006"];
+      volumes = ["/mnt/media/actual_budget"];
+      pull = "newer";
+    };
+    # prometheus exporter for system info
+    node_exporter = {
+      image = "quay.io/prometheus/node-exporter:latest";
+      volumes = ["/:/host:ro,rslave"];
+      pull = "newer";
+      extraOptions = [ "--network=host" "--pid=host" ];
+      cmd = [ "--path.rootfs=/host" ];
+    };
+  };
 
   environment.systemPackages = with pkgs; [
     btrfs-progs

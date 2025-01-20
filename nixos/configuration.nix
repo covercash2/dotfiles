@@ -80,13 +80,14 @@
       chezmoi  # dotfiles manager
       dig      # domain name server
       discord
-			dust      # like du but Rust
+      dust      # like du but Rust
       fastfetch # neofetch replacement
       firefox
       gcc
       grim # Wayland image grabber
       helvum # PipeWire patch bay
 
+      just
       kitty
       libgcc
       lshw
@@ -95,7 +96,7 @@
       nil # nix lsp
       pavucontrol # volume control for pulse audio
 
-			ripgrep
+      ripgrep
       slurp # select a region of the screen in Wayland
       starship
       tree

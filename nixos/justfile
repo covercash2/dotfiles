@@ -1,0 +1,16 @@
+hostname := shell('hostname')
+
+# list recipes
+default:
+  just --list
+
+# rebuild the system to, e.g., install packages or change configuration
+build:
+  sudo nixos-rebuild switch --flake .#{{hostname}} --upgrade
+
+# update NixOS channels https://nixos.wiki/wiki/Nix_channels
+update_channels:
+  sudo nix-channel --update
+
+# full system update
+update_system: update_channels build

@@ -13,24 +13,6 @@ def sysd [
 	}
 }
 
-def "sysd logs" [
-	service_name: string
-	--lines: int = 100 # number of entries to show
-] {
-	let args = [
-		journalctl
-		--catalog # show extra explanations where available
-		##--pager-end # move to the end of the pager
-		$"--lines=($lines)" # number of entries to show
-		--no-pager
-		--output=json
-		--unit $service_name]
-
-	run-external sudo ...$args
-	| lines
-	| each {|line| $line | from json }
-}
-
 def "sysd unit-types" [] {
 	[
 		device
@@ -62,3 +44,27 @@ def "sysd services" [] {
 	sysd list-units
 	| filter {|unit| $unit.type == service}
 }
+
+def "sysd service_names" [] {
+	sysd services
+	| get name
+}
+
+def "sysd logs" [
+	service_name: string@"sysd service_names"
+	--lines: int = 100 # number of entries to show
+] {
+	let args = [
+		journalctl
+		--catalog # show extra explanations where available
+		##--pager-end # move to the end of the pager
+		$"--lines=($lines)" # number of entries to show
+		--no-pager
+		--output=json
+		--unit $service_name]
+
+	run-external sudo ...$args
+	| lines
+	| each {|line| $line | from json }
+}
+
