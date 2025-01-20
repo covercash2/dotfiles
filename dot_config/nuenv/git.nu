@@ -87,3 +87,24 @@ def "git find outdated" [
 ] {
 	git find
 }
+
+def "git remote open" [
+	remote_name: string = "origin"
+] {
+	let url = git remote get-url $remote_name | ssh to http
+	print opening $url
+	run-external open $url
+}
+
+def "ssh to http" []: [string -> string] {
+	if not ($in | str starts-with "git@") {
+		error make {
+			msg: $"did not recognize address as a git SSH address: $($in)",
+			help: "run `git remote get-url <repo>` to get your local remote address",
+		}
+	}
+
+	let data = $in | parse "git@{url}:{user}/{repo}.git"
+
+	$"https://($data.0.url)/($data.0.user)/($data.0.repo)"
+}
