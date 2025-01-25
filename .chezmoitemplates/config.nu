@@ -598,3 +598,5 @@ def podman_ps [] {
 
 #use conda.nu
 source ~/.zoxide.nu
+
+
