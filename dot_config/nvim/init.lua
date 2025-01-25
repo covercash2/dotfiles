@@ -30,3 +30,5 @@ vim.api.nvim_create_autocmd("InsertLeave", {
 })
 
 vim.o.updatetime = 250
+
+vim.o.breakindent = true
