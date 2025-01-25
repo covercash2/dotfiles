@@ -80,6 +80,7 @@
       chezmoi  # dotfiles manager
       dig      # domain name server
       discord
+      delta     # diff viewer for git
       dust      # like du but Rust
       fastfetch # neofetch replacement
       firefox

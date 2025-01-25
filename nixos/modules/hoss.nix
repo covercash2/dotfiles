@@ -38,6 +38,7 @@
 
   environment.systemPackages = with pkgs; [
     cudatoolkit
+    zenith-nvidia
   ];
 
   fileSystems = {
