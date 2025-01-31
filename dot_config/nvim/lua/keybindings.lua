@@ -153,12 +153,8 @@ local get_keybindings = function()
 
 		{
 			"<leader>t",
-			group = "tree"
+			group = "tree view"
 		},
-		{ "<leader>tt", file_tree.show,    desc = "toggle" },
-		{ "<leader>tb", file_tree.buffers, desc = "buffers" },
-		{ "<leader>tg", file_tree.git,     desc = "git status" },
-
 		{
 			"<leader>T",
 			group = "treesitter"

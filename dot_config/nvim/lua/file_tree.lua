@@ -5,6 +5,14 @@ local lazy_config = {
 		"nvim-tree/nvim-web-devicons",
 		"MunifTanjim/nui.nvim",
 	},
+  keys = {
+    { "<leader>tt", "<cmd>Neotree toggle<cr>", desc = "toggle neotree" },
+    { "<leader>tf", "<cmd>Neotree action=show<cr>", desc = "show files in neotree" },
+    { "<leader>tc", "<cmd>Neotree action=close<cr>", desc = "close neotree" },
+    { "<leader>tb", "<cmd>Neotree action=show source=buffers<cr>", desc = "show buffers" },
+    { "<leader>tg", "<cmd>Neotree action=show source=git_status<cr>", desc = "show changed files" },
+    { "<leader>tr", "<cmd>Neotree reveal<cr>", desc = "show current file in tree" },
+  },
 	config = function()
 		-- disable legacy commands
 		vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1]])
