@@ -12,6 +12,8 @@ def "asdf data_dir" [] {
 # get directory with asdf shims
 let shims_dir = asdf data_dir | path join 'shims'
 
+$env.PATH = ($env.PATH | prepend $shims_dir) | uniq
+
 # set up completions
 def "asdf completion generate" [
 	data_dir: path = ~/nuenv
