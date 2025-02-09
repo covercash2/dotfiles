@@ -1,6 +1,1 @@
 {{- template "config.nu" . -}}
-
-# assumes nushell was installed using git
-$env.ASDF_NU_DIR = ($env.HOME | path join '.asdf')
-const asdf_config_file = '~/.asdf/asdf.nu'
-source $asdf_config_file

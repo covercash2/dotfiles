@@ -271,10 +271,6 @@ $env.config = {
       completer: null # check 'carapace_completer' above as an example
     }
   }
-  filesize: {
-    metric: true # true => KB, MB, GB (ISO standard), false => KiB, MiB, GiB (Windows standard)
-    format: "auto" # b, kb, kib, mb, mib, gb, gib, tb, tib, pb, pib, eb, eib, zb, zib, auto
-  }
   cursor_shape: {
     emacs: line # block, underscore, line, blink_block, blink_underscore, blink_line (line is the default)
     vi_insert: line # block, underscore, line , blink_block, blink_underscore, blink_line (block is the default)
@@ -565,6 +561,9 @@ $env.config = {
   ]
 }
 
+## integrations
+
+# starship
 def create_left_prompt [] {
     starship prompt --cmd-duration $env.CMD_DURATION_MS $'--status=($env.LAST_EXIT_CODE)'
 }
@@ -580,7 +579,7 @@ $env.PROMPT_INDICATOR_VI_INSERT = "〉"
 $env.PROMPT_INDICATOR_VI_NORMAL = ": "
 $env.PROMPT_MULTILINE_INDICATOR = "::: "
 
-# completions
+# carapace completions
 let carapace_completer = {|spans|
     carapace $spans.0 nushell ...$spans | from json
 }
@@ -590,6 +589,15 @@ $env.config.completions.external = {
     max_results: 100
     completer: $carapace_completer
 }
+
+# include nuenv dir in NU_LIB_DIRS
+const NU_LIB_DIRS = [
+	"~/nuenv/"
+]
+
+source asdf.nu
+source asdf_completions.nu
+
 
 # convenience commands
 def podman_ps [] {
