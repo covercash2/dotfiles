@@ -595,10 +595,6 @@ const NU_LIB_DIRS = [
 	"~/nuenv/"
 ]
 
-source asdf.nu
-source asdf_completions.nu
-
-
 # convenience commands
 def podman_ps [] {
 	(podman ps --format json) | from json

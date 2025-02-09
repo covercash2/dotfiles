@@ -1,1 +1,7 @@
 {{- template "config.nu" . -}}
+
+
+# i only need asdf for non-Nix distros right now.
+# Nix can manage toolchains through envs and shells.
+source asdf.nu
+source asdf_completions.nu
