@@ -1,3 +1,4 @@
+# NOTE: running into bugs? https://asdf-vm.com/guide/upgrading-to-v0-16.html
 const COMPLETIONS_FILE_NAME = "asdf_completions.nu"
 
 # get the effective data directory for asdf. usually '~/.asdf`
