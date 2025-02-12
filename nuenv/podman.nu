@@ -36,7 +36,11 @@ export def "podman bash" [
     $env_id
   }
 
-  podman exec $id /bin/bash -c $cmd
+  if $user == null {
+    podman exec $id /bin/bash -c $cmd
+  } else {
+    podman exec --user $user $id /bin/bash -c $cmd
+  }
 }
 
 export def "podman state check" [] {
