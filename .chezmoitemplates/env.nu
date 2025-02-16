@@ -64,3 +64,20 @@ if (which ov | is-empty) {
 } else {
 	$env.PAGER = (which ov | get path.0)
 }
+
+# filter null keys
+def "compact keys" [
+  --empty(-e) # filter empty keys as well as null
+]: record -> record {
+
+  let fn = if $empty {
+    {|rc| $rc.value | is-not-empty }
+  } else {
+    {|rc| $rc.value != null }
+  }
+
+  $in
+  | transpose key value
+  | filter $fn
+  | transpose -rd
+}
