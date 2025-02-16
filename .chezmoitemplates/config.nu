@@ -595,9 +595,17 @@ const NU_LIB_DIRS = [
 	"~/nuenv/"
 ]
 
+## Nix
+# nix installers i've tried don't support nushell.
+# this is a best guess at how to do this because Nix documentation sucks
 let default_nix_profile = "/nix/var/nix/profiles/default/"
 if ($default_nix_profile | path exists) {
   $env.PATH = $env.PATH | prepend $"($default_nix_profile)/bin" | uniq
+}
+
+let user_profile = "~/.nix-profile/" | path expand
+if ($user_profile | path exists) {
+  $env.PATH = $env.PATH | prepend $"($user_profile)/bin" | uniq
 }
 
 # convenience commands
@@ -605,7 +613,7 @@ def podman_ps [] {
 	(podman ps --format json) | from json
 }
 
-#use conda.nu
-source ~/.zoxide.nu
-
-
+# generated per the docs
+# https://github.com/ajeetdsouza/zoxide
+# `zoxide init nushell | save -f (chezmoi source-path | path expand | path join nuenv)`
+source zoxide.nu
