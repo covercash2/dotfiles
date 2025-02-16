@@ -355,6 +355,7 @@ local plugins = {
 				"luau_lsp",
 				"lua_ls",
 				"nil_ls",
+        "nushell",
 				"pyright",
 				"ruff",
 				"svelte",
