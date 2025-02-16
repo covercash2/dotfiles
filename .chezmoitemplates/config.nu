@@ -595,6 +595,11 @@ const NU_LIB_DIRS = [
 	"~/nuenv/"
 ]
 
+let default_nix_profile = "/nix/var/nix/profiles/default/"
+if ($default_nix_profile | path exists) {
+  $env.PATH = $env.PATH | prepend $"($default_nix_profile)/bin" | uniq
+}
+
 # convenience commands
 def podman_ps [] {
 	(podman ps --format json) | from json
