@@ -1,4 +1,4 @@
-def sysd [
+export def sysd [
 	service?: string@"sysd services"
 ] {
 	if $service == null {
@@ -13,7 +13,7 @@ def sysd [
 	}
 }
 
-def "sysd unit-types" [] {
+export def "sysd unit-types" [] {
 	[
 		device
 		mount
@@ -25,7 +25,7 @@ def "sysd unit-types" [] {
 }
 
 # list systemd units currently in memory
-def "sysd list-units" [] {
+export def "sysd list-units" [] {
 	let args = [
 		systemctl
 		--no-pager
@@ -40,17 +40,17 @@ def "sysd list-units" [] {
 	| rename --column { unit: name }
 }
 
-def "sysd services" [] {
+export def "sysd services" [] {
 	sysd list-units
 	| filter {|unit| $unit.type == service}
 }
 
-def "sysd service_names" [] {
+export def "sysd service_names" [] {
 	sysd services
 	| get name
 }
 
-def "sysd logs" [
+export def "sysd logs" [
 	service_name: string@"sysd service_names"
 	--lines: int = 100 # number of entries to show
 ] {

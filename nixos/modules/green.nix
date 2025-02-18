@@ -19,6 +19,31 @@
 
   services = {
     tailscale.enable = true;
+
+    # reverse proxy
+    caddy = {
+      enable = true;
+
+      configFile = pkgs.writeText "Caddyfile" ''
+        foundry.green.chrash.net {
+          reverse_proxy localhost:30000
+        }
+
+        db.green.chrash.net {
+          reverse_proxy localhost:5432
+        }
+
+        adguard.green.chrash.net {
+          reverse_proxy localhost:3000
+        }
+
+        green.tail33d42.ts.net {
+          reverse_proxy localhost:9876
+        }
+      '';
+
+    };
+
     # media hosting
     jellyfin = {
       enable = true;
@@ -29,11 +54,29 @@
       logDir = "/mnt/media/jellyfin/logs";
     };
 
+    postgresql = {
+      enable = true;
+      enableTCPIP = true;
+      dataDir = "/mnt/space/postgres";
+      settings = {
+        ssl = true;
+        port = 5432; # default port echoed here for docs
+      };
+      authentication = pkgs.lib.mkOverride 10 ''
+        ## allow local to connect
+        #type database  DBuser origin-address auth-method
+        local all       all                   trust
+        host  sameuser  all    127.0.0.1/32   trust
+        host  all       all    ::1/128        trust
+       '';
+    };
+
     grafana = {
       enable = true;
       settings = {
         server = {
           http_addr = "0.0.0.0";
+          http_port = 9876;
         };
       };
     };
@@ -76,7 +119,7 @@
     allowedTCPPorts = [
       30000 # foundry VTT
       8123  # home assistant
-      3000  # Grafana
+      9876  # Grafana
     ];
   };
 
@@ -128,19 +171,26 @@
   environment.systemPackages = with pkgs; [
     btrfs-progs
     dive
+    nss # for certutils
+    openssl
     podman-tui
     podman-compose
     zenith-nvidia
   ];
 
-  users.groups = {
-    iot = {
-      gid = 992;
+  users = {
+    groups = {
+      iot = {
+        gid = 992;
+      };
     };
   };
   users.users.chrash = {
     extraGroups = [
       "iot"
+    ];
+    packages = with pkgs; [
+      minica # mini certificate authority for generating certs for my services
     ];
   };
 }
