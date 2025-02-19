@@ -29,7 +29,7 @@ export def "podman bash" [
     podman state set_id $container_id
     $container_id
   } else if $container_id != '' {
-    print $'updating container id from ($env_id) to ($container_id)'
+    print $'(ansi bold)updating container id from ($env_id) to ($container_id)(ansi reset)'
     podman state set_id $container_id
     $container_id
   } else {
