@@ -31,38 +31,32 @@ $env.NU_LIB_DIRS = [
 # By default, <nushell-config-dir>/plugins is added
 $env.NU_PLUGIN_DIRS = [
     ($nu.default-config-dir | path join 'plugins')
+    ($env.HOME | path join '.config/nushell/plugins')
 ]
 
 # To add entries to PATH (on Windows you might use Path), you can use the following pattern:
 # $env.PATH = ($env.PATH | split row (char esep) | prepend '/some/path')
 
 $env.user_paths = ([
-	"bin",
-	".cargo/bin",
-	".local/bin",
-	".asdf/bin",
-	"google-cloud-sdk/bin",
-	"go/bin"
+  "bin",
+  ".cargo/bin",
+  ".local/bin",
+  ".asdf/bin",
+  "go/bin"
 ] | each {|path| $nu.home-path | path join $path })
 
-$env.PATH =	($env.PATH | prepend ($env.user_paths | where $it not-in $env.PATH))
+$env.PATH = ($env.PATH | prepend ($env.user_paths | where $it not-in $env.PATH))
 
 if (which zoxide | is-empty) {
-	print "zoxide not found"
+  print "zoxide not found"
 } else {
-	zoxide init nushell | save --force ~/.zoxide.nu
+  zoxide init nushell | save --force ~/.zoxide.nu
 }
 
 if (which nvim | is-empty) {
-	print "nvim not found"
+  print "nvim not found"
 } else {
-	$env.EDITOR = (which nvim | get path.0)
-}
-
-if (which ov | is-empty) {
-	print "ov pager not found"
-} else {
-	$env.PAGER = (which ov | get path.0)
+  $env.EDITOR = (which nvim | get path.0)
 }
 
 # filter null keys

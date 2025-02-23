@@ -2,6 +2,10 @@ const INITIAL_STATE = {
   container_id: ''
 }
 
+export def "podman ps" [] {
+	(^podman ps --format json) | from json
+}
+
 export def "podman state path" [] {
   "~/.local/state/nuenv/podman.toml" | path expand
 }
