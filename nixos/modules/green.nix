@@ -44,6 +44,19 @@
 
     };
 
+    # shared shell history, depends on postgresql
+    atuin = {
+      enable = true;
+      port = 8888;
+      openFirewall = true;
+      openRegistration = true;
+
+      database = {
+        uri = "postgresql://atuin@localhost:5432/atuin";
+        createLocally = true;
+      };
+    };
+
     # media hosting
     jellyfin = {
       enable = true;
@@ -66,9 +79,15 @@
         ## allow local to connect
         #type database  DBuser origin-address auth-method
         local all       all                   trust
-        host  sameuser  all    127.0.0.1/32   trust
-        host  all       all    ::1/128        trust
+        local sameuser  all     peer          map=superuser_map
        '';
+      identMap = ''
+        # ArbitraryMapName systemUser DBUser
+        superuser_map      root       postgres
+        superuser_map      postgres   postgres
+        # Let other names login as themselves
+        superuser_map      /^(.*)$    \1
+      '';
     };
 
     grafana = {
