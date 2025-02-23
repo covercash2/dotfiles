@@ -1,5 +1,29 @@
+# https://blog.gitbutler.com/how-git-core-devs-configure-git/
 [core]
 	pager = delta
+
+[init]
+  defaultBranch = main
+
+[feature]
+  experimental = true
+
+[fetch]
+  prune = true
+  pruneTags = true
+  all = true
+
+[commit]
+  verbose = true
+
+[push]
+  autoSetupRemote = true
+
+[branch]
+  sort = committerdate
+
+[tag]
+  sort = version:refname
 
 [interactive]
 	diffFilter = delta --color-only
@@ -10,12 +34,21 @@
 [merge]
 	conflictstyle = diff3
 
+[rebase]
+  autoSquash = true
+  autoStash = true
+  updateRefs = true
+
 [diff]
-	colorMoved = default
+	colorMoved = plain
+  algorithm = histogram
+  mnemoniPrefix = true
+  rename = true
 
 # https://git-scm.com/book/en/v2/Git-Tools-Rerere
 [rerere]
 	enabled = true
+  autoupdate = true
 
 [user]
 	{{- if eq .chezmoi.hostname "m-ry6wtc3pxk" }}
