@@ -1,12 +1,12 @@
 
-let delimeter = "✨"
-let short_hash = "%h"
-let message = "%s"
-let author = "%aN"
-let email = "%aE"
-let date = "%aD"
+const delimeter = "✨"
+const short_hash = "%h"
+const message = "%s"
+const author = "%aN"
+const email = "%aE"
+const date = "%aD"
 
-let default_columns = [
+const default_columns = [
 	{
 		name: "short_hash",
 		pattern: $short_hash,
@@ -52,7 +52,7 @@ def derive_names [
 	$input | get name
 }
 
-def "git log" [
+export def "git log" [
 	--lines: int = 100 # see git log -n
 ] {
 	let columns = $default_columns
@@ -88,7 +88,7 @@ def "git find outdated" [
 	git find
 }
 
-def "git remote open" [
+export def "git remote open" [
 	remote_name: string = "origin"
 ] {
 	let url = git remote get-url $remote_name | ssh to http
@@ -107,4 +107,15 @@ def "ssh to http" []: [string -> string] {
 	let data = $in | parse "git@{url}:{user}/{repo}.git"
 
 	$"https://($data.0.url)/($data.0.user)/($data.0.repo)"
+}
+
+export def "git status" [] {
+  ^git status --porcelain
+  | lines
+  | each {|line|
+    $line
+    | str trim
+    | parse '{status} {file}'
+  }
+  | flatten
 }

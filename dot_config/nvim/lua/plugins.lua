@@ -979,7 +979,7 @@ local plugins = {
 	json.jq_playground,
 	spider.spec,
 	test_config.neotest,
-	nushell.spec,
+	-- nushell.spec,
 	require("oil_config").spec,
 	typescript.dap,
 	typescript.debug,

@@ -27,3 +27,16 @@ these files are not copied directly by chezmoi, since it only works with user pr
 - `sshd_config`: basically just configure pubkey auth only
 - `xorg.conf/30-ds4.conf`: disable DualShock 4 touchpad
 
+# `nuenv`
+
+this is just a set of conventions that i use
+to provide wrappers and convenience functions.
+the `nuenv` directory is added to the `NU_LIBS_DIR`,
+which allows me to summon `nushell` overlays easily:
+
+```nu
+overlay use git.nu
+
+
+```
+
