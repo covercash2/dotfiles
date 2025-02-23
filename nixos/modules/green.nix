@@ -52,7 +52,6 @@
       openRegistration = true;
 
       database = {
-        uri = "postgresql://atuin@localhost:5432/atuin";
         createLocally = true;
       };
     };
@@ -80,6 +79,7 @@
         #type database  DBuser origin-address auth-method
         local all       all                   trust
         local sameuser  all     peer          map=superuser_map
+        host  sameuser  all     ::1/128       scram-sha-256
        '';
       identMap = ''
         # ArbitraryMapName systemUser DBUser
@@ -192,6 +192,7 @@
     dive
     nss # for certutils
     openssl
+    pgcli # better CLI for Postgres
     podman-tui
     podman-compose
     zenith-nvidia

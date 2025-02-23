@@ -66,57 +66,62 @@
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.chrash = {
-    isNormalUser = true;
-    extraGroups = [
-        "wheel" # Enable ‘sudo’ for the user.
-        "networkmanager" # allow wifi connections
-    ];
-    shell = pkgs.nushell;
-    packages = with pkgs; [
-      asdf-vm # toolchain management
-      bitwarden
-      carapace # command line completion
-      chezmoi  # dotfiles manager
-      dig      # domain name server
-      discord
-      delta     # diff viewer for git
-      dust      # like du but Rust
-      fastfetch # neofetch replacement
-      firefox
-      gcc
-      grim # Wayland image grabber
-      helvum # PipeWire patch bay
+  users = {
+    defaultUserShell = pkgs.nushell;
+    users.chrash = {
+      isNormalUser = true;
+      extraGroups = [
+          "wheel" # Enable ‘sudo’ for the user.
+          "networkmanager" # allow wifi connections
+      ];
+      useDefaultShell = true;
+      packages = with pkgs; [
+        asdf-vm # toolchain management
+        atuin # sync shell autocomplete across machines
+        bitwarden
+        carapace # command line completion
+        chezmoi  # dotfiles manager
+        dig      # domain name server
+        discord
+        delta     # diff viewer for git
+        dust      # like du but Rust
+        fastfetch # neofetch replacement
+        firefox
+        gcc
+        grim # Wayland image grabber
+        helvum # PipeWire patch bay
 
-      just
-      kitty
-      libgcc
-      lshw
-      lua-language-server
-      neovim
-      nil # nix lsp
-      pavucontrol # volume control for pulse audio
+        just
+        kitty
+        libgcc
+        lshw
+        lua-language-server
+        neovim
+        nil # nix lsp
+        pavucontrol # volume control for pulse audio
 
-      ripgrep
-      slurp # select a region of the screen in Wayland
-      starship
-      tree
-      wezterm
-      wl-clipboard
-      wofi # runner a la rofi, Spotlight
-      xdg-utils # e.g. xdg-open
-      zellij # terminal multiplexer
-      zoxide # cd replacement with a memory
-    ];
+        ripgrep
+        slurp # select a region of the screen in Wayland
+        starship
+        tree
+        wezterm
+        wl-clipboard
+        wofi # runner a la rofi, Spotlight
+        xdg-utils # e.g. xdg-open
+        zellij # terminal multiplexer
+        zoxide # cd replacement with a memory
+      ];
+    };
   };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    bat # cat but better
     git
+    most # pager
     neovim
     nushell
-    ov
     pciutils
     wget
   ];

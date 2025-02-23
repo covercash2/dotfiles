@@ -6,6 +6,7 @@ export def sysd [
 	} else {
 		let args = [
 			status
+      "--no-pager"
 			$service
 		]
 
@@ -57,7 +58,6 @@ export def "sysd logs" [
 	let args = [
 		journalctl
 		--catalog # show extra explanations where available
-		##--pager-end # move to the end of the pager
 		$"--lines=($lines)" # number of entries to show
 		--no-pager
 		--output=json
