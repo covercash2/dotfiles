@@ -146,29 +146,27 @@ local plugins = {
 			vim.cmd("TSUpdate")
 			vim.treesitter.language.register("javascript", "dataviewjs")
 			vim.treesitter.language.register("json", "dataviewjs")
-			vim.treesitter.language.register("tmpl", "gotmpl")
+			vim.treesitter.language.register("gotmpl", "tmpl")
+      -- they're close enough, why not
+			vim.treesitter.language.register("toml", "conf")
 			require("nvim-treesitter.configs").setup({
 				ensure_installed = {
 					"bash",
-					"cmake",
 					"cpp",
 					"css",
 					"elm",
 					"fish",
 					"javascript",
 					"json",
-					"kdl",
 					"kotlin",
 					"lua",
 					"make",
 					"markdown",
 					"markdown_inline",
-					"norg",
 					"nu",
 					"python",
 					"rust",
 					"svelte",
-					"tsx",
 					"typescript",
 				},
 				highlight = {
@@ -347,7 +345,7 @@ local plugins = {
 			"SmiteshP/nvim-navic",
 		},
 		config = function()
-			local nvim_lsp = require("lspconfig")
+			local lspconfig = require("lspconfig")
 			local servers = {
 				"biome", -- javascript stuff
 				"eslint",
@@ -375,9 +373,17 @@ local plugins = {
 				end
 			end
 
+      -- https://github.com/tekumara/typos-lsp/blob/main/docs/neovim-lsp-config.md
+      lspconfig.typos_lsp.setup({
+        cmd_env = { RUST_LOG = "error" },
+        init_options = {
+          diagnositSeverity = "Error",
+        }
+      })
+
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 			for _, server in ipairs(servers) do
-				nvim_lsp[server].setup({
+				lspconfig[server].setup({
 					on_attach = on_attach,
 					capabilities = capabilities,
 				})
@@ -420,22 +426,6 @@ local plugins = {
 			}
 		end,
 	},
-	-- {
-	-- 	"ravibrock/spellwarn.nvim",
-	-- 	event = "VeryLazy",
-	-- 	config = function()
-	-- 		local opts = {
-	-- 			prefix = "spelling: ",
-	-- 		}
-	-- 		vim.opt.spell = true
-	-- 		vim.opt.spelllang = "en"
-	-- 		local spellfile = vim.fn.stdpath("config") .. "/spell/en.utf-8.add"
-	-- 		print(spellfile)
-	-- 		print(vim.fn.filereadable(spellfile))
-	-- 		vim.opt.spellfile = spellfile
-	-- 		require("spellwarn").setup(opts)
-	-- 	end,
-	-- },
 	-- svelte
 	{
 		"leafOfTree/vim-svelte-plugin",
