@@ -1,5 +1,5 @@
 
-const delimeter = "✨"
+const delimiter = "✨"
 const short_hash = "%h"
 const message = "%s"
 const author = "%aN"
@@ -37,7 +37,7 @@ def derive_pattern [
 	} else {
 		$columns
 	}
-	$input | get pattern | str join $delimeter
+	$input | get pattern | str join $delimiter
 }
 
 def derive_names [
@@ -59,7 +59,7 @@ export def "git log" [
 	let pattern = derive_pattern $columns
 	let column_names = derive_names $columns
 	let raw = run-external "git" "log" "-n" $lines $"--pretty=($pattern)"
-	let raw_table = $raw | lines | split column $delimeter | rename ...$column_names
+	let raw_table = $raw | lines | split column $delimiter | rename ...$column_names
 	let with_date = $raw_table | upsert date {|d| $d.date | into datetime }
 
 	let output = $with_date
