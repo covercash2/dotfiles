@@ -805,11 +805,6 @@ local plugins = {
 			})
 		end,
 	},
-	{
-		"nvimtools/none-ls.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
-		opts = {},
-	},
 	file_tree.lazy,
 	{
 		"andythigpen/nvim-coverage",

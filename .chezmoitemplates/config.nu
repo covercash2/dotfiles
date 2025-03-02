@@ -619,3 +619,5 @@ if (which $pager_name | is-empty) {
 # https://github.com/ajeetdsouza/zoxide
 # `zoxide init nushell | save -f (chezmoi source-path | path expand | path join nuenv)`
 source zoxide.nu
+
+overlay use default.nu
