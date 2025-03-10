@@ -595,6 +595,13 @@ const NU_LIB_DIRS = [
   "~/nuenv/"
 ]
 
+# i don't really like the mac defaults.
+# this will probably point a lot of Linux-first software
+# to the right place.
+if ($env | get --ignore-errors XDG_STATE_HOME | is-empty) {
+  $env.XDG_STATE_HOME = ("~/.local/state" | path expand)
+}
+
 ## Nix
 # nix installers i've tried don't support nushell.
 # this is a best guess at how to do this because Nix documentation sucks
@@ -603,7 +610,7 @@ if ($default_nix_profile | path exists) {
   $env.PATH = $env.PATH | prepend $"($default_nix_profile)/bin" | uniq
 }
 
-let user_profile = "~/.nix-profile/" | path expand
+let user_profile = $env.XDG_STATE_HOME | path join nix/profiles/profile | path expand
 if ($user_profile | path exists) {
   $env.PATH = $env.PATH | prepend $"($user_profile)/bin" | uniq
 }
