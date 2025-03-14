@@ -8,9 +8,12 @@ default:
 build:
   sudo nixos-rebuild switch --flake .#{{hostname}} --upgrade
 
+update_flake:
+  nix flake update --flake .
+
 # update NixOS channels https://nixos.wiki/wiki/Nix_channels
 update_channels:
   sudo nix-channel --update
 
 # full system update
-update_system: update_channels build
+update_system: update_channels update_flake build

@@ -235,16 +235,6 @@ $env.config = {
 
       show_head: true
       show_index: true
-
-      # selected_cell: {fg: 'white', bg: '#777777'}
-      # selected_row: {fg: 'yellow', bg: '#C1C2A3'}
-      # selected_column: blue
-
-      # padding_column_right: 2
-      # padding_column_left: 2
-
-      # padding_index_left: 2
-      # padding_index_right: 1
     }
 
     config: {

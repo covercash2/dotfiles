@@ -9,6 +9,9 @@
       enable = true;
       powerOnBoot = true;
     };
+
+    # enable CUDA in containers
+    nvidia-container-toolkit.enable = true;
   };
 
   services = {
@@ -38,6 +41,8 @@
 
   environment.systemPackages = with pkgs; [
     cudatoolkit
+    devenv
+    direnv
     zenith-nvidia
   ];
 
@@ -45,6 +50,35 @@
     "/mnt/space" = {
       device = "/dev/disk/by-label/space";
       fsType = "ext4";
+    };
+  };
+
+  # containers
+  virtualisation = {
+    containers.enable = true;
+    podman = {
+      enable = true;
+      # Required for containers under podman-compose to be able to talk to each other.
+      defaultNetwork.settings.dns_enabled = true;
+    };
+
+    oci-containers.containers = {
+      mistral_rs = {
+        image = "ghcr.io/ericlbuehler/mistral.rs:cuda-90-0.4";
+        ports = [ "14554:80" ];
+        volumes = ["/mnt/space/hfhub"];
+        pull = "newer";
+        devices = [ "nvidia.com/gpu=all" ];
+        cmd = [ "plain" "--model-id" "microsoft/Phi-3.5-MoE-instruct" "-a" "phi3.5moe" ];
+      };
+      # prometheus exporter for system info
+      node_exporter = {
+        image = "quay.io/prometheus/node-exporter:latest";
+        volumes = ["/:/host:ro,rslave"];
+        pull = "newer";
+        extraOptions = [ "--network=host" "--pid=host" ];
+        cmd = [ "--path.rootfs=/host" ];
+      };
     };
   };
 }

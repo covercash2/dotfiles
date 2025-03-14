@@ -79,6 +79,7 @@
         asdf-vm # toolchain management
         atuin # sync shell autocomplete across machines
         bitwarden
+        bitwarden-cli
         carapace # command line completion
         chezmoi  # dotfiles manager
         dig      # domain name server
@@ -103,6 +104,8 @@
         ripgrep
         slurp # select a region of the screen in Wayland
         starship
+        typos      # find typos in source code projects
+        typos-lsp
         tree
         wezterm
         wl-clipboard
@@ -123,6 +126,7 @@
     neovim
     nushell
     pciutils
+    uv # python package manager
     wget
   ];
 
