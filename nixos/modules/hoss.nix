@@ -11,7 +11,11 @@
     };
 
     # enable CUDA in containers
-    nvidia-container-toolkit.enable = true;
+    nvidia-container-toolkit = {
+      enable = true;
+      # https://forums.developer.nvidia.com/t/nvidia-container-toolkit-podman-error-error-setting-up-cdi-devices-unresolvable-cdi-devices-nvidia-com-gpu-all/272286
+      device-name-strategy = "type-index";
+    };
   };
 
   services = {
@@ -30,6 +34,9 @@
 
   networking.firewall = {
     enable = true;
+    allowedTCPPorts = [
+      14554 # virtualisation.oci-containers.mistral_rs.ports
+    ];
   };
 
   programs.steam = {
@@ -43,8 +50,34 @@
     cudatoolkit
     devenv
     direnv
+    nvidia-container-toolkit
     zenith-nvidia
   ];
+
+  users = {
+    groups = {
+      # huggingface users
+      hf.name = "hf";
+    };
+    users = {
+      chrash = {
+        extraGroups = [
+          "hf"
+        ];
+        packages = with pkgs; [
+          python313Packages.huggingface-hub
+          mistral-rs
+        ];
+      };
+      mistral = {
+        description = "user to restrict the mistralrs-server";
+        group = "hf";
+        isSystemUser = true;
+        homeMode = "774";
+        home = "/mnt/space/mistral";
+      };
+    };
+  };
 
   fileSystems = {
     "/mnt/space" = {
@@ -64,12 +97,29 @@
 
     oci-containers.containers = {
       mistral_rs = {
+        podman.user = "mistral";
         image = "ghcr.io/ericlbuehler/mistral.rs:cuda-90-0.4";
         ports = [ "14554:80" ];
-        volumes = ["/mnt/space/hfhub"];
+        volumes = [
+          "/mnt/space/mistral"
+          "/home/chrash/.cache/huggingface/:/root/.cache/huggingface/:ro"
+        ];
         pull = "newer";
-        devices = [ "nvidia.com/gpu=all" ];
-        cmd = [ "plain" "--model-id" "microsoft/Phi-3.5-MoE-instruct" "-a" "phi3.5moe" ];
+        devices = [ "nvidia.com/gpu=gpu0" ];
+        environment = {
+          RUST_LOG = "debug";
+        };
+        entrypoint = "mistralrs-server";
+        cmd = [
+          # ordering matters: --token-source is a flag for the root
+          # https://github.com/EricLBuehler/mistral.rs?tab=readme-ov-file#getting-models-from-hugging-face-hub
+          # looking in ~/.cache/huggingface/token
+          "--token-source" "cache"
+          "--port" "80"
+          "--isq" "Q4K"
+          "plain"
+          "--model-id" "deepseek-ai/DeepSeek-R1"
+        ];
       };
       # prometheus exporter for system info
       node_exporter = {
