@@ -834,7 +834,7 @@ local plugins = {
 		dependencies = {
 			"mfussenegger/nvim-dap",
 		},
-		version = "^5",
+		version = "^6",
 		ft = { "rust" },
 		lazy = false,
 		config = function()
@@ -852,47 +852,49 @@ local plugins = {
 					},
 				},
 			}
+
+      -- configure `dap` debugger
 			-- https://github.com/helix-editor/helix/wiki/Debugger-Configurations#install-debuggers
-			local dap = require("dap")
-			local path = vim.fn.executable("lldb-dap")
-			if path == nil then
-				vim.print("could not find path to lldb-dap")
-			else
-				dap.adapters.lldb = {
-					type = "executable",
-					command = path,
-					name = "lldb",
-				}
-				dap.configurations.rust = {
-					initCommands = function()
-						local rustc_sysroot = vim.fn.trim(vim.fn.system("rustc --print sysroot"))
-
-						local script_import = 'command script import "'
-								.. rustc_sysroot
-								.. "lib/rustlib/etc/lldb_lookup.py"
-						local commands_file = rustc_sysroot .. "/lib/rustlib/etc/lldb_commands"
-
-						local commands = {}
-						local file = io.open(commands_file, "r")
-						if file then
-							for line in file:lines() do
-								table.insert(commands, line)
-							end
-							file:close()
-						end
-						table.insert(commands, 1, script_import)
-
-						return commands
-					end,
-					env = function()
-						local variables = {}
-						for k, v in pairs(vim.fn.environ()) do
-							table.insert(variables, string.format("%s=%s", k, v))
-						end
-						return variables
-					end,
-				}
-			end
+			-- local dap = require("dap")
+			-- local path = vim.fn.executable("lldb-dap")
+			-- if path == nil then
+			-- 	vim.print("could not find path to lldb-dap")
+			-- else
+			-- 	dap.adapters.lldb = {
+			-- 		type = "executable",
+			-- 		command = path,
+			-- 		name = "lldb",
+			-- 	}
+			-- 	dap.configurations.rust = {
+			-- 		initCommands = function()
+			-- 			local rustc_sysroot = vim.fn.trim(vim.fn.system("rustc --print sysroot"))
+			--
+			-- 			local script_import = 'command script import "'
+			-- 					.. rustc_sysroot
+			-- 					.. "lib/rustlib/etc/lldb_lookup.py"
+			-- 			local commands_file = rustc_sysroot .. "/lib/rustlib/etc/lldb_commands"
+			--
+			-- 			local commands = {}
+			-- 			local file = io.open(commands_file, "r")
+			-- 			if file then
+			-- 				for line in file:lines() do
+			-- 					table.insert(commands, line)
+			-- 				end
+			-- 				file:close()
+			-- 			end
+			-- 			table.insert(commands, 1, script_import)
+			--
+			-- 			return commands
+			-- 		end,
+			-- 		env = function()
+			-- 			local variables = {}
+			-- 			for k, v in pairs(vim.fn.environ()) do
+			-- 				table.insert(variables, string.format("%s=%s", k, v))
+			-- 			end
+			-- 			return variables
+			-- 		end,
+			-- 	}
+			-- end
 		end,
 	},
 	{
@@ -958,6 +960,9 @@ local plugins = {
 			min_chars = 1,
 		},
 	},
+  {
+    "almo7aya/openingh.nvim",
+  },
 	ai.spec,
 	json.jsonpath,
 	json.jq_playground,

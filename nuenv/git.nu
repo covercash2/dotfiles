@@ -109,6 +109,43 @@ def "ssh to http" []: [string -> string] {
 	$"https://($data.0.url)/($data.0.user)/($data.0.repo)"
 }
 
+export const git_statuses = {
+  "M": {
+    color: "yellow",
+    label: "modified",
+  }
+  "A": {
+    color: "green_bold",
+    label: "added",
+  }
+  "D": {
+    color: "red_bold",
+    label: "deleted",
+  }
+  "R": {
+    color: "yellow_bold",
+    label: "renamed",
+  }
+  "??": {
+    color: "purple",
+    label: "untracked",
+  }
+}
+
+def render_git_status [
+  --status: string # the status symbol emitted by git status --porcelain
+  --file: string # the file path emitted by git status
+  --status_map: record = $git_statuses
+] {
+  let status = $status_map | get $status | default ($status_map | get "??")
+  let color = $status.color
+
+  let status_label = $"(ansi $color)($status.label)(ansi reset)"
+  let file_label = $"(ansi $color)($file)(ansi reset)"
+
+  { status: $status_label, file: $file_label }
+}
+
 export def "git status" [] {
   ^git status --porcelain
   | lines
@@ -116,6 +153,9 @@ export def "git status" [] {
     $line
     | str trim
     | parse '{status} {file}'
+    | each {|row|
+      render_git_status --status $row.status --file $row.file
+    }
   }
   | flatten
 }
