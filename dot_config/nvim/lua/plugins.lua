@@ -269,9 +269,6 @@ local plugins = {
 			vim.o.completeopt = "menu,menuone,noselect"
 			local cmp = require("cmp")
 			cmp.setup({
-				view = {
-					entries = "custom",
-				},
 				snippet = {
 					expand = function(args)
 						require("luasnip").lsp_expand(args.body)
@@ -294,9 +291,10 @@ local plugins = {
 					["<C-e>"] = cmp.mapping.abort(),
 					["<CR>"] = cmp.mapping.confirm({ select = true }),
 				},
-				enabled = true,
-				autocomplete = true,
-				norg = true,
+        window = {
+          completion = cmp.config.window.bordered(),
+          documentation = cmp.config.window.bordered(),
+        }
 			})
 
 			cmp.setup.cmdline({ "/", "?" }, {
@@ -967,7 +965,7 @@ local plugins = {
 	json.jsonpath,
 	json.jq_playground,
 	spider.spec,
-	test_config.neotest,
+	-- test_config.neotest,
 	-- nushell.spec,
 	require("oil_config").spec,
 	typescript.dap,
