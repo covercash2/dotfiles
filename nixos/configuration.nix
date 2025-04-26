@@ -4,7 +4,13 @@
 { config, lib, pkgs, ... }:
 
 {
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix = {
+    settings.experimental-features = [ "nix-command" "flakes" ];
+    extraOptions = ''
+      extra-substituters = https://devenv.cachix.org
+      extra-trusted-public-keys = devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw=
+    '';
+  };
 
   nixpkgs.config.allowUnfree = true;
 
@@ -82,6 +88,7 @@
         bitwarden-cli
         carapace # command line completion
         chezmoi  # dotfiles manager
+        cyme     # lsusb replacement in Rust
         dig      # domain name server
         discord
         delta     # diff viewer for git
@@ -107,6 +114,7 @@
         typos      # find typos in source code projects
         typos-lsp
         tree
+        usbutils # lsusb etc
         wezterm
         wl-clipboard
         wofi # runner a la rofi, Spotlight
