@@ -36,6 +36,7 @@
         ./configuration.nix
         ./modules/hoss.nix
         ./modules/openssh.nix
+        ./modules/embedded_dev.nix
       ];
     };
   };

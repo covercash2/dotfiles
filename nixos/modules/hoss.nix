@@ -62,7 +62,7 @@
     users = {
       chrash = {
         extraGroups = [
-          "hf"
+          "hf" # huggingface
         ];
         packages = with pkgs; [
           python313Packages.huggingface-hub
