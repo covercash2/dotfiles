@@ -91,11 +91,13 @@
         cyme     # lsusb replacement in Rust
         dig      # domain name server
         discord
+        direnv    # loads .envrc for dev environments
         delta     # diff viewer for git
         dust      # like du but Rust
         fastfetch # neofetch replacement
         firefox
         gcc
+        ghostty   # terminal emulator
         grim # Wayland image grabber
         helvum # PipeWire patch bay
 

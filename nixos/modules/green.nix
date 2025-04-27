@@ -15,29 +15,34 @@
         prefixLength = 24;
       }];
     };
+    nameservers = [ "8.8.8.8" "1.1.1.1" ];
+    defaultGateway = "192.168.2.1";
   };
 
   services = {
-    tailscale.enable = true;
+    tailscale = {
+      enable = true;
+      permitCertUid = "caddy";
+    };
 
     # reverse proxy
     caddy = {
       enable = true;
 
       configFile = pkgs.writeText "Caddyfile" ''
-        foundry.green.chrash.net {
+        foundry.green.faun-truck.net {
           reverse_proxy localhost:30000
         }
 
-        db.green.chrash.net {
+        green.faun-truck.ts.net/db {
           reverse_proxy localhost:5432
         }
 
-        adguard.green.chrash.net {
+        adguard.green.faun-truck.net {
           reverse_proxy localhost:3000
         }
 
-        green.tail33d42.ts.net {
+        green.faun-truck.ts.net {
           reverse_proxy localhost:9876
         }
       '';
