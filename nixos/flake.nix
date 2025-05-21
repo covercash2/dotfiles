@@ -3,9 +3,10 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    ultron.url = "github:covercash2/ultron";
   };
 
-  outputs = { self, nixpkgs, ... }@inputs: {
+  outputs = { self, nixpkgs, ultron, ... }@inputs: {
     nixosConfigurations.wall-e = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
 
@@ -18,6 +19,11 @@
     nixosConfigurations.green = nixpkgs.lib.nixosSystem {
 
       system = "x86_64-linux";
+
+      # Pass all inputs to modules in a way that avoids recursion
+      specialArgs = {
+        inherit ultron;
+      };
 
       modules = [
         ./green-hardware-configuration.nix

@@ -1,18 +1,19 @@
 # Ultron service config
 
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ultron, ... }:
 
 let
-  ultron = builtins.getFlake "github:covercash2/ultron";
+  system = pkgs.system;
 in
 {
   imports = [
-    ultron.nixosModules.${pkgs.system}.default
+    ultron.nixosModules.${system}.default
   ];
 
   services.ultron = {
     enable = true;
 
     environmentFile = "/mnt/space/ultron/secrets";
+    port = 9000;
   };
 }
