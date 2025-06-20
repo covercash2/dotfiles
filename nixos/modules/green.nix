@@ -196,12 +196,16 @@
   environment.systemPackages = with pkgs; [
     btrfs-progs
     dive
+    nodejs_24
     nss # for certutils
     openssl
     pgcli # better CLI for Postgres
     podman-tui
     podman-compose
     zenith-nvidia
+
+    python3Packages.python
+    python3Packages.black
   ];
 
   users = {
