@@ -202,10 +202,16 @@
     pgcli # better CLI for Postgres
     podman-tui
     podman-compose
+    wol # wake on LAN tool
     zenith-nvidia
 
-    python3Packages.python
+    # Python tools
+    pyright
+    python314
     python3Packages.black
+    python3Packages.pip
+    python3Packages.python
+    ruff
   ];
 
   users = {

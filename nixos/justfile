@@ -15,5 +15,10 @@ update_flake:
 update_channels:
   sudo nix-channel --update
 
+# invoke the garbage collector
+# https://nixos.org/guides/nix-pills/11-garbage-collector.html
+gc:
+  nix-collect-garbage
+
 # full system update
 update_system: update_channels update_flake build
