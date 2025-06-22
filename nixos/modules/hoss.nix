@@ -1,7 +1,20 @@
 { config, lib, pkgs, ... }:
 
 {
-  networking.hostName = "hoss";
+  networking = {
+    hostName = "hoss";
+    interfaces.enp5s0 = {
+      useDHCP = false;
+      ipv4.addresses = [{
+        address = "192.168.2.136";
+        prefixLength = 24;
+      }];
+      wakeOnLan = {
+        enable = true;
+      };
+    };
+    defaultGateway = "192.168.2.1";
+  };
   nixpkgs.config.cudaSupport = true;
 
   hardware = {
@@ -96,31 +109,31 @@
     };
 
     oci-containers.containers = {
-      mistral_rs = {
-        podman.user = "mistral";
-        image = "ghcr.io/ericlbuehler/mistral.rs:cuda-90-0.4";
-        ports = [ "14554:80" ];
-        volumes = [
-          "/mnt/space/mistral"
-          "/home/chrash/.cache/huggingface/:/root/.cache/huggingface/:ro"
-        ];
-        pull = "newer";
-        devices = [ "nvidia.com/gpu=gpu0" ];
-        environment = {
-          RUST_LOG = "debug";
-        };
-        entrypoint = "mistralrs-server";
-        cmd = [
-          # ordering matters: --token-source is a flag for the root
-          # https://github.com/EricLBuehler/mistral.rs?tab=readme-ov-file#getting-models-from-hugging-face-hub
-          # looking in ~/.cache/huggingface/token
-          "--token-source" "cache"
-          "--port" "80"
-          "--isq" "Q4K"
-          "plain"
-          "--model-id" "deepseek-ai/DeepSeek-R1"
-        ];
-      };
+      # mistral_rs = {
+      #   podman.user = "mistral";
+      #   image = "ghcr.io/ericlbuehler/mistral.rs:cuda-90-0.4";
+      #   ports = [ "14554:80" ];
+      #   volumes = [
+      #     "/mnt/space/mistral"
+      #     "/home/chrash/.cache/huggingface/:/root/.cache/huggingface/:ro"
+      #   ];
+      #   pull = "newer";
+      #   devices = [ "nvidia.com/gpu=gpu0" ];
+      #   environment = {
+      #     RUST_LOG = "debug";
+      #   };
+      #   entrypoint = "mistralrs-server";
+      #   cmd = [
+      #     # ordering matters: --token-source is a flag for the root
+      #     # https://github.com/EricLBuehler/mistral.rs?tab=readme-ov-file#getting-models-from-hugging-face-hub
+      #     # looking in ~/.cache/huggingface/token
+      #     "--token-source" "cache"
+      #     "--port" "80"
+      #     "--isq" "Q4K"
+      #     "plain"
+      #     "--model-id" "deepseek-ai/DeepSeek-R1"
+      #   ];
+      # };
       # prometheus exporter for system info
       node_exporter = {
         image = "quay.io/prometheus/node-exporter:latest";

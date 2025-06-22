@@ -94,6 +94,7 @@
         direnv    # loads .envrc for dev environments
         delta     # diff viewer for git
         dust      # like du but Rust
+        ethtool   # network tool
         fastfetch # neofetch replacement
         firefox
         gcc
