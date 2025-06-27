@@ -67,6 +67,10 @@ export def "git log" [
 	$output
 }
 
+export def "git trigger-ci" [] {
+  run-external "git" "commit" "--allow-empty" "-m" "chore: trigger CI"
+}
+
 # format a branch name with a date suitable for filenames
 def "git branch filename" [] {
 	let branch = (git branch --show-current) | str replace --all '/' '.'

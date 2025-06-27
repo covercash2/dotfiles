@@ -72,6 +72,6 @@ def "compact keys" [
 
   $in
   | transpose key value
-  | filter $fn
+  | where $fn
   | transpose -rd
 }
