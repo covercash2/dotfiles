@@ -15,3 +15,34 @@ export def "net port" [
 	| where {|x| $x.Local | str ends-with $port }
 }
 
+export def "net interfaces" [] {
+  let raw = run-external "ifconfig" "-a"
+
+  let interfaces = $raw | lines | reduce {|acc, line|
+    if ($line | str starts-with " ") {
+      # parse interface data
+      let line = $line | str trim
+      netstat -i4n --libxo json
+    } else {
+      # parse first interface line
+      let words = $line | split words
+      let interface_name = $words | get 0 | str substring 0..-1
+      let flags = $words | get 1
+      let mtu = $words | get 3
+
+      {
+        name: $interface_name
+        flags: $flags
+        mtu: $mtu
+      }
+    }
+  }
+}
+
+def os_name [] {
+  uname | get kernel-name
+}
+
+def kernel_names [] {
+  ["Darwin", "Linux"]
+}
