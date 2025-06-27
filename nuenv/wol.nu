@@ -5,7 +5,7 @@ export def wake [
   host: string
   --debug
 ] {
-  let mac = hoss mac
+  let mac = mac $host
   let args = [
     "wol"
     $mac
