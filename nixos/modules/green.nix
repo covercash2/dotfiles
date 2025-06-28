@@ -1,6 +1,6 @@
 # my server config
 
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 
 {
   # disable intel integrated graphics kernel module
@@ -30,7 +30,7 @@
       enable = true;
 
       configFile = pkgs.writeText "Caddyfile" ''
-        foundry.green.faun-truck.net {
+        foundry.green.faun-truck.ts.net {
           reverse_proxy localhost:30000
         }
 
@@ -38,12 +38,16 @@
           reverse_proxy localhost:5432
         }
 
-        adguard.green.faun-truck.net {
+        adguard.green.faun-truck.ts.net {
           reverse_proxy localhost:3000
         }
 
-        green.faun-truck.ts.net {
+        grafana.green.faun-truck.ts.net {
           reverse_proxy localhost:9876
+        }
+
+        ultron.green.faun-truck.ts.net {
+          reverse_proxy localhost:${toString config.services.ultron.port}
         }
       '';
 
@@ -96,6 +100,23 @@
       '';
     };
 
+    # video surveillance
+    # frigate = {
+    #   enable = true;
+    #   hostname = "frigate.green";
+    #   settings = {
+    #     mqtt = {
+    #       enabled = true;
+    #       host = "localhost";
+    #     };
+    #     cameras = {
+    #       door = {
+    #
+    #       };
+    #     };
+    #   };
+    # };
+
     grafana = {
       enable = true;
       settings = {
@@ -145,6 +166,7 @@
       30000 # foundry VTT
       8123  # home assistant
       9876  # Grafana
+      (config.services.ultron.port)
     ];
   };
 
