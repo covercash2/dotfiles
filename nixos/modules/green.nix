@@ -30,24 +30,30 @@
       enable = true;
 
       configFile = pkgs.writeText "Caddyfile" ''
-        foundry.green.faun-truck.ts.net {
+        foundry.green.chrash.net {
           reverse_proxy localhost:30000
         }
 
-        green.faun-truck.ts.net/db {
-          reverse_proxy localhost:5432
-        }
-
-        adguard.green.faun-truck.ts.net {
+        adguard.green.chrash.net {
           reverse_proxy localhost:3000
         }
 
-        grafana.green.faun-truck.ts.net {
+        ultron.green.chrash.net {
+          reverse_proxy localhost:${toString config.services.ultron.port} {
+            health_uri /healthcheck
+          }
+        }
+
+        green.faun-truck.ts.net {
+          respond "hello"
+        }
+
+        grafana.green.chrash.net {
           reverse_proxy localhost:9876
         }
 
-        ultron.green.faun-truck.ts.net {
-          reverse_proxy localhost:${toString config.services.ultron.port}
+        db.green.chrash.net {
+          reverse_proxy localhost:5432
         }
       '';
 
