@@ -10,16 +10,27 @@
     hostName = "green";
     interfaces.enp5s0 = {
       useDHCP = false;
-      ipv4.addresses = [{
-        address = "192.168.2.216";
-        prefixLength = 24;
-      }];
+      ipv4.addresses = [
+        {
+          address = "192.168.2.216";
+          prefixLength = 24;
+        }
+      ];
     };
-    nameservers = [ "8.8.8.8" "1.1.1.1" ];
+    nameservers = [
+      "8.8.8.8"
+      "1.1.1.1"
+    ];
     defaultGateway = "192.168.2.1";
   };
 
   services = {
+    mkcert = {
+      enable = true;
+      domain = "*.green.chrash.net";
+      user = "chrash";
+    };
+
     tailscale = {
       enable = true;
       permitCertUid = "caddy";
@@ -96,7 +107,7 @@
         local all       all                   trust
         local sameuser  all     peer          map=superuser_map
         host  sameuser  all     ::1/128       scram-sha-256
-       '';
+      '';
       identMap = ''
         # ArbitraryMapName systemUser DBUser
         superuser_map      root       postgres
@@ -141,7 +152,7 @@
           scrape_interval = "5s";
           static_configs = [
             {
-              targets = ["localhost:9090"];
+              targets = [ "localhost:9090" ];
             }
           ];
         }
@@ -149,7 +160,7 @@
           job_name = "homeassistant";
           static_configs = [
             {
-              targets = ["localhost:8123"];
+              targets = [ "localhost:8123" ];
             }
           ];
         }
@@ -157,7 +168,7 @@
           job_name = "green_system";
           static_configs = [
             {
-              targets = ["localhost:9100"];
+              targets = [ "localhost:9100" ];
             }
           ];
         }
@@ -165,13 +176,14 @@
     };
   };
 
-
   networking.firewall = {
     enable = true;
     allowedTCPPorts = [
       30000 # foundry VTT
-      8123  # home assistant
-      9876  # Grafana
+      8123 # home assistant
+      9876 # Grafana
+      443
+      80
       (config.services.ultron.port)
     ];
   };
@@ -207,16 +219,19 @@
   virtualisation.oci-containers.containers = {
     actual_budget = {
       image = "docker.io/actualbudget/actual-server:latest";
-      ports = ["5006:5006"];
-      volumes = ["/mnt/media/actual_budget"];
+      ports = [ "5006:5006" ];
+      volumes = [ "/mnt/media/actual_budget" ];
       pull = "newer";
     };
     # prometheus exporter for system info
     node_exporter = {
       image = "quay.io/prometheus/node-exporter:latest";
-      volumes = ["/:/host:ro,rslave"];
+      volumes = [ "/:/host:ro,rslave" ];
       pull = "newer";
-      extraOptions = [ "--network=host" "--pid=host" ];
+      extraOptions = [
+        "--network=host"
+        "--pid=host"
+      ];
       cmd = [ "--path.rootfs=/host" ];
     };
   };
@@ -224,14 +239,16 @@
   environment.systemPackages = with pkgs; [
     btrfs-progs
     dive
+    mkcert # create certificates and a local CA
     nodejs_24
     nss # for certutils
     openssl
     pgcli # better CLI for Postgres
     podman-tui
     podman-compose
+    rops # version controllable secrets management
     wol # wake on LAN tool
-    zenith-nvidia
+    zenith-nvidia # system monitor with Nvidia support
 
     # Python tools
     pyright
@@ -258,4 +275,3 @@
     ];
   };
 }
-

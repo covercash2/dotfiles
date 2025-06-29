@@ -47,6 +47,7 @@
           ./modules/zigbee_receiver.nix
           # ./modules/actualbudget.nix
           ./modules/ultron.nix
+          ./modules/certificates.nix
         ]
       );
 

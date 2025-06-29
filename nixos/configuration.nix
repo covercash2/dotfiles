@@ -1,11 +1,19 @@
 # Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   nix = {
-    settings.experimental-features = [ "nix-command" "flakes" ];
+    settings.experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
     extraOptions = ''
       extra-substituters = https://devenv.cachix.org
       extra-trusted-public-keys = devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw=
@@ -17,7 +25,11 @@
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelModules = ["nvidia" "nvidia-drm" "nvidia-uvm"];
+  boot.kernelModules = [
+    "nvidia"
+    "nvidia-drm"
+    "nvidia-uvm"
+  ];
 
   # recommended for PipeWire: https://nixos.wiki/wiki/PipeWire
   security.rtkit.enable = true;
@@ -39,7 +51,7 @@
 
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
+  networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
 
   # Set your time zone.
   time.timeZone = "America/Chicago";
@@ -77,9 +89,10 @@
     users.chrash = {
       isNormalUser = true;
       extraGroups = [
-          "wheel" # Enable ‘sudo’ for the user.
-          "networkmanager" # allow wifi connections
+        "wheel" # Enable ‘sudo’ for the user.
+        "networkmanager" # allow wifi connections
       ];
+      home = "/home/chrash";
       useDefaultShell = true;
       packages = with pkgs; [
         asdf-vm # toolchain management
@@ -87,18 +100,18 @@
         bitwarden
         bitwarden-cli
         carapace # command line completion
-        chezmoi  # dotfiles manager
-        cyme     # lsusb replacement in Rust
-        dig      # domain name server
+        chezmoi # dotfiles manager
+        cyme # lsusb replacement in Rust
+        dig # domain name server
         discord
-        direnv    # loads .envrc for dev environments
-        delta     # diff viewer for git
-        dust      # like du but Rust
-        ethtool   # network tool
+        direnv # loads .envrc for dev environments
+        delta # diff viewer for git
+        dust # like du but Rust
+        ethtool # network tool
         fastfetch # neofetch replacement
         firefox
         gcc
-        ghostty   # terminal emulator
+        ghostty # terminal emulator
         grim # Wayland image grabber
         helvum # PipeWire patch bay
 
@@ -114,7 +127,7 @@
         ripgrep
         slurp # select a region of the screen in Wayland
         starship
-        typos      # find typos in source code projects
+        typos # find typos in source code projects
         typos-lsp
         tree
         usbutils # lsusb etc
@@ -198,4 +211,3 @@
   system.stateVersion = "24.05"; # Did you read the comment?
 
 }
-
