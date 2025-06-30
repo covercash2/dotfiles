@@ -28,7 +28,6 @@
     mkcert = {
       enable = true;
       domain = "*.green.chrash.net";
-      user = "chrash";
     };
 
     tailscale = {
@@ -50,6 +49,7 @@
         }
 
         ultron.green.chrash.net {
+          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
           reverse_proxy localhost:${toString config.services.ultron.port} {
             health_uri /healthcheck
           }
@@ -217,12 +217,12 @@
     };
   };
   virtualisation.oci-containers.containers = {
-    actual_budget = {
-      image = "docker.io/actualbudget/actual-server:latest";
-      ports = [ "5006:5006" ];
-      volumes = [ "/mnt/media/actual_budget" ];
-      pull = "newer";
-    };
+    # actual_budget = {
+    #   image = "docker.io/actualbudget/actual-server:latest";
+    #   ports = [ "5006:5006" ];
+    #   volumes = [ "/mnt/media/actual_budget" ];
+    #   pull = "newer";
+    # };
     # prometheus exporter for system info
     node_exporter = {
       image = "quay.io/prometheus/node-exporter:latest";

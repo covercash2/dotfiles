@@ -1,10 +1,58 @@
-# mkcert certificate management module
+# Fixed mkcert certificate management
 { config, lib, pkgs, ... }:
 
 let
   cfg = config.services.mkcert;
-  userConfig = config.users.users.${cfg.user};
-  userHome = userConfig.home;
+
+  mkcertCerts = pkgs.runCommand "mkcert-certs-${builtins.replaceStrings ["."] ["-"] cfg.domain}" {
+    buildInputs = [ pkgs.mkcert ];
+  } ''
+    set -e
+    mkdir -p $out
+    cd $out
+
+    echo "Starting certificate generation for domain: ${cfg.domain}"
+
+    # Initialize mkcert with a local CA root
+    export CAROOT=$out
+    mkcert -install
+
+    echo "Generating certificate..."
+    mkcert ${lib.escapeShellArg cfg.domain}
+
+    echo "Files created by mkcert:"
+    ls -la *.pem
+
+    # Find and rename the domain certificate and key files
+    # The certificate file is any .pem file that's not the CA files
+    for file in *.pem; do
+      if [[ "$file" != "rootCA.pem" && "$file" != "rootCA-key.pem" ]]; then
+        if [[ "$file" == *"-key.pem" ]]; then
+          echo "Renaming key file: $file -> domain-key.pem"
+          mv "$file" domain-key.pem
+        else
+          echo "Renaming certificate file: $file -> domain.pem"
+          mv "$file" domain.pem
+        fi
+      fi
+    done
+
+    echo "Final files:"
+    ls -la $out/
+
+    # Verify required files exist
+    for required in domain.pem domain-key.pem rootCA.pem; do
+      if [[ ! -f "$required" ]]; then
+        echo "ERROR: $required not found!"
+        ls -la
+        exit 1
+      fi
+    done
+
+    echo "Certificate generation completed successfully"
+  '';
+
+  certDir = "/var/lib/mkcert";
 in
 {
   options.services.mkcert = {
@@ -13,23 +61,42 @@ in
     domain = lib.mkOption {
       type = lib.types.str;
       default = "green.chrash.net";
-      description = "Domain name for the certificate";
+      description = "Domain name for the certificate (supports wildcards like *.example.com)";
     };
 
-    user = lib.mkOption {
-      type = lib.types.str;
-      default = "chrash";
-      description = "User who owns the mkcert certificates";
+    certPath = lib.mkOption {
+      type = lib.types.path;
+      readOnly = true;
+      default = "${certDir}/domain.pem";
+      description = "Path to the domain certificate";
+    };
+
+    keyPath = lib.mkOption {
+      type = lib.types.path;
+      readOnly = true;
+      default = "${certDir}/domain-key.pem";
+      description = "Path to the domain private key";
+    };
+
+    caPath = lib.mkOption {
+      type = lib.types.path;
+      readOnly = true;
+      default = "${certDir}/rootCA.pem";
+      description = "Path to the mkcert CA certificate";
     };
   };
 
   config = lib.mkIf cfg.enable {
-    # Install mkcert
     environment.systemPackages = with pkgs; [ mkcert ];
 
-    # Create systemd service to manage certificates
+    users.users.caddy = {
+      group = "caddy";
+      isSystemUser = true;
+    };
+    users.groups.caddy = {};
+
     systemd.services.mkcert-setup = {
-      description = "Setup mkcert certificates for ${cfg.domain}";
+      description = "Deploy mkcert certificates for ${cfg.domain}";
       wantedBy = [ "multi-user.target" ];
       before = [ "caddy.service" ];
       serviceConfig = {
@@ -38,73 +105,30 @@ in
         User = "root";
       };
       script = ''
-        # Create certificate directories
-        mkdir -p /etc/ssl/certs
-        mkdir -p /etc/ssl/private
+        echo "Deploying certificates from ${mkcertCerts}..."
+
+        mkdir -p ${certDir}
+        chmod 755 ${certDir}
+
+        # Copy certificates from Nix store
+        cp ${mkcertCerts}/domain.pem ${cfg.certPath}
+        cp ${mkcertCerts}/domain-key.pem ${cfg.keyPath}
+        cp ${mkcertCerts}/rootCA.pem ${cfg.caPath}
 
         # Set proper permissions
-        chmod 755 /etc/ssl/certs
-        chmod 700 /etc/ssl/private
+        chmod 644 ${cfg.certPath} ${cfg.caPath}
+        chmod 600 ${cfg.keyPath}
+        chown caddy:caddy ${cfg.certPath} ${cfg.keyPath} ${cfg.caPath}
 
-        # Use the user's home directory from NixOS config
-        USER_HOME="${userHome}"
-        MKCERT_DIR="$USER_HOME/.local/share/mkcert"
-
-        echo "Looking for certificates in: $MKCERT_DIR"
-
-        # Find and copy mkcert CA certificate
-        if [ -d "$MKCERT_DIR" ]; then
-          CA_FILE=$(find "$MKCERT_DIR" -name "rootCA.pem" 2>/dev/null | head -1)
-          if [ -n "$CA_FILE" ] && [ -f "$CA_FILE" ]; then
-            cp "$CA_FILE" /etc/ssl/certs/mkcert-ca.pem
-            chmod 644 /etc/ssl/certs/mkcert-ca.pem
-            echo "Copied mkcert CA certificate from $CA_FILE"
-          else
-            echo "Warning: rootCA.pem not found in $MKCERT_DIR"
-          fi
-
-          # Find and copy domain certificate
-          CERT_FILE=$(find "$MKCERT_DIR" -name "*${cfg.domain}.pem" -not -name "*-key.pem" 2>/dev/null | head -1)
-          if [ -n "$CERT_FILE" ] && [ -f "$CERT_FILE" ]; then
-            cp "$CERT_FILE" /etc/ssl/certs/${cfg.domain}.pem
-            chmod 644 /etc/ssl/certs/${cfg.domain}.pem
-            echo "Copied domain certificate from $CERT_FILE"
-          else
-            echo "Warning: Certificate for ${cfg.domain} not found in $MKCERT_DIR"
-            echo "Available certificates:"
-            ls -la "$MKCERT_DIR"/*.pem 2>/dev/null || echo "No .pem files found"
-          fi
-
-          # Find and copy domain private key
-          KEY_FILE=$(find "$MKCERT_DIR" -name "*${cfg.domain}-key.pem" 2>/dev/null | head -1)
-          if [ -n "$KEY_FILE" ] && [ -f "$KEY_FILE" ]; then
-            cp "$KEY_FILE" /etc/ssl/private/${cfg.domain}-key.pem
-            chmod 600 /etc/ssl/private/${cfg.domain}-key.pem
-            chown caddy:caddy /etc/ssl/private/${cfg.domain}-key.pem
-            echo "Copied domain private key from $KEY_FILE"
-          else
-            echo "Warning: Private key for ${cfg.domain} not found in $MKCERT_DIR"
-            echo "Available key files:"
-            ls -la "$MKCERT_DIR"/*-key.pem 2>/dev/null || echo "No key files found"
-          fi
-        else
-          echo "Error: mkcert directory $MKCERT_DIR not found"
-        fi
+        echo "Certificates deployed successfully:"
+        echo "  Certificate: ${cfg.certPath}"
+        echo "  Private key: ${cfg.keyPath}"
+        echo "  CA: ${cfg.caPath}"
       '';
     };
 
-    assertions = [
-      {
-        assertion = config.users.users ? ${cfg.user};
-        message = "User ${cfg.user} must be defined in the NixOS configuration";
-      }
+    security.pki.certificates = [
+      (builtins.readFile "${mkcertCerts}/rootCA.pem")
     ];
-
-    # Ensure caddy user and group exist
-    users.users.caddy = {
-      group = "caddy";
-      isSystemUser = true;
-    };
-    users.groups.caddy = {};
   };
 }
