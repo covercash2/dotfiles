@@ -18,6 +18,7 @@ local file_tree = require("file_tree")
 local keybindings = require("keybindings")
 local ai = require("ai")
 local json = require('json')
+local mcp = require('mcp')
 local spider = require("spider_move")
 local test_config = require('test_config')
 local typescript = require('typescript')
@@ -355,6 +356,7 @@ local plugins = {
         "pyright",
         "ruff",
         "svelte",
+        "taplo",
         "ts_ls",
       }
       local navic = require('nvim-navic')
@@ -971,7 +973,9 @@ local plugins = {
     config = true,
   },
   { 'vuciv/golf' },
-  ai.spec,
+  ai.copilot,
+  ai.chat,
+  ai.mcp,
   json.jsonpath,
   json.jq_playground,
   spider.spec,
