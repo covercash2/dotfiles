@@ -2,8 +2,8 @@
 -- this needs to be done before `lazy` is loaded
 vim.g.mapleader = " "
 
-vim.o.number = true
---vim.o.relativenumber = true
+-- vim.o.number = true
+vim.o.relativenumber = true
 
 vim.opt.smartindent = true
 vim.opt.expandtab = true
@@ -21,8 +21,6 @@ vim.g.loaded_netrwPlugin = 1
 -- enable highlight groups
 vim.opt.termguicolors = true
 
-require("date")
-require("plugins")
 
 vim.api.nvim_create_autocmd("InsertLeave", {
 	pattern = "*",
@@ -32,3 +30,5 @@ vim.api.nvim_create_autocmd("InsertLeave", {
 vim.o.updatetime = 150
 
 vim.o.breakindent = true
+
+require("config.lazy")

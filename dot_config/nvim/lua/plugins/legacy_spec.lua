@@ -1,22 +1,5 @@
--- load `lazy` packaeze manager
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not (vim.loop or vim.uv).fs_stat(lazypath) then
-  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "--branch=stable",
-    lazyrepo,
-    lazypath,
-  })
-end
-
-vim.opt.rtp:prepend(lazypath)
-
 local file_tree = require("file_tree")
 local keybindings = require("keybindings")
-local ai = require("ai")
 local json = require('json')
 local mcp = require('mcp')
 local spider = require("spider_move")
@@ -50,7 +33,7 @@ local recording_symbol = function()
   return "󰑋 " .. register
 end
 
-local plugins = {
+return {
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
@@ -973,9 +956,6 @@ local plugins = {
     config = true,
   },
   { 'vuciv/golf' },
-  ai.copilot,
-  ai.chat,
-  ai.mcp,
   json.jsonpath,
   json.jq_playground,
   spider.spec,
@@ -987,9 +967,3 @@ local plugins = {
   typescript.neotest,
   ui.winbar,
 }
-
-require("lazy").setup({
-  spec = plugins,
-  install = { colorscheme = { "kanagawa" } },
-  checker = { enabled = false },
-})
