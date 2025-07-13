@@ -62,7 +62,7 @@
           reverse_proxy localhost:8123
         }
 
-        green.chrash.net {
+        home.green.chrash.net {
           tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
           reverse_proxy localhost:${toString config.services.green.port} {
             health_uri /healthcheck
