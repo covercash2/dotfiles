@@ -17,37 +17,14 @@ let
     export CAROOT=$out
     mkcert -install
 
-    echo "Generating certificate..."
-    mkcert ${lib.escapeShellArg cfg.domain}
+    echo "Generating certificate for domains: ${cfg.domain}"
+    mkcert ${lib.concatMapStringsSep " " (domain: lib.escapeShellArg domain) cfg.domain}
 
     echo "Files created by mkcert:"
     ls -la *.pem
 
-    # Find and rename the domain certificate and key files
-    # The certificate file is any .pem file that's not the CA files
-    for file in *.pem; do
-      if [[ "$file" != "rootCA.pem" && "$file" != "rootCA-key.pem" ]]; then
-        if [[ "$file" == *"-key.pem" ]]; then
-          echo "Renaming key file: $file -> domain-key.pem"
-          mv "$file" domain-key.pem
-        else
-          echo "Renaming certificate file: $file -> domain.pem"
-          mv "$file" domain.pem
-        fi
-      fi
-    done
-
     echo "Final files:"
     ls -la $out/
-
-    # Verify required files exist
-    for required in domain.pem domain-key.pem rootCA.pem; do
-      if [[ ! -f "$required" ]]; then
-        echo "ERROR: $required not found!"
-        ls -la
-        exit 1
-      fi
-    done
 
     echo "Certificate generation completed successfully"
   '';
@@ -59,9 +36,9 @@ in
     enable = lib.mkEnableOption "mkcert certificate management";
 
     domain = lib.mkOption {
-      type = lib.types.str;
-      default = "green.chrash.net";
-      description = "Domain name for the certificate (supports wildcards like *.example.com)";
+      type = lib.types.listOf lib.types.str;
+      default = [ "green.chrash.net" ];
+      description = "List of domain names for the certificates (each domain can include wildcards like *.example.com)";
     };
 
     certPath = lib.mkOption {
