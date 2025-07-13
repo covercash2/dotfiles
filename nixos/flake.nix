@@ -4,13 +4,24 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     ultron = {
-      url = "github:covercash2/ultron";
+      type = "github";
+      owner = "covercash2";
+      repo = "ultron";
+      rev = "0875adf8d630246ac3d0c338157a5b89fa0c57a8";
       # Make ultron use the same nixpkgs to avoid conflicts
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    green = {
+      type = "github";
+      owner = "covercash2";
+      repo = "green";
+      rev = "a7ab382f9df76f590735f056ba636009e7fd5eca";
+
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs, ultron, ... }@inputs:
+  outputs = { self, nixpkgs, ultron, green, ... }@inputs:
   let
     # Helper function to create a system configuration for any architecture
     mkSystem = system: hostName: modules:
@@ -20,7 +31,7 @@
         modules = modules ++ [
           # Import the system-specific Ultron module
           ultron.nixosModules.default
-          # add other custom modules here
+          green.nixosModules.default
 
           # Share the hostname
           { networking.hostName = hostName; }

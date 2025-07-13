@@ -116,7 +116,7 @@ in
         cp ${mkcertCerts}/rootCA.pem ${cfg.caPath}
 
         # Set proper permissions
-        chmod 644 ${cfg.certPath} ${cfg.caPath}
+        chmod 744 ${cfg.certPath} ${cfg.caPath}
         chmod 600 ${cfg.keyPath}
         chown caddy:caddy ${cfg.certPath} ${cfg.keyPath} ${cfg.caPath}
 

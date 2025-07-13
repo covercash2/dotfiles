@@ -35,17 +35,44 @@
       permitCertUid = "caddy";
     };
 
+    green = {
+      enable = true;
+
+      port = 47336;
+      caPath = config.services.mkcert.caPath;
+    };
+
     # reverse proxy
     caddy = {
       enable = true;
 
       configFile = pkgs.writeText "Caddyfile" ''
         foundry.green.chrash.net {
+          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
           reverse_proxy localhost:30000
         }
 
         adguard.green.chrash.net {
-          reverse_proxy localhost:3000
+          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+          reverse_proxy localhost:${toString config.services.adguardhome.port}
+        }
+
+        homeassistant.green.chrash.net {
+          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+          reverse_proxy localhost:8123
+        }
+
+        green.chrash.net {
+          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+          reverse_proxy localhost:${toString config.services.green.port} {
+            health_uri /healthcheck
+          }
+        }
+
+        green.faun-truck.ts.net {
+          reverse_proxy localhost:${toString config.services.green.port} {
+            health_uri /healthcheck
+          }
         }
 
         ultron.green.chrash.net {
@@ -55,16 +82,19 @@
           }
         }
 
-        green.faun-truck.ts.net {
-          respond "hello"
+        frigate.green.chrash.net {
+          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+          reverse_proxy localhost:8971
         }
 
         grafana.green.chrash.net {
-          reverse_proxy localhost:9876
+          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+          reverse_proxy localhost:${toString config.services.grafana.settings.server.http_port}
         }
 
         db.green.chrash.net {
-          reverse_proxy localhost:5432
+          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+          reverse_proxy localhost:${toString config.services.postgresql.settings.port}
         }
       '';
 
@@ -118,21 +148,36 @@
     };
 
     # video surveillance
-    # frigate = {
-    #   enable = true;
-    #   hostname = "frigate.green";
-    #   settings = {
-    #     mqtt = {
-    #       enabled = true;
-    #       host = "localhost";
-    #     };
-    #     cameras = {
-    #       door = {
-    #
-    #       };
-    #     };
-    #   };
-    # };
+    # https://docs.frigate.video/frigate/installation#ports
+    frigate = {
+      enable = true;
+      hostname = "frigate.green";
+      # video acceleration API
+      vaapiDriver = "nvidia";
+
+      settings = {
+        mqtt = {
+          enabled = true;
+          host = "localhost";
+        };
+
+        cameras = {
+          door = {
+            ffmpeg.inputs = [
+              {
+                path = "rtsp://chrash:chrash@192.168.2.132:1935";
+                roles = [
+                  "audio"
+                  "detect"
+                  "record"
+                ];
+              }
+            ];
+          };
+        }; # cameras
+
+      }; # settings
+    }; # frigate
 
     grafana = {
       enable = true;
@@ -181,7 +226,9 @@
     allowedTCPPorts = [
       30000 # foundry VTT
       8123 # home assistant
-      9876 # Grafana
+      8971 # frigate
+      (config.services.grafana.settings.server.http_port)
+      (config.services.postgresql.settings.port)
       443
       80
       (config.services.ultron.port)
@@ -239,6 +286,7 @@
   environment.systemPackages = with pkgs; [
     btrfs-progs
     dive
+    ffmpeg
     mkcert # create certificates and a local CA
     nodejs_24
     nss # for certutils
@@ -271,6 +319,7 @@
       "iot"
     ];
     packages = with pkgs; [
+      gnumake
       minica # mini certificate authority for generating certs for my services
     ];
   };

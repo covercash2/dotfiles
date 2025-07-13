@@ -73,8 +73,9 @@ return {
         desc = "toggle MCP Hub",
       },
     },
-    build = "npm install -g mcp-hub@latest",
+    build = "bundled_build.lua",
     opts = {
+      use_bundled_binary = true,
       port = 37373,
       config = vim.fn.expand("~/.config/mcphub/servers.json"),
       extensions = {
