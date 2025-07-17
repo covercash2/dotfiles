@@ -618,3 +618,7 @@ if (which $pager_name | is-empty) {
 source zoxide.nu
 
 overlay use default.nu
+
+if (is work) {
+  source work.nu
+}

@@ -19,3 +19,25 @@ export def "help with" [
   }
   | bat
 }
+
+export def "machine name" [] {
+  if (which scutil | is-empty) {
+    return "unknown"
+  }
+
+  let output = run-external scutil "--get" ComputerName | str trim
+
+  if $output == "" {
+    return "unknown"
+  }
+
+  return $output
+}
+
+export def "is work" [] {
+  if (machine name) == "m-ry6wtc3pxk" {
+    return true
+  }
+
+  return false
+}

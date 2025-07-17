@@ -1,7 +1,6 @@
 local file_tree = require("file_tree")
 local keybindings = require("keybindings")
 local json = require('json')
-local mcp = require('mcp')
 local spider = require("spider_move")
 local test_config = require('test_config')
 local typescript = require('typescript')
@@ -330,6 +329,7 @@ return {
       local servers = {
         "biome", -- javascript stuff
         "eslint",
+        "helm_ls",
         "html",
         "luau_lsp",
         "lua_ls",
