@@ -70,6 +70,7 @@
         }
 
         green.faun-truck.ts.net {
+
           reverse_proxy localhost:${toString config.services.green.port} {
             health_uri /healthcheck
           }
@@ -90,6 +91,11 @@
         grafana.green.chrash.net {
           tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
           reverse_proxy localhost:${toString config.services.grafana.settings.server.http_port}
+        }
+
+        prometheus.green.chrash.net {
+          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+          reverse_proxy localhost:${toString config.services.prometheus.port}
         }
 
         db.green.chrash.net {
@@ -227,7 +233,6 @@
       30000 # foundry VTT
       8123 # home assistant
       8971 # frigate
-      (config.services.grafana.settings.server.http_port)
       (config.services.postgresql.settings.port)
       443
       80

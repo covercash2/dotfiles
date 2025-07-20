@@ -17,7 +17,7 @@ let
     export CAROOT=$out
     mkcert -install
 
-    echo "Generating certificate..."
+    echo "Generating certificate again..."
     mkcert ${lib.escapeShellArg cfg.domain}
 
     echo "Files created by mkcert:"
