@@ -40,6 +40,41 @@
 
       port = 47336;
       caPath = config.services.mkcert.caPath;
+
+      routes = {
+        prometheus = {
+          url = "prometheus.green.chrash.net";
+          description = "Prometheus metrics UI";
+        };
+        ultron = {
+          url = "ultron.green.chrash.net";
+          description = "Main route for Ultron bot";
+        };
+        adguard = {
+          url = "adguard.green.chrash.net";
+          description = "AdGuard DNS route";
+        };
+        grafana = {
+          url = "grafana.green.chrash.net";
+          description = "Grafana monitoring dashboard";
+        };
+        postgres = {
+          url = "db.green.chrash.net";
+          description = "PostgreSQL database route";
+        };
+        homeassistant = {
+          url = "homeassistant.green.chrash.net";
+          description = "Home Assistant route";
+        };
+        frigate = {
+          url = "frigate.green.chrash.net";
+          description = "Frigate for NVR and AI detection";
+        };
+        foundry = {
+          url = "foundry.green.chrash.net";
+          description = "Foundry Virtual Tabletop route";
+        };
+      };
     };
 
     # reverse proxy
@@ -47,21 +82,6 @@
       enable = true;
 
       configFile = pkgs.writeText "Caddyfile" ''
-        foundry.green.chrash.net {
-          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-          reverse_proxy localhost:30000
-        }
-
-        adguard.green.chrash.net {
-          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-          reverse_proxy localhost:${toString config.services.adguardhome.port}
-        }
-
-        homeassistant.green.chrash.net {
-          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-          reverse_proxy localhost:8123
-        }
-
         home.green.chrash.net {
           tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
           reverse_proxy localhost:${toString config.services.green.port} {
@@ -70,35 +90,50 @@
         }
 
         green.faun-truck.ts.net {
-
           reverse_proxy localhost:${toString config.services.green.port} {
             health_uri /healthcheck
           }
         }
 
-        ultron.green.chrash.net {
+        ${config.services.green.routes.foundry.url} {
+          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+          reverse_proxy localhost:30000
+        }
+
+        ${config.services.green.routes.adguard.url} {
+          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+          reverse_proxy localhost:${toString config.services.adguardhome.port}
+        }
+
+        ${config.services.green.routes.homeassistant.url} {
+          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+          reverse_proxy localhost:8123
+        }
+
+        ${config.services.green.routes.ultron.url} {
           tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
           reverse_proxy localhost:${toString config.services.ultron.port} {
             health_uri /healthcheck
           }
         }
 
-        frigate.green.chrash.net {
+        ${config.services.green.routes.frigate.url} {
           tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
           reverse_proxy localhost:8971
         }
 
-        grafana.green.chrash.net {
+        ${config.services.green.routes.grafana.url} {
           tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
           reverse_proxy localhost:${toString config.services.grafana.settings.server.http_port}
         }
 
-        prometheus.green.chrash.net {
+        ${config.services.green.routes.prometheus.url} {
+        # prometheus.green.chrash.net {
           tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
           reverse_proxy localhost:${toString config.services.prometheus.port}
         }
 
-        db.green.chrash.net {
+        ${config.services.green.routes.postgres.url} {
           tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
           reverse_proxy localhost:${toString config.services.postgresql.settings.port}
         }
@@ -220,6 +255,14 @@
           static_configs = [
             {
               targets = [ "localhost:9100" ];
+            }
+          ];
+        }
+        {
+          job_name = "hoss_system";
+          static_configs = [
+            {
+              targets = [ "hoss:9100" ];
             }
           ];
         }
