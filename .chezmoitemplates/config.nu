@@ -588,7 +588,7 @@ const NU_LIB_DIRS = [
 # i don't really like the mac defaults.
 # this will probably point a lot of Linux-first software
 # to the right place.
-if ($env | get --ignore-errors XDG_STATE_HOME | is-empty) {
+if ($env | get --optional XDG_STATE_HOME | is-empty) {
   $env.XDG_STATE_HOME = ("~/.local/state" | path expand)
 }
 
@@ -605,6 +605,11 @@ if ($user_profile | path exists) {
   $env.PATH = $env.PATH | prepend $"($user_profile)/bin" | uniq
 }
 
+# add bun globals to path
+if ($env.HOME | path join ".bun/bin" | path exists) {
+  $env.PATH = $env.PATH | prepend $"($env.HOME)/.bun/bin" | uniq
+}
+
 let pager_name = "most"
 if (which $pager_name | is-empty) {
   print $"($pager_name) pager not found"
@@ -619,6 +624,3 @@ source zoxide.nu
 
 overlay use default.nu
 
-if (is work) {
-  source work.nu
-}
