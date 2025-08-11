@@ -256,11 +256,13 @@ return {
 		"neovim/nvim-lspconfig",
 		dependencies = {
 			"folke/neodev.nvim",
-			"hrsh7th/nvim-cmp",
-			"hrsh7th/cmp-nvim-lsp",
-			"saadparwaiz1/cmp_luasnip",
-			"L3MON4D3/LuaSnip",
+			"saghen/blink.cmp",
 			"SmiteshP/nvim-navic",
+		},
+		opts = {
+			servers = {
+				lua_ls = {},
+			},
 		},
 		config = function()
 			local lspconfig = require("lspconfig")
@@ -302,7 +304,7 @@ return {
 				},
 			})
 
-			local capabilities = require("cmp_nvim_lsp").default_capabilities()
+			local capabilities = require("blink.cmp").get_lsp_capabilities()
 			for _, server in ipairs(servers) do
 				lspconfig[server].setup({
 					on_attach = on_attach,
@@ -407,15 +409,13 @@ return {
 			--   `nvim-notify` is only needed, if you want to use the notification view.
 			--   If not available, we use `mini` as the fallback
 			"rcarriga/nvim-notify",
-			"hrsh7th/nvim-cmp",
 		},
 		opts = {
 			lsp = {
-				-- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+				-- override markdown rendering so that other plugins use **Treesitter**
 				override = {
 					["vim.lsp.util.convert_input_to_markdown_lines"] = true,
 					["vim.lsp.util.stylize_markdown"] = true,
-					["cmp.entry.get_documentation"] = true,
 				},
 			},
 			presets = {
@@ -752,42 +752,12 @@ return {
 		end,
 	},
 	{
-		"ryo33/nvim-cmp-rust",
-		dependencies = {
-			"hrsh7th/nvim-cmp",
-		},
-		config = function()
-			local compare = require("cmp.config.compare")
-			local cmp_rust = require("cmp-rust")
-			require("cmp").setup.filetype({ "rust" }, {
-				sorting = {
-					priority_weight = 2,
-					comparators = {
-						cmp_rust.deprioritize_postfix,
-						cmp_rust.deprioritize_borrow,
-						cmp_rust.deprioritize_deref,
-						cmp_rust.deprioritize_common_traits,
-						compare.offset,
-						compare.exact,
-						compare.score,
-						compare.recently_used,
-						compare.locality,
-						compare.sort_text,
-						compare.length,
-						compare.order,
-					},
-				},
-			})
-		end,
-	},
-	{
 		"epwalsh/obsidian.nvim",
 		version = "*",
 		lazy = true,
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"nvim-treesitter/nvim-treesitter",
-			"hrsh7th/nvim-cmp",
 		},
 		event = {
 			"BufReadPre " .. vim.fn.expand("~") .. "/obsidian/**.md",
@@ -810,7 +780,6 @@ return {
 			},
 		},
 		completion = {
-			nvim_cmp = true,
 			min_chars = 1,
 		},
 	},
