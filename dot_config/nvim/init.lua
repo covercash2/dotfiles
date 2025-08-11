@@ -21,12 +21,6 @@ vim.g.loaded_netrwPlugin = 1
 -- enable highlight groups
 vim.opt.termguicolors = true
 
-
-vim.api.nvim_create_autocmd("InsertLeave", {
-	pattern = "*",
-	command = [[silent! update]],
-})
-
 vim.o.updatetime = 150
 
 vim.o.breakindent = true
