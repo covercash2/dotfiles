@@ -12,6 +12,6 @@ local jq_playground_spec = {
 }
 
 return {
-	jsonpath = jsonpath_spec,
-	jq_playground = jq_playground_spec,
+	jsonpath_spec,
+	jq_playground_spec,
 }

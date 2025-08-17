@@ -99,7 +99,6 @@ return {
 			"nvim-lua/plenary.nvim",
 			"MunifTanjim/nui.nvim",
 			"nvim-telescope/telescope.nvim",
-			"hrsh7th/nvim-cmp",
 			"stevearc/dressing.nvim",
 			"folke/snacks.nvim",
 			"nvim-tree/nvim-web-devicons",
