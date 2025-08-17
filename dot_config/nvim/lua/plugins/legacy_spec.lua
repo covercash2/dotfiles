@@ -101,40 +101,10 @@ return {
 		},
 	},
 	{
-		"rcarriga/nvim-dap-ui",
-		dependencies = {
-			"mfussenegger/nvim-dap",
-			"nvim-neotest/nvim-nio",
-		},
-	},
-	{
 		"nvim-tree/nvim-web-devicons",
 		opts = {
 			default = true,
 		},
-	},
-	{
-		"andythigpen/nvim-coverage",
-		dependencies = { "nvim-lua/plenary.nvim" },
-		config = function()
-			local get_lcov_file = function()
-				local file = vim.fn.expand("%:p")
-				if string.find(file, "/packages/") then
-					local match = string.match(file, "(.-/[^/]+/)coverage") .. "lcov.info"
-					print("using coverage report: ", match)
-					if vim.fn.filereadable(match) then
-						return match
-					else
-						print("file did not match expected: ", match)
-					end
-				end
-				print("no coverage file found")
-			end
-
-			require("coverage").setup({
-				lcov_file = get_lcov_file,
-			})
-		end,
 	},
 	{
 		"oysandvik94/curl.nvim",
