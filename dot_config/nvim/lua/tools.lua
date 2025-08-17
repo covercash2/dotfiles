@@ -1,6 +1,6 @@
 local M = {}
 
-function dump_table(tbl, indent)
+local function dump_table(tbl, indent)
 	if not indent then
 		indent = 0
 	end

@@ -1,4 +1,4 @@
-local spec = {
+return {
 	"stevearc/oil.nvim",
 	dependencies = { { "echasnovski/mini.icons", opts = {} } },
 	keys = {
@@ -7,8 +7,4 @@ local spec = {
 	---@module 'oil'
 	---@type oil.SetupOpts
 	opts = {},
-}
-
-return {
-	spec = spec,
 }

@@ -14,13 +14,6 @@ vim.opt.scrolloff = 10
 
 vim.o.clipboard = "unnamedplus"
 
--- https://github.com/nvim-tree/nvim-tree.lua#setup
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-
--- enable highlight groups
-vim.opt.termguicolors = true
-
 vim.o.updatetime = 150
 
 vim.o.breakindent = true
