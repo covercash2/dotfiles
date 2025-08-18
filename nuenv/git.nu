@@ -162,4 +162,7 @@ export def "git status" [] {
     }
   }
   | flatten
+  | if ($in | is-empty) {
+      "already up-to-date"
+    }
 }
