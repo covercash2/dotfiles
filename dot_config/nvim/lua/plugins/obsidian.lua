@@ -1,15 +1,16 @@
 return {
-	"epwalsh/obsidian.nvim",
+	"obsidian-nvim/obsidian.nvim",
+
 	version = "*",
 	lazy = true,
 	dependencies = {
 		"nvim-lua/plenary.nvim",
 		"nvim-treesitter/nvim-treesitter",
+		"saghen/blink.cmp",
 	},
-	event = {
-		"BufReadPre " .. vim.fn.expand("~") .. "/obsidian/**.md",
-		"BufNewFile " .. vim.fn.expand("~") .. "/obsidian/**.md",
-	},
+	ft = { "markdown" },
+	---@module 'obsidian'
+	---@type obsidian.config
 	opts = {
 		workspaces = {
 			{
@@ -27,6 +28,8 @@ return {
 		},
 	},
 	completion = {
+		blink = true,
+		nvim_cmp = false,
 		min_chars = 1,
 	},
 }
