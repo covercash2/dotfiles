@@ -190,35 +190,35 @@
 
     # video surveillance
     # https://docs.frigate.video/frigate/installation#ports
-    frigate = {
-      enable = true;
-      hostname = "frigate.green";
-      # video acceleration API
-      vaapiDriver = "nvidia";
-
-      settings = {
-        mqtt = {
-          enabled = true;
-          host = "localhost";
-        };
-
-        cameras = {
-          door = {
-            ffmpeg.inputs = [
-              {
-                path = "rtsp://chrash:chrash@192.168.2.132:1935";
-                roles = [
-                  "audio"
-                  "detect"
-                  "record"
-                ];
-              }
-            ];
-          };
-        }; # cameras
-
-      }; # settings
-    }; # frigate
+    # frigate = {
+    #   enable = true;
+    #   hostname = "frigate.green";
+    #   # video acceleration API
+    #   vaapiDriver = "nvidia";
+    #
+    #   settings = {
+    #     mqtt = {
+    #       enabled = true;
+    #       host = "localhost";
+    #     };
+    #
+    #     cameras = {
+    #       door = {
+    #         ffmpeg.inputs = [
+    #           {
+    #             path = "rtsp://chrash:chrash@192.168.2.132:1935";
+    #             roles = [
+    #               "audio"
+    #               "detect"
+    #               "record"
+    #             ];
+    #           }
+    #         ];
+    #       };
+    #     }; # cameras
+    #
+    #   }; # settings
+    # }; # frigate
 
     grafana = {
       enable = true;
@@ -369,6 +369,7 @@
     packages = with pkgs; [
       gnumake
       minica # mini certificate authority for generating certs for my services
+      rustup
     ];
   };
 }
