@@ -43,7 +43,7 @@ export def "sysd list-units" [] {
 
 export def "sysd services" [] {
 	sysd list-units
-	| filter {|unit| $unit.type == service}
+	| where {|unit| $unit.type == service}
 }
 
 export def "sysd service_names" [] {
@@ -68,3 +68,23 @@ export def "sysd logs" [
 	| each {|line| $line | from json }
 }
 
+# print the user information for a systemd service
+export def "sysd user" [
+  service_name: string@"sysd service_names"
+] {
+  let output = systemctl show -pUser,UID $service_name
+
+  # output is like:
+  # User=zwavejs-ui
+  # UID=1001
+
+  ($output
+    # split lines into a record
+    | lines
+    | each {|line| $line
+      | split row "="
+      | { $in.0: $in.1 }
+    }
+    | reduce {|it| merge $it}
+  )
+}

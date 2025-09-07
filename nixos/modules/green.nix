@@ -74,6 +74,10 @@
           url = "foundry.green.chrash.net";
           description = "Foundry Virtual Tabletop route";
         };
+        zwave = {
+          url = "zwave.green.chrash.net";
+          description = "Z-Wave JS controls";
+        };
       };
     };
 
@@ -136,6 +140,11 @@
         ${config.services.green.routes.postgres.url} {
           tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
           reverse_proxy localhost:${toString config.services.postgresql.settings.port}
+        }
+
+        ${config.services.green.routes.zwave.url} {
+          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+          reverse_proxy localhost:${config.services.zwave-js-ui.settings.PORT}
         }
       '';
 
