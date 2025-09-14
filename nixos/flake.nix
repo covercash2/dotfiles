@@ -55,6 +55,7 @@
           ./modules/green.nix
           ./modules/adguard.nix
           ./modules/openssh.nix
+          ./modules/postgres.nix
           ./modules/zigbee_receiver.nix
           ./modules/z-wave_receiver.nix
           # ./modules/actualbudget.nix
