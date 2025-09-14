@@ -16,15 +16,27 @@ local auto_show_hover = function(bufnr)
 	})
 end
 
+local schema_store = function()
+	return require("schemastore")
+end
+
 return {
 	"neovim/nvim-lspconfig",
 	dependencies = {
 		"saghen/blink.cmp",
 		"SmiteshP/nvim-navic",
+		"b0o/schemastore.nvim",
 	},
 	opts = {
 		servers = {
 			lua_ls = {},
+			-- https://github.com/tekumara/typos-lsp/blob/main/docs/neovim-lsp-config.md
+			typos_lsp = {
+				cmd_env = { RUST_LOG = "error" },
+				init_options = {
+					diagnositSeverity = "Error",
+				},
+			},
 		},
 	},
 	config = function()
@@ -55,14 +67,6 @@ return {
 				navic.attach(client, bufnr)
 			end
 		end
-
-		-- https://github.com/tekumara/typos-lsp/blob/main/docs/neovim-lsp-config.md
-		lspconfig.typos_lsp.setup({
-			cmd_env = { RUST_LOG = "error" },
-			init_options = {
-				diagnositSeverity = "Error",
-			},
-		})
 
 		local capabilities = require("blink.cmp").get_lsp_capabilities()
 		for _, server in ipairs(servers) do
