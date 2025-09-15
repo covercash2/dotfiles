@@ -8,6 +8,26 @@ export def "net ports" [] {
 	$lines
 }
 
+export def "net connections" [
+  --port: int
+] {
+  let args = if $port != null {
+    ["-i", $":($port)"]
+  } else {
+    ["-i"]
+  }
+
+  let args = $args ++ ['-n' '-P']
+
+  print $args
+
+  let raw = run-external "lsof" ...$args
+
+  $raw | detect columns
+}
+
+export alias "net conn" = net connections
+
 export def "net port" [
 	port: string
 ] {
