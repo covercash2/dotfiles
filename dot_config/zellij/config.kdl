@@ -224,7 +224,8 @@ default_shell "nu"
 // Choose the theme that is specified in the themes section.
 // Default: default
 //
-theme "tokyo-night"
+// theme "tokyo-night"
+theme "one-half-dark"
 
 // The name of the default layout to load on startup
 // Default: "default"

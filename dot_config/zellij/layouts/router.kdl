@@ -1,0 +1,8 @@
+layout {
+  pane cwd="graphql-platform/mgql-router" {
+    command "make run"
+  }
+  pane cwd="ce-orchestration/router-sidecar" {
+    command "just run"
+  }
+}
