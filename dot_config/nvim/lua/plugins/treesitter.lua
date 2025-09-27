@@ -5,7 +5,7 @@ return {
 			"apple/pkl-neovim",
 		},
 		init = function()
-			vim.cmd("TSUpdate")
+			-- vim.cmd("TSUpdate")
 			vim.treesitter.language.register("javascript", "dataviewjs")
 			vim.treesitter.language.register("json", "dataviewjs")
 			vim.treesitter.language.register("gotmpl", "tmpl")

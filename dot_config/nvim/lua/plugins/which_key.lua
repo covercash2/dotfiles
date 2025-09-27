@@ -205,7 +205,7 @@ return {
 		"folke/trouble.nvim",
 		"nvim-neotest/neotest",
 		"kazhala/close-buffers.nvim",
-		"echasnovski/mini.icons",
+		"nvim-mini/mini.icons",
 	},
 	config = function()
 		local wk = require("which-key")

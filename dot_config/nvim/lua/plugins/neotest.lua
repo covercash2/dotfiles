@@ -43,13 +43,15 @@ return {
 		"nvim-neotest/neotest-jest",
 		"mrcjkb/rustaceanvim",
 	},
-	opts = {
-		discovery = {
-			enabled = false,
-		},
-		adapters = {
-			require("neotest-jest")(jest_config),
-			require("rustaceanvim.neotest"),
-		},
-	},
+  config = function()
+    require("neotest").setup {
+      discovery = {
+        enabled = false,
+      },
+      adapters = {
+        require("neotest-jest")(jest_config),
+        require("rustaceanvim.neotest"),
+      },
+    }
+  end,
 }

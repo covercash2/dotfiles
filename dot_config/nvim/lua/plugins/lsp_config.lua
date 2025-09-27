@@ -16,10 +16,6 @@ local auto_show_hover = function(bufnr)
 	})
 end
 
-local schema_store = function()
-	return require("schemastore")
-end
-
 return {
 	"neovim/nvim-lspconfig",
 	dependencies = {
@@ -40,7 +36,6 @@ return {
 		},
 	},
 	config = function()
-		local lspconfig = require("lspconfig")
 		local servers = {
 			"biome", -- javascript stuff
 			"eslint",
@@ -70,10 +65,10 @@ return {
 
 		local capabilities = require("blink.cmp").get_lsp_capabilities()
 		for _, server in ipairs(servers) do
-			lspconfig[server].setup({
+			vim.lsp.config[server] = {
 				on_attach = on_attach,
 				capabilities = capabilities,
-			})
+			}
 		end
 	end,
 }
