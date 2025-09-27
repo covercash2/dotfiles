@@ -21,59 +21,70 @@
     };
   };
 
-  outputs = { self, nixpkgs, ultron, green, ... }@inputs:
-  let
-    # Helper function to create a system configuration for any architecture
-    mkSystem = system: hostName: modules:
-      nixpkgs.lib.nixosSystem {
-        inherit system;
+  outputs =
+    {
+      self,
+      nixpkgs,
+      ultron,
+      green,
+      ...
+    }@inputs:
+    let
+      # Helper function to create a system configuration for any architecture
+      mkSystem =
+        system: hostName: modules:
+        nixpkgs.lib.nixosSystem {
+          inherit system;
 
-        modules = modules ++ [
-          # Import the system-specific Ultron module
-          ultron.nixosModules.default
-          green.nixosModules.default
+          modules = modules ++ [
+            # Import the system-specific Ultron module
+            ultron.nixosModules.default
+            green.nixosModules.default
 
-          # Share the hostname
-          { networking.hostName = hostName; }
-        ];
-      };
-  in {
-    nixosConfigurations = {
-      wall-e = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
+            # Share the hostname
+            { networking.hostName = hostName; }
+          ];
+        };
+    in
+    {
+      nixosConfigurations = {
 
-        modules = [
-          ./wall-e-hardware-configuration.nix
-          ./configuration.nix
-          ./modules/wall-e.nix
-        ];
-      };
-      green = mkSystem "x86_64-linux" "green" (
-        [
+        wall-e = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+
+          modules = [
+            ./wall-e-hardware-configuration.nix
+            ./configuration.nix
+            ./modules/wall-e.nix
+          ];
+        };
+
+        green = mkSystem "x86_64-linux" "green" ([
           ./green-hardware-configuration.nix
           ./configuration.nix
           ./modules/green.nix
+
+          # ./modules/actualbudget.nix
           ./modules/adguard.nix
+          ./modules/certificates.nix
+          ./modules/homeassistant.nix
           ./modules/openssh.nix
           ./modules/postgres.nix
-          ./modules/zigbee_receiver.nix
-          ./modules/z-wave_receiver.nix
-          # ./modules/actualbudget.nix
           ./modules/ultron.nix
-          ./modules/certificates.nix
-        ]
-      );
+          ./modules/z-wave_receiver.nix
+          ./modules/zigbee_receiver.nix
+        ]);
 
-      hoss = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [
-          ./hoss-hardware-configuration.nix
-          ./configuration.nix
-          ./modules/hoss.nix
-          ./modules/openssh.nix
-          ./modules/embedded_dev.nix
-        ];
+        hoss = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            ./hoss-hardware-configuration.nix
+            ./configuration.nix
+            ./modules/hoss.nix
+            ./modules/openssh.nix
+            ./modules/embedded_dev.nix
+          ];
+        };
       };
     };
-  };
 }

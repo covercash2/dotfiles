@@ -19,7 +19,7 @@ def zigbee [] {
 }
 
 # takes a line of input and parses the output
-def _zigbee_parse_log [] {
+export def "zigbee parse log" [] {
 	(
 		parse --regex $ZIGBEE_LOG_REGEX
 		| update timestamp {|row| $row.timestamp | into datetime }
@@ -28,5 +28,5 @@ def _zigbee_parse_log [] {
 
 #[test]
 def test_zigbee_parse_log [] {
-	open $TEST_FILE | lines | take 2 | _zigbee_parse_log
+	open $TEST_FILE | lines | take 2 | zigbee parse log
 }
