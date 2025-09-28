@@ -42,6 +42,7 @@
             zigbee2mqtt = {
               acl = [
                 "readwrite zigbee2mqtt/#"
+                "readwrite homeassistant/#"
               ];
               hashedPasswordFile = "${config.services.mosquitto.dataDir}passwd-zigbee2mqtt";
             };
@@ -76,7 +77,13 @@
       dataDir = "/mnt/space/zigbee2mqtt/data";
 
       settings = {
-        homeassistant.enabled = true;
+        homeassistant = {
+          enabled = true;
+          discovery_topic = "homeassistant";
+          status_topic = "homeassistant/status";
+          experimental_event_entities = true;
+          legacy_action_sensor = true;
+        };
         permit_join = true;
 
         serial = {
@@ -87,42 +94,91 @@
         mqtt = {
           base_topic = "zigbee2mqtt";
           server = "mqtt://localhost:1883";
+          user = "!secret.yaml user";
+          password = "!secret.yaml password";
         };
 
-        device_options.legacy = false;
-
         advanced = {
-          homeassistant_legacy_entity_attributes = false;
-          legacy_api = false;
-          legacy_availability_payload = false;
-
           log_output = [
             "console"
             "file"
           ];
         };
 
+        availability = {
+          enabled = true;
+          active = {
+            timeout = 1; # minutes
+          };
+          passive = {
+            # TODO: increase this timeout
+            timeout = 1; # minutes
+          };
+        };
+
         devices = {
-          "0x00158d000af394f6".friendly_name = "0x00158d000af394f6";
-          "0x00158d000af394f8".friendly_name = "0x00158d000af394f8";
-          "0x00158d008b04a887".friendly_name = "0x00158d008b04a887";
-          "0x282c02bfffea5495".friendly_name = "0x282c02bfffea5495";
-          "0x282c02bfffec2f84".friendly_name = "0x282c02bfffec2f84";
-          "0x282c02bfffec78bf".friendly_name = "0x282c02bfffec78bf";
-          "0x282c02bfffec84f8".friendly_name = "0x282c02bfffec84f8";
-          "0xa4c13812d9bd371a".friendly_name = "0xa4c13812d9bd371a";
-          "0xa4c1385989d0c74d".friendly_name = "living room presence sensor";
+          # prefix "0x00158d000af3" is Aqara sensors
+          # the suffix for the friendly names corresponds to the sticker on the device
+          "0x00158d000af394f6" = {
+            friendly_name = "0x00158d000af394f6";
+            availability = true;
+          };
+          "0x00158d000af394f8" = {
+            friendly_name = "bedroom temp (0)";
+          };
+          "0x00158d008b04a887" = {
+            friendly_name = "office temp (2)";
+          };
+          "0x282c02bfffea5495" = {
+            friendly_name = "0x282c02bfffea5495";
+          };
+          "0x282c02bfffec2f84" = {
+            friendly_name = "0x282c02bfffec2f84";
+          };
+          "0x282c02bfffec78bf" = {
+            friendly_name = "0x282c02bfffec78bf";
+          };
+          "0x282c02bfffec84f8" = {
+            friendly_name = "0x282c02bfffec84f8";
+          };
+          "0xa4c13812d9bd371a" = {
+            friendly_name = "0xa4c13812d9bd371a";
+          };
+          "0xa4c1385989d0c74d" = {
+            friendly_name = "living room presence sensor";
+          };
           # "0xb0ce1814000" is a prefix for Sengled light bulbs?
-          "0xb0ce18140003dc0e".friendly_name = "tree light left";
-          "0xb0ce181400052ad2".friendly_name = "kitchen light";
-          "0xb0ce181400067f53".friendly_name = "tree light center";
-          "0xb0ce18140008a960".friendly_name = "tree light right";
-          "0xb0ce181400184485".friendly_name = "0xb0ce181400184485";
-          "0xb0ce18140018463f".friendly_name = "0xb0ce18140018463f";
-          "0xb0ce181400184699".friendly_name = "0xb0ce181400184699";
-          "0xb0ce18140018633a".friendly_name = "0xb0ce18140018633a";
-          "0xb0ce18140363e41f".friendly_name = "0xb0ce18140363e41f";
-          "0xf4b3b1fffee7b489".friendly_name = "0xf4b3b1fffee7b489";
+          "0xb0ce18140003dc0e" = {
+            friendly_name = "tree light left";
+            availability = true;
+          };
+          "0xb0ce181400052ad2" = {
+            friendly_name = "kitchen light";
+          };
+          "0xb0ce181400067f53" = {
+            friendly_name = "tree light center";
+          };
+          "0xb0ce18140008a960" = {
+            friendly_name = "tree light right";
+          };
+          "0xb0ce181400184485" = {
+            friendly_name = "0xb0ce181400184485";
+          };
+          "0xb0ce18140018463f" = {
+            friendly_name = "office shelf lamp";
+          };
+          "0xb0ce181400184699" = {
+            friendly_name = "couch lamp";
+          };
+          "0xb0ce18140018633a" = {
+            friendly_name = "0xb0ce18140018633a";
+          };
+          "0xb0ce18140363e41f" = {
+            friendly_name = "0xb0ce18140363e41f";
+          };
+          "0xf4b3b1fffee7b489" = {
+            friendly_name = "0xf4b3b1fffee7b489";
+          };
         };
       };
     };

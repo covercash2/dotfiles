@@ -7,11 +7,14 @@ export-env {
   $env.MOSQUITTO = {}
 }
 
+# subscribe to a topic
+# https://mosquitto.org/man/mosquitto_sub-1.html
 export def "mosquitto subscribe" [
   --host: string = "localhost"
-  --topic: string = "#"
+  --format: string@"mosquitto formats" = payload-only
   --username: string = "chrash"
   --password: string
+  topic: string
 ] {
   let password = if $password == null {
     mosquitto get password
@@ -28,28 +31,55 @@ export def "mosquitto subscribe" [
     -P $password
   ]
 
+  let args = if $format != null {
+    let format = mosquitto formats resolve $format
+    print $"using format '($format)'"
+    $args ++ ["-F" $format]
+  } else {
+    $args
+  }
+
   print $"subscribing to topic '($topic)' on host '($host)' as user '($username)'"
 
   run-external ...$args
 }
 
+# subscribe to all topics
 export def "mosquitto subscribe all" [
   --host: string = "localhost"
+  --format: string@"mosquitto formats" = payload-only # payload only is the default format
   --username: string = "chrash"
   --password: string
 ] {
   (mosquitto subscribe
     --host $host
-    --topic "#"
+    --format $format
     --username $username
     --password $password
+    "#"
   )
 }
 
+export const FORMAT_JSON_FULL: record = {
+  topic: "%t",
+  payload: "%p",
+  content-type: "%C",
+  message-expiry-interval: "%E",
+  length: "%l",
+  id: "%m",
+  user-property: "%P",
+  qos: "%q",
+  response-topic: "%R",
+  retain: "%r",
+  subscription-identifier: "%S",
+}
+
+# publish a message to a topic
+# https://mosquitto.org/man/mosquitto_pub-1.html
 export def "mosquitto publish" [
   --host: string = "localhost"
   --topic: string = "test/topic"
-  --message: string = "Hello, World!"
+  --message: record = { message: "Hello, World!" }
   --username: string = "chrash"
   --password: string
 ] {
@@ -59,6 +89,8 @@ export def "mosquitto publish" [
     mosquitto set { password: $password }
     $password
   }
+
+  let message = if ($message | is-empty) { "" } else { $message | to json }
 
   let args = [
     mosquitto_pub
@@ -91,5 +123,19 @@ export def "mosquitto get" [
         msg: $"key '($key)' not set; please set it using `mosquitto set { ($key): <value> }`"
       }
     }
+  }
+}
+
+def "mosquitto formats" [] {
+  [json-full payload-only]
+}
+
+def "mosquitto formats resolve" [
+  format: string@"mosquitto formats"
+] {
+  match $format {
+    "json-full" => "%J",
+    "payload-only" => "%p",
+    _ => (error make { msg: $"unknown format '($format)'" })
   }
 }
