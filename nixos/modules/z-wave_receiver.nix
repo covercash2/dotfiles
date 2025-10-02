@@ -4,12 +4,7 @@
 
   services = {
     # zwave-js-ui bundles zwave-js
-    # zwave-js = {
-    #   enable = true;
-    #   port = 3000;
-    #   serialPort = "/dev/ttyUSBHomeSeerZWave";
-    #   secretsConfigFile = "/mnt/space/zwave/secrets.json";
-    # };
+    # this is a wrapper around `zwave-js-server`
     zwave-js-ui = {
       enable = true;
       serialPort = "/dev/ttyUSBHomeSeerZWave";

@@ -120,7 +120,7 @@
           # prefix "0x00158d000af3" is Aqara sensors
           # the suffix for the friendly names corresponds to the sticker on the device
           "0x00158d000af394f6" = {
-            friendly_name = "0x00158d000af394f6";
+            friendly_name = "server room (1)";
             availability = true;
           };
           "0x00158d000af394f8" = {
@@ -129,6 +129,7 @@
           "0x00158d008b04a887" = {
             friendly_name = "office temp (2)";
           };
+          # prefix "0x282c02bfff" is
           "0x282c02bfffea5495" = {
             friendly_name = "0x282c02bfffea5495";
           };
@@ -162,7 +163,7 @@
             friendly_name = "tree light right";
           };
           "0xb0ce181400184485" = {
-            friendly_name = "0xb0ce181400184485";
+            friendly_name = "office table lamp";
           };
           "0xb0ce18140018463f" = {
             friendly_name = "office shelf lamp";
@@ -171,7 +172,7 @@
             friendly_name = "couch lamp";
           };
           "0xb0ce18140018633a" = {
-            friendly_name = "0xb0ce18140018633a";
+            friendly_name = "bedroom lamp";
           };
           "0xb0ce18140363e41f" = {
             friendly_name = "0xb0ce18140363e41f";
