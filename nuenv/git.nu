@@ -116,23 +116,23 @@ def "ssh to http" []: [string -> string] {
 export const git_statuses = {
   "M": {
     color: "yellow",
-    label: "modified",
+    label: "modified ✎",
   }
   "A": {
     color: "green_bold",
-    label: "added",
+    label: "added ✢",
   }
   "D": {
     color: "red_bold",
-    label: "deleted",
+    label: "deleted ✕",
   }
   "R": {
     color: "yellow_bold",
-    label: "renamed",
+    label: "renamed ☛",
   }
   "??": {
     color: "purple",
-    label: "untracked",
+    label: "untracked ☉",
   }
 }
 
@@ -141,7 +141,7 @@ def render_git_status [
   --file: string # the file path emitted by git status
   --status_map: record = $git_statuses
 ] {
-  let status = $status_map | get $status | default ($status_map | get "??")
+  let status = $status_map | get --optional $status | default ($status_map | get "??")
   let color = $status.color
 
   let status_label = $"(ansi $color)($status.label)(ansi reset)"
@@ -150,6 +150,7 @@ def render_git_status [
   { status: $status_label, file: $file_label }
 }
 
+# return `git status` as a list
 export def "git status" [] {
   ^git status --porcelain
   | lines
@@ -161,8 +162,24 @@ export def "git status" [] {
       render_git_status --status $row.status --file $row.file
     }
   }
-  | flatten
   | if ($in | is-empty) {
       "already up-to-date"
+    } else {
+      $in | reduce {|elt, acc| $acc ++ $elt }
     }
+}
+
+# ammend a commit
+export def "git ammend" [] {
+  external git add "--all"
+  external git commit "--amend"
+}
+
+# run an external command with some personal tweeks
+def "external" [
+  command: string
+  ...args: string
+] {
+  print $"running `($command)` with ($args)"
+  run-external $command ...$args
 }
