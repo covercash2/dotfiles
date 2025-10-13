@@ -42,12 +42,12 @@ return {
 						cargo = {
 							features = "all",
 						},
-            lspMux = {
-              version = "1",
-              method = "connect",
-              server = "rust-analyzer",
-            },
-            serverPath = vim.fn.expand('$HOME/.cargo/bin/ra-multiplex'),
+						lspMux = {
+							version = "1",
+							method = "connect",
+							server = "rust-analyzer",
+						},
+						serverPath = vim.fn.expand("$HOME/.cargo/bin/lspmux"),
 					},
 				},
 			},
