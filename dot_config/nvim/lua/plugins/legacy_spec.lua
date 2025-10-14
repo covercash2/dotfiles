@@ -60,15 +60,6 @@ return {
 		lazy = false,
 		opts = {},
 	},
-	-- svelte
-	{
-		"leafOfTree/vim-svelte-plugin",
-		init = function()
-			vim.g.vim_svelte_plugin_load_full_syntax = 1
-			vim.g.vim_svelte_plugin_use_typescript = 1
-		end,
-		opts = {},
-	},
 	{
 		"j-hui/fidget.nvim",
 		tag = "legacy",

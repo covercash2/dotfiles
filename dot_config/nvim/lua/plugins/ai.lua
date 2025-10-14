@@ -26,6 +26,9 @@ local copilot_chat = {
 return {
 	{
 		"zbirenbaum/copilot.lua",
+    dependencies = {
+      "copilotlsp-nvim/copilot-lsp",
+    },
 		keys = {
 			{
 				"<leader>ap",
