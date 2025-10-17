@@ -177,9 +177,53 @@ export def "git ammend" [] {
 
 # run an external command with some personal tweeks
 def "external" [
-  command: string
   ...args: string
 ] {
-  print $"running `($command)` with ($args)"
-  run-external $command ...$args
+  print $"running: ($args)"
+  run-external ...$args
+}
+
+export def "git root" [] {
+  external git rev-parse "--show-toplevel"
+}
+
+export def "git hooks" [] {
+  ls (git hooks path)
+  | where {|entry| not ($entry.name | str ends-with ".sample") }
+}
+
+export def "git hooks path" [] {
+  git root | path join ".git/hooks"
+}
+
+export def "git hooks create" [
+  --type: string@"git hooks types"
+  contents: string # a list of commands to run
+  --force
+] {
+  let path = git hooks path | path join $type
+
+  print $"saving hook to ($path)"
+
+  $contents | save --force=$force $path
+
+  chmod u+x $path
+}
+
+export def "git hooks types" [] {
+  [
+    applypatch-msg
+    commit-msg
+    fsmonitor-watchman
+    post-update
+    pre-applypatch
+    pre-commit
+    pre-merge-commit
+    pre-push
+    pre-rebase
+    pre-receive
+    prepare-commit-msg
+    push-to-checkout
+    update
+  ]
 }
