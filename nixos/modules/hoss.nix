@@ -32,7 +32,10 @@
   };
 
   services = {
-    tailscale.enable = true;
+    tailscale = {
+      enable = true;
+      permitCertUid = "caddy";
+    };
     blueman.enable = true;
     ollama = {
       enable = true;
@@ -43,12 +46,31 @@
       port = 11434;
       openFirewall = true;
     };
+
+    caddy = {
+      enable = true;
+
+      virtualHosts = {
+        "hoss.faun-truck.ts.net" = {
+          extraConfig = ''
+            handle_path /llm/* {
+              reverse_proxy localhost:11434 {
+                health_uri /
+              }
+            }
+            respond "hello"
+          '';
+        };
+      };
+    };
   };
 
   networking.firewall = {
     enable = true;
     allowedTCPPorts = [
+      443
       14554 # virtualisation.oci-containers.mistral_rs.ports
+      9100 # node_export for prometheus system resource metrics
     ];
   };
 
@@ -79,7 +101,7 @@
         ];
         packages = with pkgs; [
           python313Packages.huggingface-hub
-          mistral-rs
+          # mistral-rs
         ];
       };
       mistral = {
