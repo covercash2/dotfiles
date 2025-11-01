@@ -7,7 +7,7 @@
       type = "github";
       owner = "covercash2";
       repo = "ultron";
-      rev = "0875adf8d630246ac3d0c338157a5b89fa0c57a8";
+      rev = "05be4f8b3df65e0494229c03b8268a092736c39a";
       # Make ultron use the same nixpkgs to avoid conflicts
       inputs.nixpkgs.follows = "nixpkgs";
     };

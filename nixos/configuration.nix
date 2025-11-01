@@ -97,7 +97,7 @@
       packages = with pkgs; [
         asdf-vm # toolchain management
         atuin # sync shell autocomplete across machines
-        bitwarden
+        bitwarden-desktop
         bitwarden-cli
         carapace # command line completion
         chezmoi # dotfiles manager
@@ -156,7 +156,7 @@
 
   fonts.packages = with pkgs; [
     noto-fonts
-    noto-fonts-emoji
+    noto-fonts-color-emoji
     nerd-fonts.fira-code
     fira-code-symbols
   ];
