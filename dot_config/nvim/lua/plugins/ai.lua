@@ -2,27 +2,6 @@ local chat_keys = {
 	toggle = "<leader>at",
 }
 
-local copilot_chat = {
-	"CopilotC-Nvim/CopilotChat.nvim",
-	dependencies = {
-		{ "zbirenbaum/copilot.lua" },
-		{ "nvim-lua/plenary.nvim", branch = "master" },
-	},
-	keys = {
-		{
-			chat_keys.toggle,
-			function()
-				require("CopilotChat").toggle()
-			end,
-			desc = "toggle Copilot chat",
-		},
-	},
-	build = "make tiktoken",
-	opts = {
-		model = "claude-sonnet-4",
-	},
-}
-
 return {
 	{
 		"zbirenbaum/copilot.lua",
@@ -52,14 +31,13 @@ return {
 					},
 				},
         nes = {
-          enabled = true,
+          enabled = false,
           keymap = {
             accept_and_goto = "<leader>p",
             accept = false,
             dismiss = "<Esc>",
           },
         },
-        -- 
 				panel = {
 					auto_refresh = true,
 				},
@@ -87,6 +65,7 @@ return {
 	},
   {
     "copilotlsp-nvim/copilot-lsp",
+    enabled = false,
     init = function()
       vim.g.copilot_nes_debounce = 500
       vim.lsp.enable("copilot_ls")

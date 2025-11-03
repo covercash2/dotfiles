@@ -37,20 +37,15 @@ return {
 				on_attach = function(client, bufnr)
 					auto_show_hover(bufnr)
 				end,
-				default_settings = {
-					["rust-analyzer"] = {
-						cargo = {
-							features = "all",
-						},
-						lspMux = {
-							version = "1",
-							method = "connect",
-							server = "rust-analyzer",
-						},
-						serverPath = vim.fn.expand("$HOME/.cargo/bin/lspmux"),
-					},
-				},
 			},
+      -- TODO update to lspmux
+      -- https://github.com/mrcjkb/rustaceanvim/issues/870
+      ra_multiplex = {
+        enable = true, -- enable autodiscovery for ra-multiplex
+        -- default values marked here for docs
+        host = '127.0.0.1',
+        port = 27631,
+      },
 		}
 
 		-- configure `dap` debugger
