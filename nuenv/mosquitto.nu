@@ -139,3 +139,28 @@ def "mosquitto formats resolve" [
     _ => (error make { msg: $"unknown format '($format)'" })
   }
 }
+
+# create a mosquitto password file for a given username.
+# removes the username from the file output
+# to be compatible with the NixOS configuration
+export def "mosquitto passwd" [
+  username: string
+  --file: string # will be `passwd_<username>` if not provided
+] {
+  let file = if $file == null {
+    $"passwd-($username)"
+  } else { $file }
+
+  let args = [
+    mosquitto_passwd
+    -c
+    $file
+    $username
+  ]
+
+  print $args
+
+  run-external ...$args
+
+  open $file | split row ":" | get 1 | save --force $file
+}

@@ -173,38 +173,6 @@
       logDir = "/mnt/media/jellyfin/logs";
     };
 
-    # video surveillance
-    # https://docs.frigate.video/frigate/installation#ports
-    # frigate = {
-    #   enable = true;
-    #   hostname = "frigate.green";
-    #   # video acceleration API
-    #   vaapiDriver = "nvidia";
-    #
-    #   settings = {
-    #     mqtt = {
-    #       enabled = true;
-    #       host = "localhost";
-    #     };
-    #
-    #     cameras = {
-    #       door = {
-    #         ffmpeg.inputs = [
-    #           {
-    #             path = "rtsp://chrash:chrash@192.168.2.132:1935";
-    #             roles = [
-    #               "audio"
-    #               "detect"
-    #               "record"
-    #             ];
-    #           }
-    #         ];
-    #       };
-    #     }; # cameras
-    #
-    #   }; # settings
-    # }; # frigate
-
     grafana = {
       enable = true;
       settings = {
@@ -287,32 +255,26 @@
     };
   };
 
-  virtualisation.containers.enable = true;
   virtualisation = {
+    containers.enable = true;
     podman = {
       enable = true;
 
       # Required for containers under podman-compose to be able to talk to each other.
       defaultNetwork.settings.dns_enabled = true;
     };
-  };
-  virtualisation.oci-containers.containers = {
-    # actual_budget = {
-    #   image = "docker.io/actualbudget/actual-server:latest";
-    #   ports = [ "5006:5006" ];
-    #   volumes = [ "/mnt/media/actual_budget" ];
-    #   pull = "newer";
-    # };
-    # prometheus exporter for system info
-    node_exporter = {
-      image = "quay.io/prometheus/node-exporter:latest";
-      volumes = [ "/:/host:ro,rslave" ];
-      pull = "newer";
-      extraOptions = [
-        "--network=host"
-        "--pid=host"
-      ];
-      cmd = [ "--path.rootfs=/host" ];
+    oci-containers.containers = {
+      # prometheus exporter for system info
+      node_exporter = {
+        image = "quay.io/prometheus/node-exporter:latest";
+        volumes = [ "/:/host:ro,rslave" ];
+        pull = "newer";
+        extraOptions = [
+          "--network=host"
+          "--pid=host"
+        ];
+        cmd = [ "--path.rootfs=/host" ];
+      };
     };
   };
 
@@ -321,7 +283,6 @@
     dive
     ffmpeg
     mkcert # create certificates and a local CA
-    nodejs_24
     nss # for certutils
     openssl
     pgcli # better CLI for Postgres
@@ -338,6 +299,10 @@
     python3Packages.pip
     python3Packages.python
     ruff
+
+    # Javascript
+    deno
+    nodejs_24
   ];
 
   users = {

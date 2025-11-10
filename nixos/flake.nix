@@ -25,8 +25,9 @@
     {
       self,
       nixpkgs,
-      ultron,
+
       green,
+      ultron,
       ...
     }@inputs:
     let
@@ -67,10 +68,12 @@
           # ./modules/actualbudget.nix
           ./modules/adguard.nix
           ./modules/certificates.nix
+          ./modules/foundry.nix
           ./modules/homeassistant.nix
           ./modules/openssh.nix
           ./modules/postgres.nix
           ./modules/ultron.nix
+          ./modules/video_surveillance.nix
           ./modules/z-wave_receiver.nix
           ./modules/zigbee_receiver.nix
         ]);

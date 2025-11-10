@@ -152,6 +152,9 @@
     pciutils
     uv # python package manager
     wget
+
+    unzip
+    zip
   ];
 
   fonts.packages = with pkgs; [

@@ -21,6 +21,21 @@ export def "help with" [
   | bat
 }
 
+# run a nushell command with sudo
+# note: `root` needs access to `nu`
+export def sunu [
+  ...args: string
+] {
+  let args = [
+    sudo
+    "nu --commands"
+  ] ++ $args
+
+  print $args
+
+  run-external ...$args
+}
+
 export def "machine name" [] {
   if (which scutil | is-empty) {
     return "unknown"

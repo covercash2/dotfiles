@@ -39,6 +39,7 @@
           address = "0.0.0.0";
 
           users = {
+            # https://mosquitto.org/documentation/authentication-methods/
             zigbee2mqtt = {
               acl = [
                 "readwrite zigbee2mqtt/#"
@@ -59,6 +60,12 @@
                 "readwrite zwave/#"
               ];
               hashedPasswordFile = "${config.services.mosquitto.dataDir}passwd-homeassistant";
+            };
+            frigate = {
+              acl = [
+                "readwrite frigate/#"
+              ];
+              hashedPasswordFile = "${config.services.mosquitto.dataDir}passwd-frigate";
             };
             chrash = {
               acl = [
