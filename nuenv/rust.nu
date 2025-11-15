@@ -83,3 +83,16 @@ export def "logs filter" [] {
       }
     }
 }
+
+# for projects that use xtask, wrap `cargo xtask`
+export def "xtask" [
+  ...args: string
+] {
+  let args = [
+    cargo xtask
+  ] ++ $args
+
+  print $args
+
+  run-external ...$args
+}

@@ -264,7 +264,7 @@ $env.config = {
   cursor_shape: {
     emacs: line # block, underscore, line, blink_block, blink_underscore, blink_line (line is the default)
     vi_insert: line # block, underscore, line , blink_block, blink_underscore, blink_line (block is the default)
-    vi_normal: blink_underscore # block, underscore, line, blink_block, blink_underscore, blink_line (underscore is the default)
+    vi_normal: blink_block # block, underscore, line, blink_block, blink_underscore, blink_line (underscore is the default)
   }
   color_config: $dark_theme   # if you want a light theme, replace `$dark_theme` to `$light_theme`
   footer_mode: 25 # always, never, number_of_rows, auto
@@ -301,7 +301,7 @@ $env.config = {
     # reset_application_mode is escape \x1b[?1l and was added to help ssh work better
     reset_application_mode: true
   }
-  render_right_prompt_on_last_line: false # true or false to enable or disable right prompt to be rendered on last line of the prompt.
+  render_right_prompt_on_last_line: true # true or false to enable or disable right prompt to be rendered on last line of the prompt.
 
   hooks: {
     pre_prompt: [{||
@@ -344,7 +344,7 @@ $env.config = {
         style: {
             text: green
             selected_text: green_reverse
-            description_text: yellow
+            description_text: white
         }
       }
       {
@@ -565,9 +565,9 @@ $env.PROMPT_COMMAND_RIGHT = ""
 # The prompt indicators are environmental variables that represent
 # the state of the prompt
 $env.PROMPT_INDICATOR = ""
-$env.PROMPT_INDICATOR_VI_INSERT = "〉"
-$env.PROMPT_INDICATOR_VI_NORMAL = ": "
-$env.PROMPT_MULTILINE_INDICATOR = "::: "
+$env.PROMPT_INDICATOR_VI_INSERT = "▸▶ "
+$env.PROMPT_INDICATOR_VI_NORMAL = "▪◆ "
+$env.PROMPT_MULTILINE_INDICATOR = "::⎬ "
 
 # carapace completions
 let carapace_completer = {|spans|
