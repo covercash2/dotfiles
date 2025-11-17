@@ -610,7 +610,7 @@ if ($env.HOME | path join ".bun/bin" | path exists) {
   $env.PATH = $env.PATH | prepend $"($env.HOME)/.bun/bin" | uniq
 }
 
-let pager_name = "most"
+let pager_name = "bat"
 if (which $pager_name | is-empty) {
   print $"($pager_name) pager not found"
 } else {
