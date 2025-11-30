@@ -10,7 +10,10 @@
 
       autoStart = true;
 
-      podman.user = "homeassistant";
+      # user = "homeassistant";
+      # login.username = "homeassistant";
+      # podman.user = "homeassistant";
+      privileged = true;
 
       extraOptions = [
         "--network=host"
