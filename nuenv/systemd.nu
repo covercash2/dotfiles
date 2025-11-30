@@ -80,7 +80,6 @@ export def "sysd logs" [
 
 export def "sysd logs message" [
 	service_name: string@"sysd service_names"
-  --json
 	--lines: int = 100 # number of entries to show
 ] {
   (sysd logs $service_name --lines $lines
