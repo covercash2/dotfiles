@@ -36,18 +36,18 @@
   virtualisation.oci-containers.containers = {
     # https://github.com/QuantumEntangledAndy/neolink/blob/master/README.md#docker
     # used to translate Reolink cameras' proprietary protocol to standard RTSP
-    neolink = {
-      image = "docker.io/quantumentangledandy/neolink:v0.6.2";
-      volumes = [
-        "/mnt/space/neolink/config.toml:/etc/neolink.toml"
-      ];
-      environment = {
-        NEO_LINK_PORT = "8554";
-        NEO_LINK_MODE = "rtsp";
-      };
-      extraOptions = [
-        "--network=host"
-      ];
-    };
+    # neolink = {
+    #   image = "docker.io/quantumentangledandy/neolink:v0.6.2";
+    #   volumes = [
+    #     "/mnt/space/neolink/config.toml:/etc/neolink.toml"
+    #   ];
+    #   environment = {
+    #     NEO_LINK_PORT = "8554";
+    #     NEO_LINK_MODE = "rtsp";
+    #   };
+    #   extraOptions = [
+    #     "--network=host"
+    #   ];
+    # };
   };
 }

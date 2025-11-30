@@ -47,9 +47,10 @@
               ];
               hashedPasswordFile = "${config.services.mosquitto.dataDir}passwd-zigbee2mqtt";
             };
-            zwavjs = {
+            zwavejs = {
               acl = [
                 "readwrite zwavejs/#"
+                "readwrite homeassistant/#"
               ];
               hashedPasswordFile = "${config.services.mosquitto.dataDir}passwd-zwavejs";
             };

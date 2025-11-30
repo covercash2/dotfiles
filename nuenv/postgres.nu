@@ -33,3 +33,25 @@ export def "pg table list" [
 ] {
   pg run $'\c ($database) \dt'
 }
+
+# open rainfrog
+export def "pg rainfrog" [
+  --driver: string = postgres
+  --username: string = chrash
+  --host: string = localhost
+  --port: int = 5432
+  --database: string = chrash
+] {
+  let args = [
+    rainfrog
+    "--driver" $driver
+    "--username" $username
+    "--host" $host
+    "--port" $port
+    "--database" $database
+  ]
+
+  print $args
+
+  run-external ...$args
+}

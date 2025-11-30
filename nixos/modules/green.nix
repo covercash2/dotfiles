@@ -331,6 +331,7 @@
       gnumake
       lazysql
       minica # mini certificate authority for generating certs for my services
+      rainfrog # database view TUI
       rustup
     ];
   };
