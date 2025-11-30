@@ -54,6 +54,7 @@ export def "sysd service_names" [] {
 export def "sysd logs" [
 	service_name: string@"sysd service_names"
 	--lines: int = 100 # number of entries to show
+  --og-columns # use the original column names
 ] {
 	let args = [
 		journalctl
@@ -63,9 +64,29 @@ export def "sysd logs" [
 		--output=json
 		--unit $service_name]
 
-	run-external sudo ...$args
+	let result = run-external sudo ...$args
 	| lines
 	| each {|line| $line | from json }
+
+  if (not $og_columns) {
+    ($result
+    | rename --block {str snake-case}
+    | move message --first
+    )
+  } else {
+    $result
+  }
+}
+
+export def "sysd logs message" [
+	service_name: string@"sysd service_names"
+  --json
+	--lines: int = 100 # number of entries to show
+] {
+  (sysd logs $service_name --lines $lines
+  | get message
+  | from json
+  )
 }
 
 # print the user information for a systemd service

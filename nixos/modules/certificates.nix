@@ -107,7 +107,13 @@ in
         RemainAfterExit = true;
         User = "root";
       };
+      # create cert directory and deploy certificates
+      # only if they do not already exist
       script = ''
+        if [ -f "${cfg.certPath}" ] && [ -f "${cfg.keyPath}" ] && [ -f "${cfg.caPath}" ]; then
+          echo "Certificates already exist at ${certDir}, skipping deployment."
+          exit 0
+        fi
         echo "Deploying certificates from ${mkcertCerts}..."
 
         mkdir -p ${certDir}

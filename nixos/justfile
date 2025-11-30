@@ -5,8 +5,15 @@ default:
   just --list
 
 # rebuild the system to, e.g., install packages or change configuration
-build:
+build_quiet:
   sudo nixos-rebuild switch --flake .#{{hostname}} --upgrade
+
+build:
+  sudo nixos-rebuild switch --flake .#{{hostname}} --upgrade --print-build-logs
+
+# test the configuration without applying it
+dry_build:
+  nixos-rebuild dry-activate --sudo --flake .#{{hostname}} #--upgrade
 
 update_flake:
   nix flake update --flake .

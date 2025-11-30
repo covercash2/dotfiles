@@ -23,20 +23,17 @@
 
   outputs =
     {
-      self,
       nixpkgs,
 
       green,
       ultron,
       ...
-    }@inputs:
+    }:
     let
       # Helper function to create a system configuration for any architecture
       mkSystem =
         system: hostName: modules:
         nixpkgs.lib.nixosSystem {
-          inherit system;
-
           modules = modules ++ [
             # Import the system-specific Ultron module
             ultron.nixosModules.default
@@ -51,7 +48,7 @@
       nixosConfigurations = {
 
         wall-e = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
+          stdenv.hostPlatform.system = "x86_64-linux";
 
           modules = [
             ./wall-e-hardware-configuration.nix
@@ -70,6 +67,7 @@
           ./modules/certificates.nix
           ./modules/foundry.nix
           ./modules/homeassistant.nix
+          ./modules/immich.nix
           ./modules/openssh.nix
           ./modules/postgres.nix
           ./modules/ultron.nix
@@ -79,7 +77,7 @@
         ]);
 
         hoss = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
+          stdenv.hostPlatform.system = "x86_64-linux";
           modules = [
             ./hoss-hardware-configuration.nix
             ./configuration.nix

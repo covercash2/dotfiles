@@ -146,6 +146,11 @@
           tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
           reverse_proxy localhost:${config.services.zwave-js-ui.settings.PORT}
         }
+
+        # immich.green.chrash.net {
+        #   tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+        #   reverse_proxy localhost:${toString config.services.immich.port}
+        # }
       '';
 
     };
@@ -259,6 +264,8 @@
     containers.enable = true;
     podman = {
       enable = true;
+      # create a `docker` alias for podman, to use it as a drop-in replacement
+      dockerCompat = true;
 
       # Required for containers under podman-compose to be able to talk to each other.
       defaultNetwork.settings.dns_enabled = true;
@@ -279,9 +286,12 @@
   };
 
   environment.systemPackages = with pkgs; [
+    bat-extras.batman
     btrfs-progs
     dive
     ffmpeg
+    jc # parse CLI output to JSON or YAML
+
     mkcert # create certificates and a local CA
     nss # for certutils
     openssl
@@ -315,6 +325,7 @@
   users.users.chrash = {
     extraGroups = [
       "iot"
+      "podman"
     ];
     packages = with pkgs; [
       gnumake

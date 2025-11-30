@@ -2,35 +2,36 @@
 
 {
   # https://docs.frigate.video/frigate/installation#ports
-  services.frigate = {
-    enable = true;
-    hostname = "frigate.green";
-    # video acceleration API
-    vaapiDriver = "nvidia";
-
-    settings = {
-      mqtt = {
-        enabled = true;
-        host = "localhost";
-      };
-
-      cameras = {
-        door = {
-          ffmpeg.inputs = [
-            {
-              path = "rtsp://127.0.0.1:8554";
-              roles = [
-                "audio"
-                "detect"
-                "record"
-              ];
-            }
-          ];
-        };
-      }; # cameras
-
-    }; # settings
-  }; # frigate
+  # TODO: fix this this
+  # services.frigate = {
+  #   enable = true;
+  #   hostname = "frigate.green";
+  #   # video acceleration API
+  #   vaapiDriver = "nvidia";
+  #
+  #   settings = {
+  #     mqtt = {
+  #       enabled = true;
+  #       host = "localhost";
+  #     };
+  #
+  #     cameras = {
+  #       door = {
+  #         ffmpeg.inputs = [
+  #           {
+  #             path = "rtsp://127.0.0.1:8554";
+  #             roles = [
+  #               "audio"
+  #               "detect"
+  #               "record"
+  #             ];
+  #           }
+  #         ];
+  #       };
+  #     }; # cameras
+  #
+  #   }; # settings
+  # }; # frigate
 
   virtualisation.oci-containers.containers = {
     # https://github.com/QuantumEntangledAndy/neolink/blob/master/README.md#docker
