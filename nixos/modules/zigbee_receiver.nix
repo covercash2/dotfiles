@@ -47,12 +47,12 @@
               ];
               hashedPasswordFile = "${config.services.mosquitto.dataDir}passwd-zigbee2mqtt";
             };
-            # zwavjs = {
-            #   acl = [
-            #     "readwrite zwavejs/#"
-            #   ];
-            #   hashedPasswordFile = "${config.services.mosquitto.dataDir}passwd-zwavejs";
-            # };
+            zwavjs = {
+              acl = [
+                "readwrite zwavejs/#"
+              ];
+              hashedPasswordFile = "${config.services.mosquitto.dataDir}passwd-zwavejs";
+            };
             homeassistant = {
               acl = [
                 "readwrite homeassistant/#"
@@ -180,6 +180,9 @@
           };
           "0xb0ce18140018633a" = {
             friendly_name = "bedroom lamp";
+          };
+          "0x841826000003959d" = {
+            friendly_name = "laundry light";
           };
           "0xb0ce18140363e41f" = {
             friendly_name = "0xb0ce18140363e41f";

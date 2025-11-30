@@ -10,6 +10,17 @@
         ssl = true;
         port = 5432; # default port echoed here for docs
       };
+      ensureUsers = [
+        {
+          name = "chrash";
+          ensureDBOwnership = true;
+          ensureClauses = {
+            createdb = true;
+            superuser = true;
+          };
+        }
+      ];
+      ensureDatabases = [ "chrash" ];
       authentication = pkgs.lib.mkOverride 10 ''
         ## allow local to connect
         #type database  DBuser origin-address auth-method
@@ -31,8 +42,5 @@
     isSystemUser = true;
     home = "/mnt/space/postgres";
     description = "PostgreSQL server user";
-    packages = with pkgs; [
-      # postgresql18Packages.pgvector
-    ];
   };
 }
