@@ -2,7 +2,7 @@
 
 {
   # https://docs.frigate.video/frigate/installation#ports
-  # TODO: fix this this
+  # TODO: fix this
   # services.frigate = {
   #   enable = true;
   #   hostname = "frigate.green";

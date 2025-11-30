@@ -4,7 +4,7 @@
   systemd.services.lspmux = {
     enable = true;
 
-    # run a systemd service for FoundryVTT
+    # run a systemd service for lspmux
     after = [ "network-online.target" ];
     wants = [ "network-online.target" ];
 
