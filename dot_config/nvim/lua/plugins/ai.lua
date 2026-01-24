@@ -173,6 +173,7 @@ return {
 		---@type avante.Config
 		opts = {
 			provider = "copilot",
+      instructions_file = "AGENTS.md",
 			system_prompt = function()
 				local hub = require("mcphub").get_hub_instance()
 				return hub and hub:get_active_servers_prompt() or ""

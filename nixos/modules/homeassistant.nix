@@ -34,6 +34,7 @@
     extraGroups = [ "iot" ];
     home = "/mnt/space/homeassistant";
     createHome = true;
+    # this allows systemd services for the homeassistant user to persist even after logout (needed for container runtime or other related services)
     linger = true;
     # totally flying blind. this is apparently a container security feature
     subUidRanges = [
