@@ -19,9 +19,7 @@ export def "from env" []: string -> record {
 export def "with var" [
   key_name: string@key_names
   value: record
-] {
-
-}
+] {}
 
 def key_names [] {
   $VARS | columns
@@ -32,4 +30,3 @@ def key [
 ] {
   $VARS | get $key_name
 }
-
