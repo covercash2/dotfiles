@@ -19,6 +19,7 @@
 
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixos-cli.url = "github:nix-community/nixos-cli";
   };
 
   outputs =
@@ -27,6 +28,7 @@
 
       green,
       ultron,
+      nixos-cli,
       ...
     }:
     let
@@ -38,6 +40,7 @@
             # Import the system-specific Ultron module
             ultron.nixosModules.default
             green.nixosModules.default
+            nixos-cli.nixosModules.nixos-cli
 
             # Share the hostname
             { networking.hostName = hostName; }
@@ -60,6 +63,7 @@
         green = mkSystem "x86_64-linux" "green" ([
           ./green-hardware-configuration.nix
           ./configuration.nix
+          ./modules/apollo_router.nix
           ./modules/green.nix
 
           # ./modules/actualbudget.nix

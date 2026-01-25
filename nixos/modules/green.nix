@@ -25,6 +25,18 @@
   };
 
   services = {
+    apollo_router = {
+      enable = true;
+      port = 4000;
+    };
+
+    nixos-cli = {
+      enable = true;
+      config = {
+        use_nvd = true;
+      };
+    };
+
     mkcert = {
       enable = true;
       domain = "*.green.chrash.net";
@@ -42,6 +54,10 @@
       caPath = config.services.mkcert.caPath;
 
       routes = {
+        apollo_router = {
+          url = "graphql.green.chrash.net";
+          description = "Apollo GraphQL Router route";
+        };
         prometheus = {
           url = "prometheus.green.chrash.net";
           description = "Prometheus metrics UI";
@@ -98,6 +114,12 @@
             health_uri /healthcheck
           }
         }
+
+        ${config.services.green.routes.apollo_router.url} {
+          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+          reverse_proxy localhost:${toString config.services.apollo_router.port}
+        }
+
 
         ${config.services.green.routes.foundry.url} {
           tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}

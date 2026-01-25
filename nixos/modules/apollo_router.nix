@@ -27,6 +27,7 @@ with lib;
   };
 
   config = lib.mkIf config.services.apollo_router.enable {
+  config = mkIf config.services.apollo_router.enable {
     virtualisation.oci-containers.containers = {
       apollo_router = {
         image = "ghcr.io/apollographql/apollo-runtime:0.0.31-PR71";
@@ -63,3 +64,4 @@ with lib;
     users.groups.apollo_router = { };
   };
 }
+>>>>>>> Conflict 1 of 1 ends
