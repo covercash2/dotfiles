@@ -115,6 +115,7 @@
         grim # Wayland image grabber
         helvum # PipeWire patch bay
 
+        jujutsu
         just
         kitty
         libgcc
