@@ -72,7 +72,11 @@ with lib;
         };
       };
       default = {
+        # sandbox = {
+        #   enabled = true;
+        # };
         supergraph = {
+          introspection = true;
           listen = "0.0.0.0:4000";
         };
       };
