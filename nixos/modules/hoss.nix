@@ -59,8 +59,29 @@
               }
             }
             respond "hello"
+
+            ${config.services.sunshine.routes.apollo_router.url} {
+              tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+              reverse_proxy localhost:${toString config.services.apollo_router.port}
+            }
           '';
         };
+        "sunshine.hoss.chrash.net" = {
+          tlsCert = config.services.mkcert.certPath;
+          tlsKey = config.services.mkcert.keyPath;
+          extraConfig = ''
+            handle_path /llm/* {
+              reverse_proxy localhost:11434 {
+                health_uri /
+              }
+            }
+            respond "hello"
+
+            ${config.services.sunshine.routes.apollo_router.url} {
+              tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+              reverse_proxy localhost:${toString config.services.apollo_router.port}
+            }
+          '';
       };
     };
   };
