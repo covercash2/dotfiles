@@ -123,6 +123,7 @@
         lua-language-server
         neovim
         nil # nix lsp
+        nix-update # used to bump versions in nix files
         pavucontrol # volume control for pulse audio
 
         ripgrep

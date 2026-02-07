@@ -71,7 +71,8 @@
           ./modules/certificates.nix
           ./modules/foundry.nix
           ./modules/homeassistant.nix
-          ./modules/immich.nix
+          # ./modules/immich.nix
+          ./modules/starship-jj.nix
           ./modules/openssh.nix
           ./modules/postgres.nix
           ./modules/ultron.nix

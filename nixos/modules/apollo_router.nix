@@ -83,12 +83,12 @@ with lib;
     };
   };
 
-  config = lib.mkIf config.services.apollo_router.enable {
   config = mkIf config.services.apollo_router.enable {
     environment.etc."apollo_router/router.yaml".text =
-      if builtins.isString config.services.apollo_router.config
-      then config.services.apollo_router.config
-      else lib.generators.toYAML {} config.services.apollo_router.config;
+      if builtins.isString config.services.apollo_router.config then
+        config.services.apollo_router.config
+      else
+        lib.generators.toYAML { } config.services.apollo_router.config;
 
     virtualisation.oci-containers.containers = {
       # https://www.apollographql.com/docs/graphos/routing/self-hosted/containerization/docker-router-only
@@ -99,14 +99,11 @@ with lib;
 
         # configure the port mapping
         ports = [
-          {
-            containerPort = config.services.apollo_router.port;
-            hostPort = config.services.apollo_router.port;
-          }
+          "${toString config.services.apollo_router.port}:4000"
         ];
 
         # additional options can be added here if needed in the future
-        extraOptions = [];
+        extraOptions = [ ];
 
         # configure volumes to mount configuration and supergraph schema
         volumes = [
@@ -128,4 +125,3 @@ with lib;
     users.groups.apollo_router = { };
   };
 }
->>>>>>> Conflict 1 of 1 ends
