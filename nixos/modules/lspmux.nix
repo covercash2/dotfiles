@@ -14,7 +14,7 @@
 
     path = [ pkgs.ra-multiplex ];
 
-    script = "ra-multiplex serve --config /mnt/space/lspmux/config.yaml";
+    script = "lspmux serve --config /mnt/space/lspmux/config.yaml";
 
     serviceConfig = {
       # recommended for long-running services
@@ -36,7 +36,7 @@
       home = "/mnt/space/lspmux";
       description = "lspmux user";
       packages = with pkgs; [
-        ra-multiplex
+        lspmux
       ];
     };
     groups.lspmux = { };
