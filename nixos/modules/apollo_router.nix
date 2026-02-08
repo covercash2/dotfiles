@@ -1,11 +1,36 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 
-with lib;
+let
+  apollo_router = pkgs.rustPlatform.buildRustPackage rec {
+    pname = "router";
+    version = "v2.11.0";
 
+    src = pkgs.fetchFromGitHub {
+      owner = "apollographql";
+      repo = "router";
+      rev = version;
+      sha256 = "sha256-JuKsIGNz4AQC46D1zneio8mQ5Yik0jar0gDINrV0DXU=";
+    };
+
+    cargoHash = "sha256-NDDihTAoLbtfDdTyN6/8JpHwH/Mqetydc0L8Qj5axmk=";
+
+    meta = with pkgs.lib; {
+      description = ''
+        Apollo Router is a high-performance, extensible GraphQL router built in Rust.
+        https://github.com/apollographql/router/tree/v2.11.0?tab=readme-ov-file#usage
+      '';
+      homepage = "https://www.apollographql.com/docs/graphos/routing/self-hosted/containerization/docker-router-only";
+      license = licenses.mit;
+      maintainers = [ ];
+    };
+  };
+in
+with lib;
 # define options for the apollo_router module
 {
   options.services.apollo_router = {
@@ -15,6 +40,15 @@ with lib;
         If enabled, deploys Apollo Router in an OCI container using the specified options.
       '';
       default = false;
+    };
+
+    package = mkOption {
+      type = types.package;
+      description = ''
+        The Nix package to use for Apollo Router. By default, it uses a custom package defined in this module.
+        You can override this option to use a different version of Apollo Router or a custom build.
+      '';
+      default = apollo_router;
     };
 
     port = mkOption {
@@ -81,7 +115,7 @@ with lib;
         };
       };
     };
-  };
+};
 
   config = mkIf config.services.apollo_router.enable {
     environment.etc."apollo_router/router.yaml".text =
@@ -90,27 +124,23 @@ with lib;
       else
         lib.generators.toYAML { } config.services.apollo_router.config;
 
-    virtualisation.oci-containers.containers = {
-      # https://www.apollographql.com/docs/graphos/routing/self-hosted/containerization/docker-router-only
-      apollo_router = {
-        image = "ghcr.io/apollographql/apollo-runtime:0.0.31-PR71";
-        pull = "newer";
-        autoStart = true;
+    systemd.services.apollo_router = {
+      description = "Apollo Router service";
+      after = [ "network.target" ];
+      requires = [ "network.target" ];
 
-        # configure the port mapping
-        ports = [
-          "${toString config.services.apollo_router.port}:4000"
-        ];
-
-        # additional options can be added here if needed in the future
-        extraOptions = [ ];
-
-        # configure volumes to mount configuration and supergraph schema
-        volumes = [
-          "/etc/apollo_router/router.yaml:/dist/config/router.yaml"
-          "${config.services.apollo_router.schema}:/dist/schema/supergraph.graphql"
-        ];
+      serviceConfig = {
+        Type = "simple";
+        User = "apollo_router";
+        Group = "apollo_router";
+        Restart = "always";
       };
+
+      script = ''
+        exec ${config.services.apollo_router.package}/bin/router \
+          --config /etc/apollo_router/router.yaml \
+          --supergraph ${config.services.apollo_router.schema}
+      '';
     };
 
     users.users.apollo_router = {
@@ -120,6 +150,7 @@ with lib;
       home = config.services.apollo_router.dataDir;
       createHome = true;
       # subUidRanges and subGidRanges can be added here if user namespace remapping becomes necessary in the future.
+      packages = [ apollo_router pkgs.protobuf_33 ];
     };
 
     users.groups.apollo_router = { };
