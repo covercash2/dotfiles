@@ -101,6 +101,103 @@
     caddy = {
       enable = true;
 
+      virtualHosts = {
+        "home.green.chrash.net" = {
+          extraConfig = ''
+            handle_path /healthcheck {
+              respond "OK"
+            }
+          '';
+        };
+
+        "green.faun-truck.ts.net" = {
+          extraConfig = ''
+            handle_path /healthcheck {
+              respond "OK"
+            }
+          '';
+        };
+
+        ${config.services.green.routes.apollo_router.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:${toString config.services.apollo_router.port}
+          '';
+        };
+
+        ${config.services.green.routes.foundry.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:30000
+          '';
+        };
+
+        ${config.services.green.routes.adguard.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:${toString config.services.adguardhome.port}
+          '';
+        };
+
+        ${config.services.green.routes.homeassistant.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:8123
+          '';
+        };
+
+        ${config.services.green.routes.ultron.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:${toString config.services.ultron.port} {
+              health_uri /healthcheck
+            }
+          '';
+        };
+
+        ${config.services.green.routes.frigate.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:8971
+          '';
+        };
+
+        ${config.services.green.routes.grafana.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:${toString config.services.grafana.settings.server.http_port}
+          '';
+        };
+
+        ${config.services.green.routes.prometheus.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:${toString config.services.prometheus.port}
+          '';
+        };
+
+        ${config.services.green.routes.postgres.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:${toString config.services.postgresql.settings.port}
+          '';
+        };
+
+        ${config.services.green.routes.zwave.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:${config.services.zwave-js-ui.settings.PORT}
+          '';
+        };
+
+        # ${config.services.green.routes.immich.url} = {
+        #   extraConfig = ''
+        #     tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+        #     reverse_proxy localhost:${toString config.services.immich.port}
+        #   '';
+        # };
+      };
+
       configFile = pkgs.writeText "Caddyfile" ''
         home.green.chrash.net {
           tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
