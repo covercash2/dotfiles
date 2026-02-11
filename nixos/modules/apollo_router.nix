@@ -19,6 +19,23 @@ let
 
     cargoHash = "sha256-NDDihTAoLbtfDdTyN6/8JpHwH/Mqetydc0L8Qj5axmk=";
 
+    nativeBuildInputs = with pkgs; [
+      protobuf_33
+      pkg-config-unwrapped
+    ];
+
+    buildInputs = with pkgs; [
+      elfutils
+    ];
+
+    # ensure pkg-config can find libdw.pc from elfutils during the build
+    # the dw-sys crate's build.rs uses pkg-config to find libdw
+    PKG_CONFIG_PATH = "${pkgs.elfutils.dev}/lib/pkgconfig";
+
+    checkPhase = ''
+      cargo xtask test --no-fail-fast
+    '';
+
     meta = with pkgs.lib; {
       description = ''
         Apollo Router is a high-performance, extensible GraphQL router built in Rust.
@@ -115,7 +132,7 @@ with lib;
         };
       };
     };
-};
+  };
 
   config = mkIf config.services.apollo_router.enable {
     environment.etc."apollo_router/router.yaml".text =
@@ -149,8 +166,7 @@ with lib;
       group = "apollo_router";
       home = config.services.apollo_router.dataDir;
       createHome = true;
-      # subUidRanges and subGidRanges can be added here if user namespace remapping becomes necessary in the future.
-      packages = [ apollo_router pkgs.protobuf_33 ];
+      packages = [ apollo_router ];
     };
 
     users.groups.apollo_router = { };
