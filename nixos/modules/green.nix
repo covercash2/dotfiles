@@ -25,11 +25,6 @@
   };
 
   services = {
-    apollo_router = {
-      enable = true;
-      port = 4000;
-    };
-
     nixos-cli = {
       enable = true;
       config = {
@@ -54,10 +49,6 @@
       caPath = config.services.mkcert.caPath;
 
       routes = {
-        apollo_router = {
-          url = "graphql.green.chrash.net";
-          description = "Apollo GraphQL Router route";
-        };
         prometheus = {
           url = "prometheus.green.chrash.net";
           description = "Prometheus metrics UI";
@@ -104,9 +95,8 @@
       virtualHosts = {
         "home.green.chrash.net" = {
           extraConfig = ''
-            handle_path /healthcheck {
-              respond "OK"
-            }
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:${toString config.services.green.port}
           '';
         };
 
@@ -115,13 +105,6 @@
             handle_path /healthcheck {
               respond "OK"
             }
-          '';
-        };
-
-        ${config.services.green.routes.apollo_router.url} = {
-          extraConfig = ''
-            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-            reverse_proxy localhost:${toString config.services.apollo_router.port}
           '';
         };
 
@@ -195,83 +178,7 @@
         #     tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
         #     reverse_proxy localhost:${toString config.services.immich.port}
         #   '';
-        # };
       };
-
-      configFile = pkgs.writeText "Caddyfile" ''
-        home.green.chrash.net {
-          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-          reverse_proxy localhost:${toString config.services.green.port} {
-            health_uri /healthcheck
-          }
-        }
-
-        green.faun-truck.ts.net {
-          reverse_proxy localhost:${toString config.services.green.port} {
-            health_uri /healthcheck
-          }
-        }
-
-        ${config.services.green.routes.apollo_router.url} {
-          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-          reverse_proxy localhost:${toString config.services.apollo_router.port}
-        }
-
-
-        ${config.services.green.routes.foundry.url} {
-          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-          reverse_proxy localhost:30000
-        }
-
-        ${config.services.green.routes.adguard.url} {
-          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-          reverse_proxy localhost:${toString config.services.adguardhome.port}
-        }
-
-        ${config.services.green.routes.homeassistant.url} {
-          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-          reverse_proxy localhost:8123
-        }
-
-        ${config.services.green.routes.ultron.url} {
-          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-          reverse_proxy localhost:${toString config.services.ultron.port} {
-            health_uri /healthcheck
-          }
-        }
-
-        ${config.services.green.routes.frigate.url} {
-          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-          reverse_proxy localhost:8971
-        }
-
-        ${config.services.green.routes.grafana.url} {
-          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-          reverse_proxy localhost:${toString config.services.grafana.settings.server.http_port}
-        }
-
-        ${config.services.green.routes.prometheus.url} {
-        # prometheus.green.chrash.net {
-          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-          reverse_proxy localhost:${toString config.services.prometheus.port}
-        }
-
-        ${config.services.green.routes.postgres.url} {
-          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-          reverse_proxy localhost:${toString config.services.postgresql.settings.port}
-        }
-
-        ${config.services.green.routes.zwave.url} {
-          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-          reverse_proxy localhost:${config.services.zwave-js-ui.settings.PORT}
-        }
-
-        # immich.green.chrash.net {
-        #   tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-        #   reverse_proxy localhost:${toString config.services.immich.port}
-        # }
-      '';
-
     };
 
     # shared shell history, depends on postgresql
