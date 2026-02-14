@@ -160,6 +160,27 @@ with lib;
       '';
     };
 
+    services = {
+      green = {
+        routes = {
+          apollo_router = {
+            url = "graphql.green.chrash.net";
+            description = "Apollo GraphQL Router route";
+          };
+        };
+      };
+      caddy = {
+        virtualHosts = {
+          ${config.services.green.routes.apollo_router.url} = {
+            extraConfig = ''
+              tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+              reverse_proxy localhost:${toString config.services.apollo_router.port}
+            '';
+          };
+        };
+      };
+    };
+
     users.users.apollo_router = {
       isSystemUser = true;
       description = "Apollo Router user";
