@@ -43,7 +43,7 @@ $env.user_paths = ([
   ".local/bin",
   ".asdf/bin",
   "go/bin"
-] | each {|path| $nu.home-path | path join $path })
+] | each {|path| $nu.home-dir | path join $path })
 
 $env.PATH = ($env.PATH | prepend ($env.user_paths | where $it not-in $env.PATH))
 
