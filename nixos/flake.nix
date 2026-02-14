@@ -62,7 +62,7 @@
         green = mkSystem "x86_64-linux" "green" ([
           ./green-hardware-configuration.nix
           ./configuration.nix
-          ./modules/apollo_router.nix
+          # ./modules/apollo_router.nix
           ./modules/green.nix
 
           ./modules/adguard.nix
@@ -73,6 +73,7 @@
           ./modules/starship-jj.nix
           ./modules/openssh.nix
           ./modules/postgres.nix
+          ./modules/sunshine.nix
           ./modules/ultron.nix
           ./modules/video_surveillance.nix
           ./modules/z-wave_receiver.nix
