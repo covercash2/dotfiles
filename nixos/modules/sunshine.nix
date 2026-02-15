@@ -3,7 +3,8 @@
 {
   services.sunshine = {
     enable = true;
-    settings.port = 47989;
+    # necessary for playing DRM content
+    capSysAdmin = true;
   };
 
   services = {
