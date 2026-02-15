@@ -75,6 +75,7 @@
           ./modules/starship-jj.nix
           ./modules/openssh.nix
           ./modules/postgres.nix
+          ./modules/steam_server.nix
           ./modules/sunshine.nix
           ./modules/ultron.nix
           ./modules/video_surveillance.nix
@@ -90,6 +91,7 @@
             ./modules/hoss.nix
             ./modules/openssh.nix
             ./modules/embedded_dev.nix
+          ./modules/steam_server.nix
           ];
         };
       };
