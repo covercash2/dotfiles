@@ -26,15 +26,30 @@ export def "sysd unit-types" [] {
 }
 
 # list systemd units currently in memory
-export def "sysd list-units" [] {
+export def "sysd list-units" [
+  --user
+] {
+  let executable = [
+    sudo systemctl
+  ]
 	let args = [
-		systemctl
 		--no-pager
 		--output=json
-		list-units
 	]
+  let command = [
+    list-units
+  ]
 
-	run-external sudo ...$args
+  let args = if $user {
+    $args ++ ["--user"]
+  } else {
+    $args
+  }
+
+  let full_command = $executable ++ $command ++ $args
+
+  print $full_command
+	run-external ...$full_command
 	| from json
 	| insert type {|row| $row.unit | parse --regex '.+\.(?P<type>\w+)' | get type.0 }
 	| update unit {|row| $row.unit | parse --regex '(?P<name>.+)\.\w+' | get name.0 }
