@@ -105,6 +105,9 @@
             handle_path /healthcheck {
               respond "OK"
             }
+            handle_path /ca {
+              reverse_proxy localhost:${toString config.services.green.port}/api/ca
+            }
           '';
         };
 
@@ -172,12 +175,6 @@
             reverse_proxy localhost:${config.services.zwave-js-ui.settings.PORT}
           '';
         };
-
-        # ${config.services.green.routes.immich.url} = {
-        #   extraConfig = ''
-        #     tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-        #     reverse_proxy localhost:${toString config.services.immich.port}
-        #   '';
       };
     };
 
