@@ -101,6 +101,7 @@
         bitwarden-cli
         carapace # command line completion
         chezmoi # dotfiles manager
+        claude-code
         cyme # lsusb replacement in Rust
         dig # domain name server
         discord
@@ -112,6 +113,7 @@
         firefox
         gcc
         ghostty # terminal emulator
+        gh # GitHub CLI
         grim # Wayland image grabber
         helvum # PipeWire patch bay
 
