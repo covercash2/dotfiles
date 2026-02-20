@@ -1,13 +1,20 @@
-{ config, ... }:
+{ config, lib, ... }:
 
+let
+  # Web UI is at base port + 1
+  webUIPort = config.services.sunshine.settings.port + 1;
+in
 {
-  services.sunshine = {
-    enable = true;
-    # necessary for playing DRM content
-    capSysAdmin = true;
-  };
-
   services = {
+    sunshine = {
+      enable = true;
+      # necessary for playing DRM content
+      capSysAdmin = true;
+      settings = {
+        port = 47989; # Base streaming port (web UI will be 47990)
+      };
+    };
+
     green = {
       routes = {
         sunshine = {
@@ -18,10 +25,14 @@
     };
     caddy = {
       virtualHosts = {
-        "sunshine.${config.networking.hostName}.chrash.net" = {
+        ${config.services.green.routes.sunshine.url} = {
           extraConfig = ''
             tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-            reverse_proxy localhost:${toString config.services.sunshine.settings.port}
+            reverse_proxy https://localhost:${toString webUIPort} {
+              transport http {
+                tls_insecure_skip_verify
+              }
+            }
           '';
         };
       };
