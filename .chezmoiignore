@@ -12,3 +12,7 @@ nushell/
 
 ipv6
 udev
+
+# Added by Assistant for deprecation
+Xresources.d
+nixos/
