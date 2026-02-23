@@ -15,10 +15,11 @@
       type = "github";
       owner = "covercash2";
       repo = "green";
-      rev = "b5f31edac5905f917dfeed7137daa3ac2d953901";
+      rev = "c9225aa26befc96db9555f8222ba8bf67a51da1f";
 
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixos-cli.url = "github:nix-community/nixos-cli";
   };
 
   outputs =
@@ -27,6 +28,7 @@
 
       green,
       ultron,
+      nixos-cli,
       ...
     }:
     let
@@ -38,6 +40,7 @@
             # Import the system-specific Ultron module
             ultron.nixosModules.default
             green.nixosModules.default
+            nixos-cli.nixosModules.nixos-cli
 
             # Share the hostname
             { networking.hostName = hostName; }
@@ -60,6 +63,7 @@
         green = mkSystem "x86_64-linux" "green" ([
           ./green-hardware-configuration.nix
           ./configuration.nix
+          # ./modules/apollo_router.nix
           ./modules/green.nix
 
           # ./modules/actualbudget.nix
@@ -67,9 +71,12 @@
           ./modules/certificates.nix
           ./modules/foundry.nix
           ./modules/homeassistant.nix
-          ./modules/immich.nix
+          # ./modules/immich.nix
+          ./modules/starship-jj.nix
           ./modules/openssh.nix
           ./modules/postgres.nix
+          ./modules/steam_server.nix
+          ./modules/sunshine.nix
           ./modules/ultron.nix
           ./modules/video_surveillance.nix
           ./modules/z-wave_receiver.nix
@@ -84,6 +91,7 @@
             ./modules/hoss.nix
             ./modules/openssh.nix
             ./modules/embedded_dev.nix
+          ./modules/steam_server.nix
           ];
         };
       };

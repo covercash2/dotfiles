@@ -25,6 +25,13 @@
   };
 
   services = {
+    nixos-cli = {
+      enable = true;
+      config = {
+        use_nvd = true;
+      };
+    };
+
     mkcert = {
       enable = true;
       domain = "*.green.chrash.net";
@@ -85,74 +92,90 @@
     caddy = {
       enable = true;
 
-      configFile = pkgs.writeText "Caddyfile" ''
-        home.green.chrash.net {
-          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-          reverse_proxy localhost:${toString config.services.green.port} {
-            health_uri /healthcheck
-          }
-        }
+      virtualHosts = {
+        "home.green.chrash.net" = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:${toString config.services.green.port}
+          '';
+        };
 
-        green.faun-truck.ts.net {
-          reverse_proxy localhost:${toString config.services.green.port} {
-            health_uri /healthcheck
-          }
-        }
+        "green.faun-truck.ts.net" = {
+          extraConfig = ''
+            handle_path /healthcheck {
+              respond "OK"
+            }
+            handle_path /ca {
+              reverse_proxy localhost:${toString config.services.green.port}/api/ca
+            }
+          '';
+        };
 
-        ${config.services.green.routes.foundry.url} {
-          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-          reverse_proxy localhost:30000
-        }
+        ${config.services.green.routes.foundry.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:30000
+          '';
+        };
 
-        ${config.services.green.routes.adguard.url} {
-          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-          reverse_proxy localhost:${toString config.services.adguardhome.port}
-        }
+        ${config.services.green.routes.adguard.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:${toString config.services.adguardhome.port}
+          '';
+        };
 
-        ${config.services.green.routes.homeassistant.url} {
-          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-          reverse_proxy localhost:8123
-        }
+        ${config.services.green.routes.homeassistant.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:8123
+          '';
+        };
 
-        ${config.services.green.routes.ultron.url} {
-          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-          reverse_proxy localhost:${toString config.services.ultron.port} {
-            health_uri /healthcheck
-          }
-        }
+        ${config.services.green.routes.ultron.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:${toString config.services.ultron.port} {
+              health_uri /healthcheck
+            }
+          '';
+        };
 
-        ${config.services.green.routes.frigate.url} {
-          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-          reverse_proxy localhost:8971
-        }
+        ${config.services.green.routes.frigate.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:8971
+          '';
+        };
 
-        ${config.services.green.routes.grafana.url} {
-          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-          reverse_proxy localhost:${toString config.services.grafana.settings.server.http_port}
-        }
+        ${config.services.green.routes.grafana.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:${toString config.services.grafana.settings.server.http_port}
+          '';
+        };
 
-        ${config.services.green.routes.prometheus.url} {
-        # prometheus.green.chrash.net {
-          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-          reverse_proxy localhost:${toString config.services.prometheus.port}
-        }
+        ${config.services.green.routes.prometheus.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:${toString config.services.prometheus.port}
+          '';
+        };
 
-        ${config.services.green.routes.postgres.url} {
-          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-          reverse_proxy localhost:${toString config.services.postgresql.settings.port}
-        }
+        ${config.services.green.routes.postgres.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:${toString config.services.postgresql.settings.port}
+          '';
+        };
 
-        ${config.services.green.routes.zwave.url} {
-          tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-          reverse_proxy localhost:${config.services.zwave-js-ui.settings.PORT}
-        }
-
-        # immich.green.chrash.net {
-        #   tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-        #   reverse_proxy localhost:${toString config.services.immich.port}
-        # }
-      '';
-
+        ${config.services.green.routes.zwave.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:${config.services.zwave-js-ui.settings.PORT}
+          '';
+        };
+      };
     };
 
     # shared shell history, depends on postgresql

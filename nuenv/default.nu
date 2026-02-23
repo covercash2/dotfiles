@@ -85,3 +85,17 @@ def ls [
         ...$pattern
     ) | sort-by type name -i
 }
+
+# run neovim with the avante plugin in "Zen mode", a la Claude Code
+# ```sh
+# alias avante='nvim -c "lua vim.defer_fn(function()require(\"avante.api\").zen_mode()end, 100)"'
+# ```
+export def avante [] {
+  let args = [
+    nvim
+    "-c"
+    'lua vim.defer_fn(function()require("avante.api").zen_mode()end, 100)'
+  ]
+
+  run-external $args
+}
