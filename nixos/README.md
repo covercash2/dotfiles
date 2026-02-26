@@ -53,5 +53,33 @@ or too esoteric and may confuse machine configurations
 are stored under modules,
 e.g. `openssh.nix` and `zigbee_receiver.nix`.
 
+# rescue disk
+
+a bootable ISO image for system recovery
+is defined in [`rescue-disk.nix`](./rescue-disk.nix).
+it includes essential tools like `fd`, `ripgrep`, `git`, and `nano`,
+as well as an SSH service for remote rescue operations.
+the default root password is `rescue` --
+change it before using in any sensitive environment.
+
+to build the rescue disk ISO,
+navigate to the `nixos` directory
+and run:
+
+```nu
+nix build .#nixosConfigurations.rescue-disk.config.system.build.isoImage
+```
+
+the resulting ISO will be available at `./result/iso/rescue-disk.iso`.
+
+to write it to a USB drive, run:
+
+```nu
+sudo dd if=./result/iso/rescue-disk.iso of=/dev/sdX bs=4M status=progress
+sync
+```
+
+replacing `/dev/sdX` with the target USB drive device.
+
 
 [Nix flakes]: https://nixos.wiki/wiki/Flakes
