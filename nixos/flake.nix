@@ -86,6 +86,14 @@
             ./modules/embedded_dev.nix
           ];
         };
+
+        # bootable rescue disk ISO for system recovery
+        rescue-disk = nixpkgs.lib.nixosSystem {
+          stdenv.hostPlatform.system = "x86_64-linux";
+          modules = [
+            ./rescue-disk.nix
+          ];
+        };
       };
     };
 }
