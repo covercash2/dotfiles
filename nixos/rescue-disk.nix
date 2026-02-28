@@ -1,6 +1,7 @@
 # a rescue disk configuration for system recovery scenarios
 # builds a bootable ISO image with essential recovery tools
 # https://nixos.wiki/wiki/Creating_a_NixOS_live_CD
+# `nix build .#nixosConfigurations.rescue-disk.config.system.build.isoImage`
 
 {
   config,
@@ -21,10 +22,23 @@
 
   # essential tools for system recovery
   environment.systemPackages = with pkgs; [
+    bat # cat but better
+    cyme # better lsusb
+    dust # like du but Rust
     fd # faster alternative to find
     git # version control
-    nano # simple text editor
+    jujutsu # version control
+    most # pager
+    neovim
+    nushell
+    pciutils
     ripgrep # faster grep
+    unzip
+    uv # python package manager
+    vim # simple text editor
+    wget
+    zellij # terminal multiplexer
+    zip
   ];
 
   # enable SSH for remote rescue operations
