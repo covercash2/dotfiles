@@ -48,8 +48,7 @@
       nixosConfigurations = {
 
         wall-e = nixpkgs.lib.nixosSystem {
-          stdenv.hostPlatform.system = "x86_64-linux";
-
+          system = "x86_64-linux";
           modules = [
             ./wall-e-hardware-configuration.nix
             ./configuration.nix
@@ -77,7 +76,7 @@
         ]);
 
         hoss = nixpkgs.lib.nixosSystem {
-          stdenv.hostPlatform.system = "x86_64-linux";
+          system = "x86_64-linux";
           modules = [
             ./hoss-hardware-configuration.nix
             ./configuration.nix
@@ -89,7 +88,7 @@
 
         # bootable rescue disk ISO for system recovery
         rescue-disk = nixpkgs.lib.nixosSystem {
-          stdenv.hostPlatform.system = "x86_64-linux";
+          system = "x86_64-linux";
           modules = [
             ./rescue-disk.nix
           ];
