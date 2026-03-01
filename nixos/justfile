@@ -11,6 +11,9 @@ build_quiet:
 build:
   sudo nixos-rebuild switch --flake .#{{hostname}} --upgrade --print-build-logs
 
+build_rescue:
+  nix build .#nixosConfigurations.rescue-disk.config.system.build.isoImage
+
 # test the configuration without applying it
 dry_build:
   nixos-rebuild dry-activate --sudo --flake .#{{hostname}} #--upgrade
