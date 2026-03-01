@@ -185,6 +185,11 @@
           http_addr = "0.0.0.0";
           http_port = 9876;
         };
+        security = {
+          admin_user = "admin";
+          admin_password = "admin";
+          secret_key = "change_this_secret_key_for_production";
+        };
       };
     };
     # metrics
@@ -328,9 +333,11 @@
       "podman"
     ];
     packages = with pkgs; [
+      bmaptool # flash ISO images
       gnumake
       lazysql
       minica # mini certificate authority for generating certs for my services
+      pv # pipe viewer, progress bar for pipes
       rainfrog # database view TUI
       rustup
     ];
