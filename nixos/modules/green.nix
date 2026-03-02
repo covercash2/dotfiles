@@ -85,6 +85,10 @@
           url = "zwave.green.chrash.net";
           description = "Z-Wave JS controls";
         };
+        dev = {
+          url = "dev.green.chrash.net";
+          description = "Development server";
+        };
       };
     };
 
@@ -108,6 +112,13 @@
             handle_path /ca {
               reverse_proxy localhost:${toString config.services.green.port}/api/ca
             }
+          '';
+        };
+
+        "dev.green.chrash.net" = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:10000
           '';
         };
 
@@ -316,6 +327,7 @@
   environment.systemPackages = with pkgs; [
     bat-extras.batman
     btrfs-progs
+    claude-code
     dive
     ffmpeg
     jc # parse CLI output to JSON or YAML
