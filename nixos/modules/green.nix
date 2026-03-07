@@ -354,6 +354,7 @@
     extraGroups = [
       "iot"
       "podman"
+      "homeassistant"
     ];
     packages = with pkgs; [
       bmaptool # flash ISO images
