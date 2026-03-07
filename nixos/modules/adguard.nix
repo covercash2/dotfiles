@@ -89,8 +89,24 @@
         enabled = true;
         inherit id url;
       }) [
-        "https://adguardteam.github.io/HostlistsRegistry/assets/filter_9.txt"  # The Big List of Hacked Malware Web Sites
-        "https://adguardteam.github.io/HostlistsRegistry/assets/filter_11.txt"  # malicious url blocklist
+        # General ad blocking
+        "https://adguardteam.github.io/HostlistsRegistry/assets/filter_1.txt"   # AdGuard DNS filter (general ads)
+        "https://adguardteam.github.io/HostlistsRegistry/assets/filter_2.txt"   # AdGuard Base filter
+        "https://adguardteam.github.io/HostlistsRegistry/assets/filter_3.txt"   # AdGuard Mobile Ads filter
+        "https://adguardteam.github.io/HostlistsRegistry/assets/filter_4.txt"   # AdGuard Tracking Protection filter
+
+        # Popular community lists
+        "https://easylist.to/easylist/easylist.txt"                              # EasyList (general ads)
+        "https://easylist.to/easylist/easyprivacy.txt"                           # EasyPrivacy (tracking)
+        "https://pgl.yoyo.org/adservers/serverlist.php?hostformat=adblockplus&showintro=0" # Peter Lowe's Ad Server List
+
+        # Security & malware
+        "https://adguardteam.github.io/HostlistsRegistry/assets/filter_9.txt"   # The Big List of Hacked Malware Web Sites
+        "https://adguardteam.github.io/HostlistsRegistry/assets/filter_11.txt"  # Malicious URL Blocklist
+        "https://urlhaus.abuse.ch/downloads/hostfile/"                           # URLhaus Malware URL Blocklist
+
+        # Annoyances
+        "https://adguardteam.github.io/HostlistsRegistry/assets/filter_14.txt"  # AdGuard Annoyances filter
       ];
     };
   };
