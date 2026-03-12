@@ -1,0 +1,8 @@
+keys:
+  - &host_green age1lvh945n6pxhwxqyrt6x5fcyvgeytnh4cg47zj2000ltmqal4xyjs0adv96
+
+creation_rules:
+  - path_regex: nixos/secrets/.*\.yaml$
+    key_groups:
+      - age:
+          - *host_green

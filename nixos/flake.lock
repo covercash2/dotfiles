@@ -126,17 +126,17 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1771182255,
-        "narHash": "sha256-aZj4QPUJ1LNL7rLmSIS7RJiXo6vcfwHN0a6pbuLXd7E=",
+        "lastModified": 1773429124,
+        "narHash": "sha256-YcMq5jN2CN4RwqUE5wxTmQq58LfFUw4a2Ttb7NZbeQQ=",
         "owner": "covercash2",
         "repo": "green",
-        "rev": "c9225aa26befc96db9555f8222ba8bf67a51da1f",
+        "rev": "0da285c3067631005fda66116e350ca54723050d",
         "type": "github"
       },
       "original": {
         "owner": "covercash2",
         "repo": "green",
-        "rev": "c9225aa26befc96db9555f8222ba8bf67a51da1f",
+        "rev": "0da285c3067631005fda66116e350ca54723050d",
         "type": "github"
       }
     },
@@ -224,6 +224,22 @@
         "type": "github"
       }
     },
+    "nixpkgs_4": {
+      "locked": {
+        "lastModified": 1772736753,
+        "narHash": "sha256-au/m3+EuBLoSzWUCb64a/MZq6QUtOV8oC0D9tY2scPQ=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "917fec990948658ef1ccd07cef2a1ef060786846",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "optnix": {
       "inputs": {
         "flake-compat": "flake-compat_2",
@@ -248,6 +264,7 @@
         "green": "green",
         "nixos-cli": "nixos-cli",
         "nixpkgs": "nixpkgs_3",
+        "sops-nix": "sops-nix",
         "ultron": "ultron"
       }
     },
@@ -290,6 +307,24 @@
       "original": {
         "owner": "oxalica",
         "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "sops-nix": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_4"
+      },
+      "locked": {
+        "lastModified": 1773096132,
+        "narHash": "sha256-M3zEnq9OElB7zqc+mjgPlByPm1O5t2fbUrH3t/Hm5Ag=",
+        "owner": "Mic92",
+        "repo": "sops-nix",
+        "rev": "d1ff3b1034d5bab5d7d8086a7803c5a5968cd784",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Mic92",
+        "repo": "sops-nix",
         "type": "github"
       }
     },

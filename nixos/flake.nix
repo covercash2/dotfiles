@@ -15,11 +15,12 @@
       type = "github";
       owner = "covercash2";
       repo = "green";
-      rev = "c9225aa26befc96db9555f8222ba8bf67a51da1f";
+      rev = "0da285c3067631005fda66116e350ca54723050d";
 
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-cli.url = "github:nix-community/nixos-cli";
+    sops-nix.url = "github:Mic92/sops-nix";
   };
 
   outputs =
@@ -29,6 +30,7 @@
       green,
       ultron,
       nixos-cli,
+      sops-nix,
       ...
     }:
     let
@@ -41,6 +43,7 @@
             ultron.nixosModules.default
             green.nixosModules.default
             nixos-cli.nixosModules.nixos-cli
+            sops-nix.nixosModules.sops
 
             # Share the hostname
             { networking.hostName = hostName; }
@@ -79,6 +82,8 @@
           ./modules/video_surveillance.nix
           ./modules/z-wave_receiver.nix
           ./modules/zigbee_receiver.nix
+          ./modules/ntfy.nix
+          ./modules/sops.nix
 
           # ./modules/actualbudget.nix
           # ./modules/immich.nix

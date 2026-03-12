@@ -90,6 +90,17 @@
           description = "Development server";
         };
       };
+
+      auth = {
+        rpId = "chrash.net";
+        rpOrigin = "https://home.green.chrash.net";
+        # Plaintext dbUrl intentionally omitted — injected at runtime via
+        # EnvironmentFile (GREEN_DB_URL) rendered by sops-nix from secrets/green.yaml.
+        dbUrl = "";
+        dbUrlFile = config.sops.templates."green-env".path;
+        gmUsers = [ "chrash" ];
+        ntfyUrl = "https://ntfy.green.chrash.net/green-recovery";
+      };
     };
 
     # reverse proxy
@@ -176,7 +187,7 @@
         ${config.services.green.routes.postgres.url} = {
           extraConfig = ''
             tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
-            reverse_proxy localhost:${toString config.services.postgresql.settings.port}
+            reverse_proxy localhost:${toString config.services.pgadmin.port}
           '';
         };
 
@@ -186,7 +197,21 @@
             reverse_proxy localhost:${config.services.zwave-js-ui.settings.PORT}
           '';
         };
+
+        "ntfy.green.chrash.net" = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:8083
+          '';
+        };
       };
+    };
+
+    pgadmin = {
+      enable = true;
+      port = 5050;
+      initialEmail = "chrash@chrash.net";
+      initialPasswordFile = config.sops.secrets.pgadmin_password.path;
     };
 
     # shared shell history, depends on postgresql
