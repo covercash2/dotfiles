@@ -19,14 +19,20 @@
             superuser = true;
           };
         }
+        {
+          name = "green";
+          ensureDBOwnership = true;
+          ensureClauses.login = true;
+        }
       ];
-      ensureDatabases = [ "chrash" ];
+      ensureDatabases = [ "chrash" "green" ];
       authentication = pkgs.lib.mkOverride 10 ''
         ## allow local to connect
         #type database  DBuser origin-address auth-method
         local all       all                   trust
         local sameuser  all     peer          map=superuser_map
         host  sameuser  all     ::1/128       scram-sha-256
+        host  green     green   127.0.0.1/32  scram-sha-256
       '';
       identMap = ''
         # ArbitraryMapName systemUser DBUser
