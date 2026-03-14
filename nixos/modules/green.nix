@@ -210,7 +210,7 @@
     pgadmin = {
       enable = true;
       port = 5050;
-      initialEmail = "chrash@chrash.net";
+      initialEmail = "covercash2@gmail.com";
       initialPasswordFile = config.sops.secrets.pgadmin_password.path;
     };
 
