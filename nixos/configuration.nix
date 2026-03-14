@@ -115,7 +115,6 @@
         ghostty # terminal emulator
         gh # GitHub CLI
         grim # Wayland image grabber
-        helvum # PipeWire patch bay
 
         jujutsu
         just
