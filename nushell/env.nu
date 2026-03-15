@@ -1,1 +1,0 @@
-.chezmoitemplates/env.nu

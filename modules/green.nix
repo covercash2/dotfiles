@@ -1,0 +1,407 @@
+# my server config
+
+{ pkgs, config, ... }:
+
+{
+  # disable intel integrated graphics kernel module
+  boot.kernelParams = [ "module_blacklist=i915" ];
+
+  networking = {
+    hostName = "green";
+    interfaces.enp5s0 = {
+      useDHCP = false;
+      ipv4.addresses = [
+        {
+          address = "192.168.2.216";
+          prefixLength = 24;
+        }
+      ];
+    };
+    nameservers = [
+      "8.8.8.8"
+      "1.1.1.1"
+    ];
+    defaultGateway = "192.168.2.1";
+  };
+
+  programs.nixos-cli = {
+    enable = true;
+    settings = {
+      use_nvd = true;
+    };
+  };
+
+  services = {
+
+    mkcert = {
+      enable = true;
+      domain = "*.green.chrash.net";
+    };
+
+    tailscale = {
+      enable = true;
+      permitCertUid = "caddy";
+    };
+
+    green = {
+      enable = true;
+
+      port = 47336;
+      caPath = config.services.mkcert.caPath;
+
+      routes = {
+        prometheus = {
+          url = "prometheus.green.chrash.net";
+          description = "Prometheus metrics UI";
+        };
+        ultron = {
+          url = "ultron.green.chrash.net";
+          description = "Main route for Ultron bot";
+        };
+        adguard = {
+          url = "adguard.green.chrash.net";
+          description = "AdGuard DNS route";
+        };
+        grafana = {
+          url = "grafana.green.chrash.net";
+          description = "Grafana monitoring dashboard";
+        };
+        postgres = {
+          url = "db.green.chrash.net";
+          description = "PostgreSQL database route";
+        };
+        homeassistant = {
+          url = "homeassistant.green.chrash.net";
+          description = "Home Assistant route";
+        };
+        frigate = {
+          url = "frigate.green.chrash.net";
+          description = "Frigate for NVR and AI detection";
+        };
+        foundry = {
+          url = "foundry.green.chrash.net";
+          description = "Foundry Virtual Tabletop route";
+        };
+        zwave = {
+          url = "zwave.green.chrash.net";
+          description = "Z-Wave JS controls";
+        };
+        dev = {
+          url = "dev.green.chrash.net";
+          description = "Development server";
+        };
+      };
+
+      auth = {
+        rpId = "chrash.net";
+        rpOrigin = "https://home.green.chrash.net";
+        # Plaintext dbUrl intentionally omitted — injected at runtime via
+        # EnvironmentFile (GREEN_DB_URL) rendered by sops-nix from secrets/green.yaml.
+        dbUrl = "";
+        dbUrlFile = config.sops.templates."green-env".path;
+        gmUsers = [ "chrash" ];
+        ntfyUrl = "https://ntfy.green.chrash.net/green-recovery";
+      };
+    };
+
+    # reverse proxy
+    caddy = {
+      enable = true;
+
+      virtualHosts = {
+        "home.green.chrash.net" = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:${toString config.services.green.port}
+          '';
+        };
+
+        "green.faun-truck.ts.net" = {
+          extraConfig = ''
+            handle_path /healthcheck {
+              respond "OK"
+            }
+            handle_path /ca {
+              reverse_proxy localhost:${toString config.services.green.port}/api/ca
+            }
+          '';
+        };
+
+        "dev.green.chrash.net" = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:10000
+          '';
+        };
+
+        ${config.services.green.routes.foundry.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:30000
+          '';
+        };
+
+        ${config.services.green.routes.adguard.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:${toString config.services.adguardhome.port}
+          '';
+        };
+
+        ${config.services.green.routes.homeassistant.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:8123
+          '';
+        };
+
+        ${config.services.green.routes.ultron.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:${toString config.services.ultron.port} {
+              health_uri /healthcheck
+            }
+          '';
+        };
+
+        ${config.services.green.routes.frigate.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:8971
+          '';
+        };
+
+        ${config.services.green.routes.grafana.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:${toString config.services.grafana.settings.server.http_port}
+          '';
+        };
+
+        ${config.services.green.routes.prometheus.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:${toString config.services.prometheus.port}
+          '';
+        };
+
+        ${config.services.green.routes.postgres.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:${toString config.services.pgadmin.port}
+          '';
+        };
+
+        ${config.services.green.routes.zwave.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:${config.services.zwave-js-ui.settings.PORT}
+          '';
+        };
+
+        "ntfy.green.chrash.net" = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:8083
+          '';
+        };
+      };
+    };
+
+    pgadmin = {
+      enable = true;
+      port = 5050;
+      initialEmail = "covercash2@gmail.com";
+      initialPasswordFile = config.sops.secrets.pgadmin_password.path;
+    };
+
+    # shared shell history, depends on postgresql
+    atuin = {
+      enable = true;
+      host = "0.0.0.0";
+      port = 8888;
+      openFirewall = true;
+      openRegistration = true;
+
+      database = {
+        createLocally = true;
+      };
+    };
+
+    # media hosting
+    jellyfin = {
+      enable = true;
+      openFirewall = true;
+      cacheDir = "/mnt/media/jellyfin/cache";
+      configDir = "/mnt/media/jellyfin/config";
+      dataDir = "/mnt/media/jellyfin/data";
+      logDir = "/mnt/media/jellyfin/logs";
+    };
+
+    grafana = {
+      enable = true;
+      settings = {
+        server = {
+          http_addr = "0.0.0.0";
+          http_port = 9876;
+        };
+        security = {
+          admin_user = "admin";
+          admin_password = "admin";
+          secret_key = "change_this_secret_key_for_production";
+        };
+      };
+    };
+    # metrics
+    prometheus = {
+      enable = true;
+      scrapeConfigs = [
+        {
+          job_name = "prometheus";
+          scrape_interval = "5s";
+          static_configs = [
+            {
+              targets = [ "localhost:9090" ];
+            }
+          ];
+        }
+        {
+          job_name = "homeassistant";
+          static_configs = [
+            {
+              targets = [ "localhost:8123" ];
+            }
+          ];
+        }
+        {
+          job_name = "green_system";
+          static_configs = [
+            {
+              targets = [ "localhost:9100" ];
+            }
+          ];
+        }
+        {
+          job_name = "hoss_system";
+          static_configs = [
+            {
+              targets = [ "hoss:9100" ];
+            }
+          ];
+        }
+      ];
+    };
+  };
+
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [
+      30000 # foundry VTT
+      8123 # home assistant
+      8971 # frigate
+      (config.services.postgresql.settings.port)
+      443
+      80
+      (config.services.ultron.port)
+    ];
+  };
+
+  fileSystems = {
+    # extra space
+    # old home folder, extra files, miscellaneous space
+    "/mnt/space" = {
+      device = "/dev/disk/by-label/Space";
+      fsType = "ext4";
+    };
+    # media: movies, some other miscellaneous files
+    "/mnt/media" = {
+      device = "/dev/disk/by-label/media";
+      fsType = "ext4";
+    };
+    # games: fast (SATA SSD) storage for games etc
+    "/mnt/games" = {
+      device = "/dev/disk/by-label/games";
+      fsType = "btrfs";
+    };
+  };
+
+  virtualisation = {
+    containers.enable = true;
+    podman = {
+      enable = true;
+      # create a `docker` alias for podman, to use it as a drop-in replacement
+      dockerCompat = true;
+
+      # Required for containers under podman-compose to be able to talk to each other.
+      defaultNetwork.settings.dns_enabled = true;
+    };
+    oci-containers.containers = {
+      # prometheus exporter for system info
+      node_exporter = {
+        image = "quay.io/prometheus/node-exporter:latest";
+        volumes = [ "/:/host:ro,rslave" ];
+        pull = "newer";
+        extraOptions = [
+          "--network=host"
+          "--pid=host"
+        ];
+        cmd = [ "--path.rootfs=/host" ];
+      };
+    };
+  };
+
+  environment.systemPackages = with pkgs; [
+    bat-extras.batman
+    btrfs-progs
+    claude-code
+    dive
+    ffmpeg
+    jc # parse CLI output to JSON or YAML
+
+    mkcert # create certificates and a local CA
+    nss # for certutils
+    openssl
+    pgcli # better CLI for Postgres
+    podman-tui
+    podman-compose
+    rops # version controllable secrets management
+    wol # wake on LAN tool
+    zenith-nvidia # system monitor with Nvidia support
+
+    # Python tools
+    pyright
+    python314
+    python3Packages.black
+    python3Packages.pip
+    python3Packages.python
+    ruff
+
+    # Javascript
+    deno
+    nodejs_24
+  ];
+
+  users = {
+    groups = {
+      iot = {
+        gid = 992;
+      };
+    };
+  };
+  users.users.chrash = {
+    extraGroups = [
+      "iot"
+      "podman"
+      "homeassistant"
+    ];
+    packages = with pkgs; [
+      bmaptool # flash ISO images
+      gnumake
+      lazysql
+      minica # mini certificate authority for generating certs for my services
+      pv # pipe viewer, progress bar for pipes
+      rainfrog # database view TUI
+      rustup
+    ];
+  };
+}
