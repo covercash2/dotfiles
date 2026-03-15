@@ -130,13 +130,13 @@ key (root-only). In a non-interactive shell, use these workarounds:
 ```nu
 sudo nix run nixpkgs#ssh-to-age -- -private-key -i /etc/ssh/ssh_host_ed25519_key
 # pipe the resulting age private key into SOPS_AGE_KEY env var, then:
-SOPS_AGE_KEY=<age-private-key> rops decrypt -f yaml secrets/green.yaml
+SOPS_AGE_KEY=<age-private-key> rops decrypt -f yaml nixos/secrets/green.yaml
 ```
 
 **encrypt / overwrite** — only needs the public key (no sudo):
 
 ```nu
-printf 'key: value\n' | rops encrypt --age age1lvh945n6pxhwxqyrt6x5fcyvgeytnh4cg47zj2000ltmqal4xyjs0adv96 -f yaml > secrets/green.yaml
+printf 'key: value\n' | rops encrypt --age age1lvh945n6pxhwxqyrt6x5fcyvgeytnh4cg47zj2000ltmqal4xyjs0adv96 -f yaml > nixos/secrets/green.yaml
 ```
 
 Note: `rops` sees stdin AND a file path as "multiple inputs" — always use
@@ -149,7 +149,7 @@ Note: `rops` sees stdin AND a file path as "multiple inputs" — always use
 3. Reference `config.sops.secrets.<name>.path` (or use a template)
    wherever the secret is needed
 
-## current secrets (`secrets/green.yaml`)
+## current secrets (`nixos/secrets/green.yaml`)
 
 | Key | Used by |
 |-----|---------|
@@ -157,7 +157,7 @@ Note: `rops` sees stdin AND a file path as "multiple inputs" — always use
 
 ### resetting the postgresql password
 
-The `green` PostgreSQL user password must match the value in `secrets/green.yaml`.
+The `green` PostgreSQL user password must match the value in `nixos/secrets/green.yaml`.
 To reset both together:
 
 ```nu
@@ -168,7 +168,7 @@ let pass = (openssl rand -base64 32 | tr -d '=/+' | head -c 40)
 psql -U postgres -c $"ALTER USER green PASSWORD '($pass)';"
 
 # 3. re-encrypt the secrets file
-printf $"green_db_password: ($pass)\n" | rops encrypt --age age1lvh945n6pxhwxqyrt6x5fcyvgeytnh4cg47zj2000ltmqal4xyjs0adv96 -f yaml > secrets/green.yaml
+printf $"green_db_password: ($pass)\n" | rops encrypt --age age1lvh945n6pxhwxqyrt6x5fcyvgeytnh4cg47zj2000ltmqal4xyjs0adv96 -f yaml > nixos/secrets/green.yaml
 ```
 
 ## first-time setup on a new host
