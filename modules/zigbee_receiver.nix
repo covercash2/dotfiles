@@ -74,6 +74,10 @@
               ];
               hashedPasswordFile = "${config.services.mosquitto.dataDir}passwd-chrash";
             };
+            green = {
+              acl = [ "readwrite #" ];
+              hashedPasswordFile = "${config.services.mosquitto.dataDir}passwd-green";
+            };
           };
         }
       ];

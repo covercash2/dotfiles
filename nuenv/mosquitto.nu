@@ -164,3 +164,43 @@ export def "mosquitto passwd" [
 
   open $file | split row ":" | get 1 | save --force $file
 }
+
+# create a hashed password file for a NixOS mosquitto user.
+#
+# writes `passwd-<username>` into the mosquitto data directory using sudo.
+# the file contains only the SHA-512 hash (no "username:" prefix), which is
+# what the NixOS mosquitto module expects for `hashedPasswordFile`.
+#
+# example:
+#   mosquitto passwd nixos green --password "hunter2"
+#   mosquitto passwd nixos green  # prompts for password
+export def "mosquitto passwd nixos" [
+  username: string
+  --password: string        # password to hash; prompts if not provided
+  --data-dir: string = "/mnt/space/mosquitto"  # mosquitto data directory
+] {
+  let password = if $password == null {
+    input --suppress-output $"Password for ($username): "
+  } else {
+    $password
+  }
+
+  let tmp = (mktemp)
+
+  try {
+    # -H sha512: use SHA-512 hashing
+    # -b: batch mode (password on command line, non-interactive)
+    run-external mosquitto_passwd "-H" sha512 "-b" $tmp $username $password
+
+    # strip "username:" prefix — hashedPasswordFile expects the hash only
+    let hash = (open $tmp | split row ":" | get 1 | str trim)
+
+    let dest = $"($data_dir)/passwd-($username)"
+    print $"writing hash to ($dest)"
+    echo $hash | sudo tee $dest | ignore
+    sudo chmod 600 $dest
+    print $"done — restart mosquitto: sudo systemctl restart mosquitto"
+  } finally {
+    rm --force $tmp
+  }
+}
