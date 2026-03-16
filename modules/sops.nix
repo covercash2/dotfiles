@@ -12,6 +12,13 @@
       mode = "0400";
     };
 
+    secrets.mqtt_password = {
+      sopsFile = ../secrets/green.yaml;
+      owner = "green";
+      group = "green";
+      mode = "0400";
+    };
+
     secrets.pgadmin_password = {
       sopsFile = ../secrets/green.yaml;
       owner = "pgadmin";
@@ -22,7 +29,10 @@
     # GREEN_DB_URL overrides db_url from config.toml at runtime so that
     # the credential never appears in the Nix store.
     templates."green-env" = {
-      content = "GREEN_DB_URL=postgres://green:${config.sops.placeholder.green_db_password}@localhost:${builtins.toString config.services.postgresql.settings.port}/green\n";
+      content = ''
+        GREEN_DB_URL=postgres://green:${config.sops.placeholder.green_db_password}@localhost:${builtins.toString config.services.postgresql.settings.port}/green
+        GREEN_MQTT_PASSWORD=${config.sops.placeholder.mqtt_password}
+      '';
       owner = "green";
       group = "green";
       mode = "0400";
