@@ -41,7 +41,7 @@
     let
       # Helper function to create a system configuration for any architecture
       mkSystem =
-        system: hostName: modules:
+        system: hostName: username: modules:
         nixpkgs.lib.nixosSystem {
           modules = modules ++ [
             # Import the system-specific Ultron module
@@ -58,8 +58,8 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { hostname = hostName; };
-              home-manager.users.chrash = import ./home;
+              home-manager.extraSpecialArgs = { hostname = hostName; inherit username; };
+              home-manager.users.${username} = import ./home;
               # Back up any files chezmoi already placed before home-manager takes over
               home-manager.backupFileExtension = "chezmoi-backup";
             }
@@ -81,14 +81,14 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { hostname = "wall-e"; };
+              home-manager.extraSpecialArgs = { hostname = "wall-e"; username = "chrash"; };
               home-manager.users.chrash = import ./home;
               home-manager.backupFileExtension = "chezmoi-backup";
             }
           ];
         };
 
-        green = mkSystem "x86_64-linux" "green" ([
+        green = mkSystem "x86_64-linux" "green" "chrash" ([
           ./green-hardware-configuration.nix
           ./configuration.nix
           # ./modules/apollo_router.nix
@@ -128,7 +128,7 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { hostname = "hoss"; };
+              home-manager.extraSpecialArgs = { hostname = "hoss"; username = "chrash"; };
               home-manager.users.chrash = import ./home;
               home-manager.backupFileExtension = "chezmoi-backup";
             }
@@ -144,14 +144,22 @@
         };
       };
 
-      # Standalone home-manager for macOS (eve)
+      # Standalone home-manager for macOS (eve and boxer)
       homeConfigurations = {
         eve = home-manager.lib.homeManagerConfiguration {
           pkgs = import nixpkgs {
             system = "aarch64-darwin";
             config.allowUnfree = true;
           };
-          extraSpecialArgs = { hostname = "eve"; };
+          extraSpecialArgs = { hostname = "eve"; username = "chrash"; };
+          modules = [ ./home ];
+        };
+        boxer = home-manager.lib.homeManagerConfiguration {
+          pkgs = import nixpkgs {
+            system = "aarch64-darwin";
+            config.allowUnfree = true;
+          };
+          extraSpecialArgs = { hostname = "m-ry6wtc3pxk"; username = "c0o02bc"; };
           modules = [ ./home ];
         };
       };
