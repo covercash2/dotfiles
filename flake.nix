@@ -147,7 +147,10 @@
       # Standalone home-manager for macOS (eve)
       homeConfigurations = {
         eve = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages."aarch64-darwin";
+          pkgs = import nixpkgs {
+            system = "aarch64-darwin";
+            config.allowUnfree = true;
+          };
           extraSpecialArgs = { hostname = "eve"; };
           modules = [ ./home ];
         };
