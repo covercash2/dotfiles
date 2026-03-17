@@ -12,6 +12,7 @@
     ./programs/zellij.nix
     ./programs/neovim.nix
     ./programs/wm.nix
+    ./programs/darwin.nix
   ];
 
   # Miscellaneous dotfiles
@@ -20,6 +21,9 @@
 
     set surround
   '';
+
+  # Link nuenv directory so `overlay use default.nu` in config.nu works
+  home.file."nuenv".source = ../nuenv;
 
   # Required: home-manager needs to know the home directory and username.
   home.username = "chrash";

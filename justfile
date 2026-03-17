@@ -4,6 +4,10 @@ hostname := shell('hostname')
 default:
   just --list
 
+# run just home-manager for, e.g. macOS without nix-darwin
+home:
+  home-manager switch --flake .#eve
+
 # rebuild the system to, e.g., install packages or change configuration
 build_quiet:
   sudo nixos-rebuild switch --flake .#{{hostname}} --upgrade
