@@ -1,7 +1,7 @@
 # Shell integrations managed by home-manager.
 # Nushell config files are linked from the repo via xdg.configFile.
 # Chezmoi templates have been converted: platform conditionals use pkgs.stdenv.isDarwin/isLinux.
-{ pkgs, ... }:
+{ pkgs, lib, extraNuLibDirs ? [], ... }:
 
 {
   # direnv — loads .envrc for dev environments
@@ -47,6 +47,8 @@
       $env.NU_LIB_DIRS = [
           ($nu.default-config-dir | path join 'scripts')
           ($env.HOME | path join ".config/nushell/scripts")
+          ($env.HOME | path join "nuenv")
+          ${lib.concatMapStrings (d: "\n          \"${d}\"") extraNuLibDirs}
       ]
 
       $env.NU_PLUGIN_DIRS = [
@@ -415,11 +417,6 @@
           max_results: 100
           completer: $carapace_completer
       }
-
-      # include nuenv dir in NU_LIB_DIRS
-      const NU_LIB_DIRS = [
-        "~/nuenv/"
-      ]
 
       if ($env | get --optional XDG_STATE_HOME | is-empty) {
         $env.XDG_STATE_HOME = ("~/.local/state" | path expand)
