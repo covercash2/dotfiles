@@ -1,6 +1,6 @@
 # Base home-manager module — imports all program sub-modules.
-# Receives `hostname` via extraSpecialArgs for host-specific overrides.
-{ pkgs, hostname, ... }:
+# Receives `hostname` and `username` via extraSpecialArgs for host-specific overrides.
+{ pkgs, hostname, username, ... }:
 
 {
   imports = [
@@ -26,8 +26,8 @@
   home.file."nuenv".source = ../nuenv;
 
   # Required: home-manager needs to know the home directory and username.
-  home.username = "chrash";
-  home.homeDirectory = if pkgs.stdenv.isDarwin then "/Users/chrash" else "/home/chrash";
+  home.username = username;
+  home.homeDirectory = if pkgs.stdenv.isDarwin then "/Users/${username}" else "/home/${username}";
 
   # Let home-manager manage itself when used standalone (macOS).
   programs.home-manager.enable = true;
