@@ -167,7 +167,14 @@
             system = "aarch64-darwin";
             config.allowUnfree = true;
           };
-          extraSpecialArgs = { hostname = "m-ry6wtc3pxk"; username = "c0o02bc"; };
+          extraSpecialArgs = {
+            hostname = "m-ry6wtc3pxk";
+            username = "c0o02bc";
+            # Add work-specific nushell script directories here
+            extraNuLibDirs = [
+              "/Users/c0o02bc/wmgithub/c0o02bc/nuenv/"
+            ];
+          };
           modules = [ ./home ];
         };
       };
