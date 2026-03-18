@@ -10,6 +10,8 @@
       lua-language-server
       nil          # nix LSP
       typos-lsp
+      black        # Python formatter
+      djhtml       # Django/Jinja template formatter
     ];
   };
 
