@@ -1,6 +1,6 @@
 # User packages previously declared under users.users.chrash.packages
 # in configuration.nix. Managed here by home-manager.
-{ pkgs, lib, ... }:
+{ pkgs, lib, withDesktop ? true, ... }:
 
 {
   home.packages = with pkgs; [
@@ -19,7 +19,6 @@
 
     jujutsu
     just
-    kitty
     # lua-language-server: via programs.neovim.extraPackages
     # neovim, nil, lua-language-server, typos-lsp installed via programs.neovim in programs/neovim.nix
     nix-update # used to bump versions in nix files
@@ -29,23 +28,23 @@
     typos # find typos in source code projects
     # typos-lsp: via programs.neovim.extraPackages
     tree
-    wezterm
     xdg-utils # e.g. xdg-open
     zellij # terminal multiplexer
     zoxide # cd replacement with a memory
   ] ++ lib.optionals pkgs.stdenv.isLinux [
-    bitwarden-desktop
     cyme # lsusb replacement in Rust
-    discord
     ethtool # network tool
+    libgcc
+    lshw
+    usbutils # lsusb etc
+  ] ++ lib.optionals (pkgs.stdenv.isLinux && withDesktop) [
+    bitwarden-desktop
+    discord
     firefox
     ghostty # terminal emulator (macOS users run the native app)
     grim # Wayland image grabber
-    libgcc
-    lshw
     pavucontrol # volume control for pulse audio
     slurp # select a region of the screen in Wayland
-    usbutils # lsusb etc
     wl-clipboard
     wofi # runner a la rofi, Spotlight
   ];

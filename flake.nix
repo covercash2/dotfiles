@@ -58,7 +58,7 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { hostname = hostName; inherit username; };
+              home-manager.extraSpecialArgs = { hostname = hostName; inherit username; withDesktop = true; };
               home-manager.users.${username} = import ./home;
               # Back up any files chezmoi already placed before home-manager takes over
               home-manager.backupFileExtension = "chezmoi-backup";
@@ -81,7 +81,7 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { hostname = "wall-e"; username = "chrash"; };
+              home-manager.extraSpecialArgs = { hostname = "wall-e"; username = "chrash"; withDesktop = true; };
               home-manager.users.chrash = import ./home;
               home-manager.backupFileExtension = "chezmoi-backup";
             }
@@ -128,7 +128,7 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { hostname = "hoss"; username = "chrash"; };
+              home-manager.extraSpecialArgs = { hostname = "hoss"; username = "chrash"; withDesktop = true; };
               home-manager.users.chrash = import ./home;
               home-manager.backupFileExtension = "chezmoi-backup";
             }
@@ -140,6 +140,14 @@
           system = "x86_64-linux";
           modules = [
             ./rescue-disk.nix
+            home-manager.nixosModules.home-manager
+            {
+              nixpkgs.config.allowUnfree = true;
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = { hostname = "rescue-disk"; username = "chrash"; withDesktop = false; };
+              home-manager.users.chrash = import ./home;
+            }
           ];
         };
       };
