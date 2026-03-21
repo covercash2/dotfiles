@@ -82,6 +82,7 @@
               reverse_proxy localhost:${toString config.services.apollo_router.port}
             }
           '';
+        };
       };
     };
   };

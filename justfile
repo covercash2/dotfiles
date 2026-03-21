@@ -8,12 +8,17 @@ default:
 home:
   home-manager switch --flake .#eve
 
-# rebuild the system to, e.g., install packages or change configuration
-build_quiet:
-  sudo nixos-rebuild switch --flake .#{{hostname}} --upgrade
-
+# build the system configuration without switching
 build:
-  sudo nixos-rebuild switch --flake .#{{hostname}} --upgrade --print-build-logs
+  sudo nixos-rebuild build --flake .#{{hostname}} --print-build-logs
+
+# build and switch to the new system configuration
+switch:
+  sudo nixos-rebuild switch --flake .#{{hostname}} --print-build-logs
+
+# switch without printing build logs
+switch_quiet:
+  sudo nixos-rebuild switch --flake .#{{hostname}}
 
 build_rescue:
   nix build .#nixosConfigurations.rescue-disk.config.system.build.isoImage
@@ -35,4 +40,4 @@ gc:
   nix-collect-garbage
 
 # full system update
-update_system: update_channels update_flake build
+update_system: update_channels update_flake switch
