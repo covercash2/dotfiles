@@ -118,6 +118,9 @@
           python313Packages.huggingface-hub
           # mistral-rs
         ];
+        openssh.authorizedKeys.keyFiles = [
+          (builtins.fetchurl "https://github.com/covercash2.keys")
+        ];
       };
       mistral = {
         description = "user to restrict the mistralrs-server";
