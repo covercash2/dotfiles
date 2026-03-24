@@ -102,6 +102,20 @@
         gmUsers = [ "chrash" ];
         ntfyUrl = "https://ntfy.green.chrash.net/green-recovery";
       };
+
+      # vaultPath = "/path/to/obsidian/vault";  # uncomment and set to enable /notes
+
+      mqtt = {
+        host = "localhost";
+        port = 1883;
+        username = "green";
+        integrations = [
+          { pattern = "zigbee2mqtt/{device}/**"; }
+          { pattern = "homeassistant/*/{device}/**"; name = "Home Assistant"; }
+          { pattern = "frigate/{device}/**"; name = "Frigate"; }
+          { pattern = "zwavejs/*/{device}/**"; name = "Z-Wave"; }
+        ];
+      };
     };
 
     # reverse proxy
