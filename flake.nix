@@ -19,7 +19,7 @@
       type = "github";
       owner = "covercash2";
       repo = "green";
-      rev = "cea15b98a065774506047dd3ad70d8db0716591e";
+      rev = "267d3be4899840ac0d79cedb0a6386438ad35d0b";
 
       inputs.nixpkgs.follows = "nixpkgs";
     };
