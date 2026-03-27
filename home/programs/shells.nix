@@ -1,8 +1,5 @@
 # Shell integrations managed by home-manager.
-# Nushell config files are linked from the repo via xdg.configFile.
-# Chezmoi templates have been converted: platform conditionals use pkgs.stdenv.isDarwin/isLinux.
 { pkgs, lib, extraNuLibDirs ? [], ... }:
-
 {
   # direnv — loads .envrc for dev environments
   programs.direnv = {
@@ -23,13 +20,10 @@
   };
 
   # Nushell — primary shell
-  # Config files live in the repo under dot_config/nushell/ and are managed
-  # here via xdg.configFile so chezmoi templating is no longer needed.
   programs.nushell = {
     enable = true;
 
     # env.nu: environment setup (PATH, ENV_CONVERSIONS, etc.)
-    # This is the content from .chezmoitemplates/env.nu with no platform conditionals.
     envFile.text = ''
       $env.STARSHIP_SHELL = "nu"
 
@@ -97,7 +91,6 @@
     '';
 
     # config.nu: main nushell configuration
-    # Converted from .chezmoitemplates/config.nu; no chezmoi templating needed.
     configFile.text = ''
       # Nushell Config File
 

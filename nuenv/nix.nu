@@ -1,4 +1,4 @@
-const DEFAULT_NIXOS_DIR = "/home/chrash/.local/share/chezmoi/nixos"
+const DEFAULT_NIXOS_DIR = "/home/chrash/github/covercash2/dotfiles"
 
 def "nixos rebuild" [
 	config_name?: string
