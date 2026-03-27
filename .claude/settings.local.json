@@ -5,7 +5,9 @@
       "Bash(zellij list-sessions:*)",
       "Bash(zellij attach:*)",
       "Bash(zellij kill-session:*)",
-      "Bash(nu:*)"
+      "Bash(nu:*)",
+      "Bash(jj --version)",
+      "Bash(jj status:*)"
     ]
   }
 }

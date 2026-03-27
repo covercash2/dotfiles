@@ -5,6 +5,7 @@
 {
   home.packages = with pkgs; [
     asdf-vm # toolchain management
+    bat # better than cat
     bitwarden-cli
     carapace # command line completion
     claude-code
@@ -23,6 +24,12 @@
     # lua-language-server: via programs.neovim.extraPackages
     # neovim, nil, lua-language-server, typos-lsp installed via programs.neovim in programs/neovim.nix
     nix-update # used to bump versions in nix files
+
+    nufmt # nushell formatter
+    # nushellPlugins.net # list net interfaces: `$ net`
+    nushellPlugins.skim # fuzzy finder for everything: `$ ps | sk`
+    nushellPlugins.highlight # highlight raw text: `$ open --raw data.json | highlight`
+    nushellPlugins.semver
 
     ripgrep
     starship
