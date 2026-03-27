@@ -1,0 +1,19 @@
+// Zellij layout for the "phone" dev session.
+// Launch with:
+//   zellij -n phone --session phone
+
+layout {
+    default_tab_template {
+        pane size=1 borderless=true {
+            plugin location="zellij:compact-bar"
+        }
+        children
+    }
+
+    tab name="claude" cwd="." focus=true {
+        pane borderless=true command="claude"
+    }
+    tab name="shell" cwd="." {
+        pane borderless=true
+    }
+}
