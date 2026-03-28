@@ -1,8 +1,5 @@
 # Shell integrations managed by home-manager.
-# Nushell config files are linked from the repo via xdg.configFile.
-# Chezmoi templates have been converted: platform conditionals use pkgs.stdenv.isDarwin/isLinux.
-{ pkgs, ... }:
-
+{ pkgs, lib, extraNuLibDirs ? [], ... }:
 {
   # direnv — loads .envrc for dev environments
   programs.direnv = {
@@ -23,13 +20,10 @@
   };
 
   # Nushell — primary shell
-  # Config files live in the repo under dot_config/nushell/ and are managed
-  # here via xdg.configFile so chezmoi templating is no longer needed.
   programs.nushell = {
     enable = true;
 
     # env.nu: environment setup (PATH, ENV_CONVERSIONS, etc.)
-    # This is the content from .chezmoitemplates/env.nu with no platform conditionals.
     envFile.text = ''
       $env.STARSHIP_SHELL = "nu"
 
@@ -47,6 +41,8 @@
       $env.NU_LIB_DIRS = [
           ($nu.default-config-dir | path join 'scripts')
           ($env.HOME | path join ".config/nushell/scripts")
+          ($env.HOME | path join "nuenv")
+          ${lib.concatMapStrings (d: "\n          \"${d}\"") extraNuLibDirs}
       ]
 
       $env.NU_PLUGIN_DIRS = [
@@ -95,7 +91,6 @@
     '';
 
     # config.nu: main nushell configuration
-    # Converted from .chezmoitemplates/config.nu; no chezmoi templating needed.
     configFile.text = ''
       # Nushell Config File
 
@@ -415,11 +410,6 @@
           max_results: 100
           completer: $carapace_completer
       }
-
-      # include nuenv dir in NU_LIB_DIRS
-      const NU_LIB_DIRS = [
-        "~/nuenv/"
-      ]
 
       if ($env | get --optional XDG_STATE_HOME | is-empty) {
         $env.XDG_STATE_HOME = ("~/.local/state" | path expand)

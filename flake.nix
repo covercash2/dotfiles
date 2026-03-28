@@ -19,7 +19,7 @@
       type = "github";
       owner = "covercash2";
       repo = "green";
-      rev = "cea15b98a065774506047dd3ad70d8db0716591e";
+      rev = "267d3be4899840ac0d79cedb0a6386438ad35d0b";
 
       inputs.nixpkgs.follows = "nixpkgs";
     };
@@ -60,8 +60,7 @@
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = { hostname = hostName; inherit username; withDesktop = true; };
               home-manager.users.${username} = import ./home;
-              # Back up any files chezmoi already placed before home-manager takes over
-              home-manager.backupFileExtension = "chezmoi-backup";
+              home-manager.backupFileExtension = "hm-backup";
             }
           ];
         };
@@ -83,7 +82,7 @@
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = { hostname = "wall-e"; username = "chrash"; withDesktop = true; };
               home-manager.users.chrash = import ./home;
-              home-manager.backupFileExtension = "chezmoi-backup";
+              home-manager.backupFileExtension = "hm-backup";
             }
           ];
         };
@@ -130,7 +129,7 @@
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = { hostname = "hoss"; username = "chrash"; withDesktop = true; };
               home-manager.users.chrash = import ./home;
-              home-manager.backupFileExtension = "chezmoi-backup";
+              home-manager.backupFileExtension = "hm-backup";
             }
           ];
         };
@@ -167,7 +166,14 @@
             system = "aarch64-darwin";
             config.allowUnfree = true;
           };
-          extraSpecialArgs = { hostname = "m-ry6wtc3pxk"; username = "c0o02bc"; };
+          extraSpecialArgs = {
+            hostname = "m-ry6wtc3pxk";
+            username = "c0o02bc";
+            # Add work-specific nushell script directories here
+            extraNuLibDirs = [
+              "/Users/c0o02bc/wmgithub/c0o02bc/nuenv/"
+            ];
+          };
           modules = [ ./home ];
         };
       };
