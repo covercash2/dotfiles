@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(zellij --help)"
+      "Bash(zellij --help)",
+      "Bash(zellij list-sessions:*)",
+      "Bash(zellij attach:*)",
+      "Bash(zellij kill-session:*)",
+      "Bash(nu:*)"
     ]
   }
 }

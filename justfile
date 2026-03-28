@@ -10,7 +10,7 @@ home:
 
 # build the system configuration without switching
 build:
-  sudo nixos-rebuild build --flake .#{{hostname}} --print-build-logs
+  nixos-rebuild build --flake .#{{hostname}} --print-build-logs
 
 # build and switch to the new system configuration
 switch:
