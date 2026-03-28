@@ -1,8 +1,13 @@
 # Base home-manager module — imports all program sub-modules.
 # Receives `hostname` and `username` via extraSpecialArgs for host-specific overrides.
-{ pkgs, hostname, username, ... }:
+{ pkgs, lib, hostname, username, ... }:
 
 {
+  # Provide a default for extraNuLibDirs so hosts that don't set it in
+  # extraSpecialArgs still satisfy the module system's arg resolution.
+  # boxer overrides this via extraSpecialArgs.extraNuLibDirs.
+  _module.args.extraNuLibDirs = lib.mkDefault [];
+
   imports = [
     ./packages.nix
     ./programs/git.nix

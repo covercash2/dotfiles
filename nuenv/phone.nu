@@ -1,13 +1,10 @@
 # Phone terminal session management.
-# Attach to an existing "phone" zellij session, or create one with the phone layout.
+
+use zellij.nu *
 
 const PHONE_SESSION = "phone"
 
+# Attach to the phone zellij session, or create it if it doesn't exist
 export def "phone session" [] {
-    let sessions = (zellij list-sessions --no-formatting 2>/dev/null | lines | str trim | where $it == $PHONE_SESSION)
-    if ($sessions | is-empty) {
-        zellij --new-session-with-layout phone --session $PHONE_SESSION
-    } else {
-        zellij attach $PHONE_SESSION
-    }
+    zj open $PHONE_SESSION --layout phone
 }
