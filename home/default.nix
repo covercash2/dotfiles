@@ -12,7 +12,6 @@
     ./packages.nix
     ./programs/git.nix
     ./programs/starship.nix
-    ./programs/atuin.nix
     ./programs/shells.nix
     ./programs/zellij.nix
     ./programs/neovim.nix
