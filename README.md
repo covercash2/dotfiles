@@ -47,7 +47,7 @@ Some services run as user units — check with `systemctl --user status <service
 
 ## secrets
 
-Managed with [sops-nix] + [rops], see `[docs/secrets.md](./docs/secrets.md)`.
+Managed with [sops-nix] + [rops], see [docs/secrets.md](./docs/secrets.md).
 
 
 ## rescue disk
