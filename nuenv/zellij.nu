@@ -3,7 +3,7 @@
 def session-names [] {
     zellij list-sessions --no-formatting --short
         | lines
-        | str trim
+        | each { str trim }
 }
 
 def layout-names [] {
