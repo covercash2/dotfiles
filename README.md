@@ -47,26 +47,8 @@ Some services run as user units — check with `systemctl --user status <service
 
 ## secrets
 
-Managed with [sops-nix] + [rops], encrypted to the host's SSH ed25519 key.
+Managed with [sops-nix] + [rops], see `[docs/secrets.md](./docs/secrets.md)`.
 
-```bash
-rops edit secrets/green.yaml     # decrypt, edit, re-encrypt
-```
-
-The age pubkey for `green` is `age1lvh945n6pxhwxqyrt6x5fcyvgeytnh4cg47zj2000ltmqal4xyjs0adv96`
-(derived via `nix run nixpkgs#ssh-to-age -- -i /etc/ssh/ssh_host_ed25519_key.pub`).
-
-New secrets: add to `secrets/green.yaml`, declare in [`modules/sops.nix`](./modules/sops.nix).
-
-Non-interactive decrypt (no TTY):
-```bash
-SOPS_AGE_KEY=<age-key> rops decrypt -f yaml secrets/green.yaml
-```
-
-Non-interactive encrypt (public key only):
-```bash
-printf 'key: value\n' | rops encrypt --age age1lvh945n... -f yaml > secrets/green.yaml
-```
 
 ## rescue disk
 
