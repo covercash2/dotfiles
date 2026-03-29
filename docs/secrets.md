@@ -5,7 +5,7 @@ secrets are managed with [sops-nix] and encrypted with [rops] using the host's S
 ## how it works
 
 - at activation, `[sops-nix]` reads `/etc/ssh/ssh_host_ed25519_key`
-and uses it to decrypt files listed under `sops.secret.*`.
+and uses it to decrypt files listed under `sops.secrets.*`.
 - `sops.templates.*` can interpolate decrypted values into rendered files
     (e.g. an `EnvironmentFile` for a systemd service).
 - the age public key derived from the SSH host key is pinned in [.sops.yaml]
