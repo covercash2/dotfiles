@@ -25,6 +25,23 @@
       mode = "0400";
     };
 
+    secrets.miniflux_admin_password = {
+      sopsFile = ../secrets/green.yaml;
+      owner = "miniflux";
+      group = "miniflux";
+      mode = "0400";
+    };
+
+    templates."miniflux-credentials" = {
+      content = ''
+        ADMIN_USERNAME=admin
+        ADMIN_PASSWORD=${config.sops.placeholder.miniflux_admin_password}
+      '';
+      owner = "miniflux";
+      group = "miniflux";
+      mode = "0400";
+    };
+
     # Renders an EnvironmentFile that green's systemd unit reads.
     # GREEN_DB_URL overrides db_url from config.toml at runtime so that
     # the credential never appears in the Nix store.

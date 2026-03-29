@@ -23,6 +23,8 @@
     # lua-language-server: via programs.neovim.extraPackages
     # neovim, nil, lua-language-server, typos-lsp installed via programs.neovim in programs/neovim.nix
     nix-update # used to bump versions in nix files
+    obsidian # note taking software
+    opencode
 
     nufmt # nushell formatter
     # nushellPlugins.net # list net interfaces: `$ net`

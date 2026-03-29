@@ -5,6 +5,7 @@
 {
   programs.git = {
     enable = true;
+    signing.format = "openpgp";
 
     # https://blog.gitbutler.com/how-git-core-devs-configure-git/
     settings = {

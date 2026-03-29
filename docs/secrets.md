@@ -1,77 +1,122 @@
 # secrets
 
-secrets are managed with [sops-nix] and encrypted with [rops] using the host's SSH ed25519 key.
+Secrets are managed with [sops-nix] and encrypted with [rops] (a Rust implementation of sops)
+using the host's SSH ed25519 key converted to an age key.
 
 ## how it works
 
-- at activation, `[sops-nix]` reads `/etc/ssh/ssh_host_ed25519_key`
-and uses it to decrypt files listed under `sops.secrets.*`.
-- `sops.templates.*` can interpolate decrypted values into rendered files
-    (e.g. an `EnvironmentFile` for a systemd service).
-- the age public key derived from the SSH host key is pinned in [.sops.yaml]
-    so that `[rops]` knows which key to encrypt to when creating or editing secrets.
+- `secrets/green.yaml` is an age-encrypted YAML file committed to the repo.
+- At NixOS activation, `sops-nix` reads `/etc/ssh/ssh_host_ed25519_key`, derives the age private
+  key internally, and decrypts secrets declared under `sops.secrets.*` in `modules/sops.nix`.
+- `sops.templates.*` can interpolate decrypted values into rendered files (e.g. an
+  `EnvironmentFile` for a systemd service).
 
-## editing secrets
+The age public key derived from the host SSH key is:
 
-```nu
-rops edit secrets/green.yaml
+```
+age1lvh945n6pxhwxqyrt6x5fcyvgeytnh4cg47zj2000ltmqal4xyjs0adv96
 ```
 
-#### non-interactive environments (e.g. Claude Code)
+This is pinned in `.sops.yaml` under the `host_green` anchor.
 
-`rops edit` requires a TTY.
-`rops decrypt` requires the SSH host private key (root-only).
-in a non-interactive shell, use these workarounds:
+> **Known issue:** `.sops.yaml` has `path_regex: nixos/secrets/.*\.yaml$` but the actual file
+> lives at `secrets/green.yaml`. The creation rules therefore do **not** auto-apply. You must
+> always pass `--age` explicitly when encrypting.
 
-##### decrypt (--requires sudo)
+## current secrets (`modules/sops.nix`)
+
+| key | owner | use |
+|-----|-------|-----|
+| `green_db_password` | green | interpolated into `green-env` template as `GREEN_DB_URL` |
+| `mqtt_password` | green | interpolated into `green-env` template as `GREEN_MQTT_PASSWORD` |
+| `pgadmin_password` | pgadmin | pgAdmin admin password |
+| `miniflux_admin_password` | miniflux | rendered into `miniflux-credentials` template as `ADMIN_PASSWORD` |
+
+## managing secrets with `nuenv/sops.nu`
+
+`nuenv/sops.nu` provides nushell commands for common operations. Load it with:
 
 ```nu
-sudo nix run nixpkgs#ssh-to-age -- -private-key -i /etc/ssh/ssh_host_ed25519_key
-# pipe the resulting age private key into SOPS_AGE_KEY env var, then:
-SOPS_AGE_KEY=<age-private-key> rops decrypt -f yaml secrets/green.yaml
+overlay use nuenv/sops.nu
 ```
 
-##### encrypt/overwrite (no sudo):
+All commands derive the age private key from `/etc/ssh/ssh_host_ed25519_key` via `sudo ssh-to-age`
+and pass it to `rops` via the `ROPS_AGE` environment variable.
 
 ```nu
-('key: value\n'
-| rops encrypt --age age1lvh945n6pxhwxqyrt6x5fcyvgeytnh4cg47zj2000ltmqal4xyjs0adv96 -f yaml
-| save --force secrets/green.yaml)
+secrets list                         # show all secret key names (requires sudo)
+secrets add miniflux_admin_password  # prompt for value and save it (requires sudo)
+secrets edit                         # open in $EDITOR interactively (requires TTY + sudo)
 ```
 
-> note: rops sees stdin AND a file path as "multiple inputs" — always use > file redirection rather than the -i / --in-place flag when piping.
+## raw `rops` commands
 
-## adding a new secret
+For cases where `sops.nu` is not available or you need more control.
 
-1. add the key to `secrets/green.yaml` via `rops edit`
-2. declare `sops.secrets.<name>` in `modules/sops.nix`
-3. reference `config.sops.secrets.<name>.path` (or use a template) where the secret is needed
+**Decrypt (read):**
+```nu
+with-env {ROPS_AGE: (sudo ssh-to-age -private-key -i /etc/ssh/ssh_host_ed25519_key | str trim)} {
+  rops decrypt secrets/green.yaml
+}
+```
 
-### resetting the postgresql password
+**Add or update a key (decrypt → edit → re-encrypt):**
+```nu
+with-env {ROPS_AGE: (sudo ssh-to-age -private-key -i /etc/ssh/ssh_host_ed25519_key | str trim)} {
+  rops decrypt secrets/green.yaml | save /tmp/s.yaml
+}
+# edit /tmp/s.yaml
+rops encrypt --age age1lvh945n6pxhwxqyrt6x5fcyvgeytnh4cg47zj2000ltmqal4xyjs0adv96 -f yaml /tmp/s.yaml
+| save --force secrets/green.yaml
+rm /tmp/s.yaml
+```
+
+> **Note:** `rops` treats both stdin and a file path as "multiple inputs" — pipe the encrypted
+> output to `save` rather than using `-i` / `--in-place` when the input is a file argument.
+
+## declaring a new secret in NixOS
+
+1. Add the key+value to `secrets/green.yaml` via `secrets add <key>` or the raw commands above.
+2. Declare it in `modules/sops.nix`:
+   ```nix
+   sops.secrets.my_secret = {
+     sopsFile = ../secrets/green.yaml;
+     owner = "someuser";
+     mode = "0400";
+   };
+   ```
+3. Reference it via `config.sops.secrets.my_secret.path`, or use
+   `config.sops.placeholder.my_secret` inside a `sops.templates` block.
+
+## first-time setup for a new host
+
+1. Derive the host's age public key:
+   ```nu
+   ssh-to-age -i /etc/ssh/ssh_host_ed25519_key.pub
+   ```
+2. Add the public key to `.sops.yaml` under a new anchor.
+3. Re-encrypt the secrets file for the new key:
+   ```nu
+   rops keys update secrets/green.yaml
+   ```
+4. Add the host's SSH key path to `sops.age.sshKeyPaths` in its sops module:
+   ```nix
+   sops.age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+   ```
+
+## resetting the postgresql password
 
 ```nu
 # 1. generate a new password
-let pass = (openssl rand -base64 32 | tr -d '=/+' | head -c 40)
+let pass = (openssl rand -base64 32 | str trim | str replace -a '=' '' | str replace -a '/' '' | str replace -a '+' '' | str substring 0..39)
 
-# 2. set it in postgres (peer auth works without a password from the machine itself)
+# 2. set it in postgres (peer auth works without a password on the machine itself)
 psql -U postgres -c $"ALTER USER green PASSWORD '($pass)';"
 
-# 3. re-encrypt the secrets file
-($"green_db_password: ($pass)\n"
-| rops encrypt --age age1lvh945n6pxhwxqyrt6x5fcyvgeytnh4cg47zj2000ltmqal4xyjs0adv96 -f yaml
-| save --force secrets/green.yaml
-)
+# 3. add it to the secrets file
+overlay use nuenv/sops.nu
+secrets add green_db_password  # paste $pass when prompted
 ```
-
-## first time setup
-
-1. derive host's age public key
-2. add it to `.sops.yaml` under a new anchor
-3. re-encrypt existing secrets files for the new key:
-```nu
-rops keys update --age <new-age-pubkey> secrets/green.yaml
-```
-4. add the host's SSH key path to `sops.age.sshKeyPaths` in its [sops] module
 
 [sops-nix]: https://github.com/Mic92/sops-nix
 [rops]: https://github.com/getsops/rops

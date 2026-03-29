@@ -90,6 +90,10 @@
           url = "dev.green.chrash.net";
           description = "Development server";
         };
+        miniflux = {
+          url = "miniflux.green.chrash.net";
+          description = "Miniflux RSS reader";
+        };
       };
 
       auth = {
@@ -213,12 +217,29 @@
           '';
         };
 
+        ${config.services.green.routes.miniflux.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:8585
+          '';
+        };
+
         "ntfy.green.chrash.net" = {
           extraConfig = ''
             tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
             reverse_proxy localhost:8083
           '';
         };
+      };
+    };
+
+    miniflux = {
+      enable = true;
+      adminCredentialsFile = config.sops.templates."miniflux-credentials".path;
+      config = {
+        LISTEN_ADDR = "localhost:8585";
+        BASE_URL = "https://${config.services.green.routes.miniflux.url}";
+        CREATE_ADMIN = 1;
       };
     };
 
@@ -353,6 +374,7 @@
 
   environment.systemPackages = with pkgs; [
     bat-extras.batman
+    ssh-to-age
     btrfs-progs
     claude-code
     dive
@@ -384,9 +406,12 @@
 
   users = {
     groups = {
-      iot = {
-        gid = 992;
-      };
+      iot.gid = 992;
+      miniflux = {};
+    };
+    users.miniflux = {
+      isSystemUser = true;
+      group = "miniflux";
     };
   };
   users.users.chrash = {

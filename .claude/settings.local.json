@@ -6,8 +6,27 @@
       "Bash(zellij attach:*)",
       "Bash(zellij kill-session:*)",
       "Bash(nu:*)",
+      "Bash(nu:*)",
       "Bash(jj --version)",
-      "Bash(jj status:*)"
+      "Bash(jj status:*)",
+      "Bash(nu:*)",
+      "Bash(just build:*)",
+      "Bash(nix flake:*)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(d[''''revision'''']\\)\")",
+      "WebFetch(domain:www.nushell.sh)",
+      "Bash(rops decrypt:*)",
+      "Bash(rops --help)",
+      "Bash(rops keys:*)",
+      "Bash(rops encrypt:*)",
+      "Bash(rops edit:*)",
+      "Bash(sudo ssh-to-age:*)",
+      "Bash(nu --commands '\"\"AGE-SECRET-KEY-1test\"\" | save /tmp/test-age-key.txt')",
+      "Read(//tmp/**)",
+      "Bash(rm /tmp/test-age-key.txt)",
+      "Bash(SOPS_AGE_KEY_FILE=/nonexistent rops decrypt /home/chrash/github/covercash2/dotfiles/secrets/green.yaml)",
+      "WebFetch(domain:github.com)",
+      "WebSearch",
+      "WebFetch(domain:crates.io)"
     ]
   }
 }
