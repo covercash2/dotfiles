@@ -1,6 +1,6 @@
 # secrets
 
-secrets are managed with [sops-nix] and ecrypted with [rops] using the host's SSH ed25519 key.
+secrets are managed with [sops-nix] and encrypted with [rops] using the host's SSH ed25519 key.
 
 ## how it works
 
