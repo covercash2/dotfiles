@@ -5,7 +5,6 @@
 {
   home.packages = with pkgs; [
     asdf-vm # toolchain management
-    atuin # sync shell autocomplete across machines
     bitwarden-cli
     carapace # command line completion
     claude-code
@@ -19,6 +18,8 @@
 
     jujutsu
     just
+    k9s
+    kubectl
     # lua-language-server: via programs.neovim.extraPackages
     # neovim, nil, lua-language-server, typos-lsp installed via programs.neovim in programs/neovim.nix
     nix-update # used to bump versions in nix files
