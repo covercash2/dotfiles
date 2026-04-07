@@ -21,7 +21,7 @@ return {
 	dependencies = {
 		"mfussenegger/nvim-dap",
 	},
-	version = "^6",
+	version = "^8",
 	ft = { "rust" },
 	lazy = false,
 	keys = {

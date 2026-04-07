@@ -8,13 +8,12 @@
     bat # better than cat
     bitwarden-cli
     carapace # command line completion
-    claude-code
+    # claude-code
     dig # domain name server
     direnv # loads .envrc for dev environments
     delta # diff viewer for git
     dust # like du but Rust
     fastfetch # neofetch replacement
-    gcc
     gh # GitHub CLI
 
     jujutsu
@@ -31,6 +30,7 @@
     nushellPlugins.highlight # highlight raw text: `$ open --raw data.json | highlight`
     nushellPlugins.semver
 
+    opencode
     ripgrep
     starship
     typos # find typos in source code projects
@@ -42,6 +42,7 @@
   ] ++ lib.optionals pkgs.stdenv.isLinux [
     cyme # lsusb replacement in Rust
     ethtool # network tool
+    gcc
     libgcc
     lshw
     usbutils # lsusb etc
