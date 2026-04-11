@@ -34,7 +34,7 @@
 
     templates."miniflux-credentials" = {
       content = ''
-        ADMIN_USERNAME=admin
+        ADMIN_USERNAME=chrash
         ADMIN_PASSWORD=${config.sops.placeholder.miniflux_admin_password}
       '';
       owner = "miniflux";

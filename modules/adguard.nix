@@ -115,5 +115,8 @@
     allowedTCPPorts = [
       53 # unsecured DNS
     ];
+    allowedUDPPorts = [
+      53 # unsecured DNS
+    ];
   };
 }

@@ -39,6 +39,7 @@
     # typos-lsp: via programs.neovim.extraPackages
     tree
     xdg-utils # e.g. xdg-open
+    yt-dlp
     zellij # terminal multiplexer
     zoxide # cd replacement with a memory
   ] ++ lib.optionals pkgs.stdenv.isLinux [
