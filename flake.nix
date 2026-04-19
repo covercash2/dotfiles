@@ -25,6 +25,10 @@
     };
     nixos-cli.url = "github:nix-community/nixos-cli";
     sops-nix.url = "github:Mic92/sops-nix";
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -36,6 +40,7 @@
       ultron,
       nixos-cli,
       sops-nix,
+      disko,
       ...
     }:
     let
@@ -95,9 +100,8 @@
 
           ./modules/adguard.nix
           ./modules/certificates.nix
-          ./modules/foundry.nix
+          ./modules/foundryvtt.nix
           ./modules/homeassistant.nix
-          # ./modules/immich.nix
           ./modules/starship-jj.nix
           ./modules/openssh.nix
           ./modules/postgres.nix
@@ -134,6 +138,50 @@
           ];
         };
 
+        # Digital Ocean VPS — ingress and high availability
+        foundry = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            ./foundry-hardware-configuration.nix
+            ./modules/foundry-disk.nix
+            ./modules/foundry.nix
+            ./modules/openssh.nix
+            disko.nixosModules.disko
+            home-manager.nixosModules.home-manager
+            {
+              nixpkgs.config.allowUnfree = true;
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = { hostname = "foundry"; username = "chrash"; withDesktop = false; };
+              home-manager.users.chrash = import ./home;
+              home-manager.backupFileExtension = "hm-backup";
+            }
+            ({ pkgs, ... }: {
+              nix.settings.experimental-features = [ "nix-command" "flakes" ];
+              time.timeZone = "America/Chicago";
+              i18n.defaultLocale = "en_US.UTF-8";
+              networking.hostName = "foundry";
+              users.users.chrash = {
+                isNormalUser = true;
+                extraGroups = [ "wheel" ];
+                shell = pkgs.nushell;
+                openssh.authorizedKeys.keyFiles = [
+                  (builtins.fetchurl {
+                    url = "https://github.com/covercash2.keys";
+                    sha256 = "0c6zpk19saxk0vfgwlkip0fcb6hp4nz3qwrfr0zs2z76qwxxjkbd";
+                  })
+                ];
+              };
+              security.sudo.wheelNeedsPassword = false;
+              environment.systemPackages = with pkgs; [
+                git
+                vim
+              ];
+              system.stateVersion = "25.05";
+            })
+          ];
+        };
+
         # bootable rescue disk ISO for system recovery
         rescue-disk = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
@@ -161,6 +209,7 @@
           extraSpecialArgs = { hostname = "eve"; username = "chrash"; };
           modules = [ ./home ];
         };
+
         foundry = home-manager.lib.homeManagerConfiguration {
           pkgs = import nixpkgs {
             system = "x86_64-linux";
@@ -169,6 +218,7 @@
           extraSpecialArgs = { hostname = "foundry"; username = "chrash"; withDesktop = false; };
           modules = [ ./home ];
         };
+
         boxer = home-manager.lib.homeManagerConfiguration {
           pkgs = import nixpkgs {
             system = "aarch64-darwin";

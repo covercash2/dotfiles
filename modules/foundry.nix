@@ -1,44 +1,31 @@
-{ pkgs, ... }:
+# NixOS module for the foundry Digital Ocean VPS
+# Currently running Ubuntu — this module is ready for when foundry is migrated to NixOS.
+{ ... }:
 
 {
-  systemd.services.foundryvtt = {
-    enable = true;
-
-    # run a systemd service for FoundryVTT
-    after = [ "network-online.target" ];
-    wants = [ "network-online.target" ];
-
-    unitConfig = {
-      Description = "Foundry Virtual Tabletop server";
+  virtualisation = {
+    containers.enable = true;
+    podman = {
+      enable = true;
+      defaultNetwork.settings.dns_enabled = true;
     };
 
-    path = [ pkgs.nodejs_24 ];
-
-    script = "node ./dist/main.js --dataPath=./data";
-
-    serviceConfig = {
-      # recommended for long-running services
-      Type = "exec";
-      Restart = "on-success";
-      User = "foundry";
-      Group = "foundry";
-      WorkingDirectory = "/mnt/space/foundry";
+    oci-containers.containers = {
+      # prometheus exporter for system info
+      node_exporter = {
+        image = "quay.io/prometheus/node-exporter:latest";
+        volumes = [ "/:/host:ro,rslave" ];
+        pull = "newer";
+        extraOptions = [ "--network=host" "--pid=host" ];
+        cmd = [ "--path.rootfs=/host" ];
+      };
     };
-
-    wantedBy = [ "multi-user.target" ];
   };
 
-  users = {
-    users.foundry = {
-      group = "foundry";
-      isSystemUser = true;
-      home = "/mnt/space/foundry";
-      createHome = false;
-      description = "Foundry VTT User";
-      packages = with pkgs; [
-        nodejs_24
-      ];
-    };
-    groups.foundry = { };
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [
+      9100 # node_exporter for prometheus system resource metrics
+    ];
   };
 }

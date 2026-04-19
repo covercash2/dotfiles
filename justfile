@@ -11,6 +11,10 @@ home:
 home-foundry:
   home-manager switch --flake .#foundry
 
+# install NixOS on foundry via nixos-anywhere (destructive — wipes the disk)
+deploy-foundry:
+  nix run github:nix-community/nixos-anywhere -- --flake .#foundry chrash@foundry
+
 # build the system configuration without switching
 build:
   nixos-rebuild build --flake .#{{hostname}} --print-build-logs
