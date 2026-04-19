@@ -25,10 +25,7 @@
   };
 
   services = {
-    tailscale = {
-      enable = true;
-      permitCertUid = "caddy";
-    };
+    tailscale.permitCertUid = "caddy";
     blueman.enable = true;
   };
 

@@ -5,30 +5,37 @@ System and user config are fully declarative — no separate dotfiles manager.
 
 ## hosts
 
-| Host | Type | Notes |
-|------|------|-------|
-| green | NixOS | Main system — gaming, home automation, web services |
-| wall-e | NixOS | ThinkPad laptop |
-| hoss | NixOS | Embedded development |
-| eve | macOS | Standalone home-manager (no nix-darwin) |
+Hosts and their module composition are defined in [`flake.nix`](./flake.nix).
 
 ## structure
 
 ```
-flake.nix                        # system + home-manager configs per host
+flake.nix                        # entry point — all host definitions
 configuration.nix                # shared NixOS base
-home/                            # home-manager modules (packages, dotfiles, shell)
-modules/                         # NixOS service modules
+modules/                         # NixOS service and hardware modules
+home/                            # home-manager config
 *-hardware-configuration.nix     # per-host hardware
-secrets/                         # sops-nix encrypted secrets
+secrets/                         # sops-nix encrypted secrets (see docs/secrets.md)
+nuenv/                           # nushell utility scripts
 ```
 
 ## rebuilding
 
 ```bash
-sudo nixos-rebuild switch --flake .#green   # NixOS hosts
-home-manager switch --flake .#eve           # macOS standalone
+just switch     # NixOS (autodetects hostname)
+just home       # macOS standalone home-manager
+just --list     # all available recipes
 ```
+
+Hosts without a local repo copy (e.g. VPS) pull directly from GitHub:
+
+```bash
+sudo nixos-rebuild switch --flake github:covercash2/dotfiles#<host>
+```
+
+## Digital Ocean VPS
+
+See [docs/digital_ocean.md](./docs/digital_ocean.md).
 
 ## home-manager
 
