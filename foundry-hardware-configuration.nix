@@ -21,6 +21,9 @@
   # boot.loader.grub.devices when it finds the EF02 BIOS boot partition.
   # Setting it here too causes a "duplicated devices in mirroredBoots" assertion.
   boot.loader.grub.enable = true;
+  # Disable the systemd-boot default from configuration.nix — only one
+  # bootloader can be active. Foundry uses BIOS/GRUB (SeaBIOS, not UEFI).
+  boot.loader.systemd-boot.enable = false;
 
   boot.initrd.availableKernelModules = [
     "ata_piix"

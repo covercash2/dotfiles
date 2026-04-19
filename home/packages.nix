@@ -8,7 +8,7 @@
     bat # better than cat
     bitwarden-cli
     carapace # command line completion
-    # claude-code
+    claude-code
     dig # domain name server
     direnv # loads .envrc for dev environments
     delta # diff viewer for git
@@ -36,26 +36,27 @@
     typos # find typos in source code projects
     # typos-lsp: via programs.neovim.extraPackages
     tree
+    yt-dlp
     zellij # terminal multiplexer
     zoxide # cd replacement with a memory
-  ] ++ lib.optionals (pkgs.stdenv.isLinux && withDesktop) [
-    bitwarden-desktop
+  ] ++ lib.optionals pkgs.stdenv.isLinux [
     cyme # lsusb replacement in Rust
-    discord
     ethtool # network tool
-    firefox
     gcc
-    ghostty # terminal emulator (macOS users run the native app)
-    grim # Wayland image grabber
     libgcc
     lshw
+    usbutils # lsusb etc
+  ] ++ lib.optionals (pkgs.stdenv.isLinux && withDesktop) [
+    bitwarden-desktop
+    discord
+    firefox
+    ghostty # terminal emulator (macOS users run the native app)
+    grim # Wayland image grabber
     obsidian # note taking software
     pavucontrol # volume control for pulse audio
     slurp # select a region of the screen in Wayland
-    usbutils # lsusb etc
     wl-clipboard
     wofi # runner a la rofi, Spotlight
-    xdg-utils # desktop integration
-    yt-dlp
+    xdg-utils # e.g. xdg-open
   ];
 }

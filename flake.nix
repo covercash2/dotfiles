@@ -79,6 +79,8 @@
           modules = [
             ./wall-e-hardware-configuration.nix
             ./configuration.nix
+            ./modules/nvidia.nix
+            ./modules/desktop.nix
             ./modules/wall-e.nix
             ./modules/ds4.nix
             home-manager.nixosModules.home-manager
@@ -95,6 +97,8 @@
         green = mkSystem "x86_64-linux" "green" "chrash" ([
           ./green-hardware-configuration.nix
           ./configuration.nix
+          ./modules/nvidia.nix
+          ./modules/desktop.nix
           # ./modules/apollo_router.nix
           ./modules/green.nix
 
@@ -123,6 +127,8 @@
           modules = [
             ./hoss-hardware-configuration.nix
             ./configuration.nix
+            ./modules/nvidia.nix
+            ./modules/desktop.nix
             ./modules/hoss.nix
             ./modules/openssh.nix
             ./modules/embedded_dev.nix
@@ -143,6 +149,7 @@
           system = "x86_64-linux";
           modules = [
             ./foundry-hardware-configuration.nix
+            ./configuration.nix
             ./modules/foundry-disk.nix
             ./modules/foundry.nix
             ./modules/openssh.nix
@@ -156,32 +163,6 @@
               home-manager.users.chrash = import ./home;
               home-manager.backupFileExtension = "hm-backup";
             }
-            ({ pkgs, ... }: {
-              nix.settings.experimental-features = [ "nix-command" "flakes" ];
-              time.timeZone = "America/Chicago";
-              i18n.defaultLocale = "en_US.UTF-8";
-              networking.hostName = "foundry";
-              networking.useDHCP = true;
-              users.users.root.initialPassword = "foundry";
-              users.users.chrash = {
-                isNormalUser = true;
-                extraGroups = [ "wheel" ];
-                shell = pkgs.nushell;
-                initialPassword = "foundry";
-                openssh.authorizedKeys.keyFiles = [
-                  (builtins.fetchurl {
-                    url = "https://github.com/covercash2.keys";
-                    sha256 = "0h6fx7dnc9pnnqkg1bxfdb45h5gq7m3jbprn09aazfxldkkh1957";
-                  })
-                ];
-              };
-              security.sudo.wheelNeedsPassword = false;
-              environment.systemPackages = with pkgs; [
-                git
-                vim
-              ];
-              system.stateVersion = "25.05";
-            })
           ];
         };
 
@@ -208,17 +189,14 @@
           pkgs = import nixpkgs {
             system = "aarch64-darwin";
             config.allowUnfree = true;
+            overlays = [
+              # nushell 0.112.1 has SHLVL tests that fail in the Nix sandbox
+              (final: prev: {
+                nushell = prev.nushell.overrideAttrs (_: { doCheck = false; });
+              })
+            ];
           };
           extraSpecialArgs = { hostname = "eve"; username = "chrash"; };
-          modules = [ ./home ];
-        };
-
-        foundry = home-manager.lib.homeManagerConfiguration {
-          pkgs = import nixpkgs {
-            system = "x86_64-linux";
-            config.allowUnfree = true;
-          };
-          extraSpecialArgs = { hostname = "foundry"; username = "chrash"; withDesktop = false; };
           modules = [ ./home ];
         };
 

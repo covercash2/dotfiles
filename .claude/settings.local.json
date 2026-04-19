@@ -26,7 +26,15 @@
       "Bash(SOPS_AGE_KEY_FILE=/nonexistent rops decrypt /home/chrash/github/covercash2/dotfiles/secrets/green.yaml)",
       "WebFetch(domain:github.com)",
       "WebSearch",
-      "WebFetch(domain:crates.io)"
+      "WebFetch(domain:crates.io)",
+      "Bash(nix search *)",
+      "WebFetch(domain:docs.digitalocean.com)",
+      "WebFetch(domain:wiki.nixos.org)",
+      "WebFetch(domain:search.nixos.org)",
+      "Bash(jj st:*)",
+      "Bash(jj log:*)",
+      "Bash(jj diff:*)",
+      "Bash(jj file:*)"
     ]
   }
 }

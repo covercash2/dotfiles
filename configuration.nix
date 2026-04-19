@@ -2,7 +2,6 @@
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
 {
-  config,
   lib,
   pkgs,
   ...
@@ -22,65 +21,21 @@
 
   nixpkgs.config.allowUnfree = true;
 
-  # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelModules = [
-    "nvidia"
-    "nvidia-drm"
-    "nvidia-uvm"
-  ];
-
-  # recommended for PipeWire: https://nixos.wiki/wiki/PipeWire
-  security.rtkit.enable = true;
-
-  hardware.graphics = {
-    enable = true;
-    enable32Bit = true;
-  };
-  hardware.nvidia = {
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
-    modesetting.enable = true;
-
-    # power management options are unstable
-    powerManagement.enable = false;
-    powerManagement.finegrained = false;
-    # use the open source kernel module
-    open = false;
-  };
-
-  # Pick only one of the below networking options.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
-
+  # Use the systemd-boot EFI boot loader by default.
+  # Hosts that use GRUB (e.g. foundry BIOS/KVM) override these in their
+  # hardware-configuration.nix by setting systemd-boot.enable = false and
+  # grub.enable = true at default priority, which overrides mkDefault.
+  boot.loader.systemd-boot.enable = lib.mkDefault true;
+  boot.loader.efi.canTouchEfiVariables = lib.mkDefault true;
   # Set your time zone.
   time.timeZone = "America/Chicago";
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
   console = {
-    font = "Lat2-Terminus16";
+    font = "ter-v16b";
+    packages = [ pkgs.terminus_font ];
     useXkbConfig = true; # use xkb.options in tty.
-  };
-
-  services = {
-    # this is used to enable video drivers,
-    # even though X isn't used in this config
-    xserver.videoDrivers = [ "nvidia" ];
-    displayManager.enable = false;
-
-    # Enable sound.
-    pipewire = {
-      enable = true;
-      alsa = {
-        enable = true;
-        support32Bit = true;
-      };
-      pulse.enable = true;
-    };
-
-    gvfs.enable = true; # Mount, trash, and other functionalities
-    tumbler.enable = true; # Thumbnail support for images
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -115,40 +70,8 @@
     zip
   ];
 
-  fonts.packages = with pkgs; [
-    noto-fonts
-    noto-fonts-color-emoji
-    nerd-fonts.fira-code
-    fira-code-symbols
-  ];
+  services.tailscale.enable = true;
 
-  programs = {
-    thunar.enable = true;
-  };
-
-  xdg = {
-    # enable different desktop integration features
-    # https://github.com/flatpak/xdg-desktop-portal
-    portal = {
-      enable = true;
-    };
-    mime = {
-      defaultApplications = {
-        "inode/directory" = "thunar.desktop";
-
-        "default-web-browser" = [ "firefox.desktop" ];
-        "text/html" = [ "firefox.desktop" ];
-        "x-scheme-handler/http" = [ "firefox.desktop" ];
-        "x-scheme-handler/https" = [ "firefox.desktop" ];
-        "x-scheme-handler/about" = [ "firefox.desktop" ];
-        "x-scheme-handler/unknown" = [ "firefox.desktop" ];
-      };
-    };
-    terminal-exec.enable = true;
-  };
-
-  programs.hyprland.enable = true;
-  environment.sessionVariables.NIXOS_OZONE_WL = "1";
   environment.variables.EDITOR = "nvim";
   environment.variables.PAGER = "ov";
 

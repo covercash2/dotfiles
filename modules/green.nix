@@ -24,6 +24,8 @@
     defaultGateway = "192.168.2.1";
   };
 
+  nix.settings.max-jobs = 4;
+
   programs.nixos-cli = {
     enable = true;
     settings = {
@@ -38,10 +40,7 @@
       domain = "*.green.chrash.net";
     };
 
-    tailscale = {
-      enable = true;
-      permitCertUid = "caddy";
-    };
+    tailscale.permitCertUid = "caddy";
 
     green = {
       enable = true;
@@ -282,33 +281,31 @@
           job_name = "prometheus";
           scrape_interval = "5s";
           static_configs = [
-            {
-              targets = [ "localhost:9090" ];
-            }
+            { targets = [ "localhost:9090" ]; }
           ];
         }
         {
           job_name = "homeassistant";
           static_configs = [
-            {
-              targets = [ "localhost:8123" ];
-            }
+            { targets = [ "localhost:8123" ]; }
           ];
         }
         {
           job_name = "green_system";
           static_configs = [
-            {
-              targets = [ "localhost:9100" ];
-            }
+            { targets = [ "localhost:9100" ]; }
           ];
         }
         {
           job_name = "hoss_system";
           static_configs = [
-            {
-              targets = [ "hoss:9100" ];
-            }
+            { targets = [ "hoss:9100" ]; }
+          ];
+        }
+        {
+          job_name = "foundry_system";
+          static_configs = [
+            { targets = [ "foundry:9100" ]; }
           ];
         }
       ];
