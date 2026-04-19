@@ -4,9 +4,12 @@ hostname := shell('hostname')
 default:
   just --list
 
-# run just home-manager for, e.g. macOS without nix-darwin
+# run home-manager for standalone hosts (macOS, VPS)
 home:
   home-manager switch --flake .#eve
+
+home-foundry:
+  home-manager switch --flake .#foundry
 
 # build the system configuration without switching
 build:

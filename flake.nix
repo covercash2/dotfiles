@@ -161,6 +161,14 @@
           extraSpecialArgs = { hostname = "eve"; username = "chrash"; };
           modules = [ ./home ];
         };
+        foundry = home-manager.lib.homeManagerConfiguration {
+          pkgs = import nixpkgs {
+            system = "x86_64-linux";
+            config.allowUnfree = true;
+          };
+          extraSpecialArgs = { hostname = "foundry"; username = "chrash"; withDesktop = false; };
+          modules = [ ./home ];
+        };
         boxer = home-manager.lib.homeManagerConfiguration {
           pkgs = import nixpkgs {
             system = "aarch64-darwin";
