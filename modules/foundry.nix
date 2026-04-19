@@ -1,5 +1,4 @@
 # NixOS module for the foundry Digital Ocean VPS
-# Currently running Ubuntu — this module is ready for when foundry is migrated to NixOS.
 { ... }:
 
 {
@@ -25,6 +24,7 @@
   networking.firewall = {
     enable = true;
     allowedTCPPorts = [
+      22   # SSH
       9100 # node_exporter for prometheus system resource metrics
     ];
   };

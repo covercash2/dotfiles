@@ -161,14 +161,17 @@
               time.timeZone = "America/Chicago";
               i18n.defaultLocale = "en_US.UTF-8";
               networking.hostName = "foundry";
+              networking.useDHCP = true;
+              users.users.root.initialPassword = "foundry";
               users.users.chrash = {
                 isNormalUser = true;
                 extraGroups = [ "wheel" ];
                 shell = pkgs.nushell;
+                initialPassword = "foundry";
                 openssh.authorizedKeys.keyFiles = [
                   (builtins.fetchurl {
                     url = "https://github.com/covercash2.keys";
-                    sha256 = "0c6zpk19saxk0vfgwlkip0fcb6hp4nz3qwrfr0zs2z76qwxxjkbd";
+                    sha256 = "0h6fx7dnc9pnnqkg1bxfdb45h5gq7m3jbprn09aazfxldkkh1957";
                   })
                 ];
               };

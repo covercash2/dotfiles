@@ -1,5 +1,5 @@
 # disko disk layout for the foundry Digital Ocean VPS
-# disk: /dev/vda (50G), UEFI/GPT
+# disk: /dev/vda (50G), BIOS/GPT (DO KVM uses BIOS boot despite having EFI partition)
 { ... }:
 
 {
@@ -11,14 +11,15 @@
         content = {
           type = "gpt";
           partitions = {
-            ESP = {
-              size = "512M";
-              type = "EF00";
+            boot = {
+              size = "1M";
+              type = "EF02"; # BIOS boot partition for GRUB on GPT
+              priority = 1;
+            };
+            swap = {
+              size = "2G";
               content = {
-                type = "filesystem";
-                format = "vfat";
-                mountpoint = "/boot";
-                mountOptions = [ "umask=0077" ];
+                type = "swap";
               };
             };
             root = {
