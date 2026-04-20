@@ -1,21 +1,3 @@
-local auto_show_hover = function(bufnr)
-	-- show a window when a doc is available
-	vim.api.nvim_create_autocmd("CursorHold", {
-		buffer = bufnr,
-		callback = function()
-			local opts = {
-				focusable = false,
-				close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
-				border = "rounded",
-				source = "always",
-				prefix = " ",
-				scope = "cursor",
-			}
-			vim.diagnostic.open_float(opts)
-		end,
-	})
-end
-
 return {
 	"mrcjkb/rustaceanvim",
 	dependencies = {
@@ -33,11 +15,6 @@ return {
 	},
 	config = function()
 		vim.g.rustaceanvim = {
-			server = {
-				on_attach = function(client, bufnr)
-					auto_show_hover(bufnr)
-				end,
-			},
       -- TODO update to lspmux
       -- https://github.com/mrcjkb/rustaceanvim/issues/870
       ra_multiplex = {

@@ -12,31 +12,6 @@ return {
 			-- they're close enough, why not
 			vim.treesitter.language.register("toml", "conf")
 		end,
-		opts = {
-			ensure_installed = {
-				"bash",
-				"cpp",
-				"css",
-				"javascript",
-				"json",
-				"just",
-				"kotlin",
-				"lua",
-				"make",
-				"markdown",
-				"markdown_inline",
-				"nu",
-				"python",
-				"rust",
-				"svelte",
-				"toml",
-				"typescript",
-				"yaml",
-			},
-			highlight = {
-				enable = true,
-			},
-		},
 	},
 	{
 		"windwp/nvim-ts-autotag",
