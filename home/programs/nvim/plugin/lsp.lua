@@ -1,6 +1,22 @@
+-- Global capabilities for all LSP servers.
+-- blink.cmp is available here because vim.pack.add() loaded it in init.lua.
+vim.lsp.config("*", {
+	capabilities = require("blink.cmp").get_lsp_capabilities(),
+})
+
+-- Mason
+require("mason").setup({
+	ui = {
+		icons = {
+			package_installed = "✓",
+			package_pending = "➜",
+			package_uninstalled = "✗",
+		},
+	},
+})
+
 -- Auto-show diagnostics on cursor hold.
--- Uses a named augroup per buffer so multiple LSP clients attaching to the
--- same buffer don't register duplicate CursorHold autocmds.
+-- Uses a named augroup per buffer to deduplicate across multiple LSP clients.
 local function auto_show_hover(bufnr)
 	local group = vim.api.nvim_create_augroup("LspAutoHover_" .. bufnr, { clear = true })
 	vim.api.nvim_create_autocmd("CursorHold", {
@@ -19,7 +35,7 @@ local function auto_show_hover(bufnr)
 	})
 end
 
--- LspAttach replaces the deprecated on_attach callback (nvim 0.12+).
+-- LspAttach replaces the deprecated on_attach callback.
 vim.api.nvim_create_autocmd("LspAttach", {
 	callback = function(args)
 		local client = vim.lsp.get_client_by_id(args.data.client_id)

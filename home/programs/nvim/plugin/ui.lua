@@ -1,10 +1,105 @@
--- which-key and other key config
+-- Theme
+vim.cmd.colorscheme("kanagawa")
 
+-- Lualine
+local function recording_symbol()
+	local register = vim.fn.reg_recording()
+	if register == "" then
+		return ""
+	end
+	return "󰑋 " .. register
+end
+
+require("lualine").setup({
+	theme = "auto",
+	sections = {
+		lualine_c = {
+			function()
+				return vim.api.nvim_buf_get_name(0)
+			end,
+		},
+		lualine_x = {
+			recording_symbol,
+		},
+	},
+})
+
+-- Winbar (breadcrumbs via navic)
+vim.o.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}"
+
+-- Window picker
+require("window-picker").setup({
+	hint = "floating-big-letter",
+	prompt_message = "pick window: ",
+})
+
+-- Neo-tree
+vim.g.neotree_remove_legacy_commands = 1
+
+require("neo-tree").setup({
+	close_if_last_window = true,
+	popup_border_style = "",
+	enable_git_status = true,
+	default_component_configs = {
+		git_status = {
+			symbols = {
+				added = "✚",
+				modified = "󰆕 ",
+				deleted = "󰇘",
+				renamed = "➜",
+				untracked = "★",
+				ignored = "☒",
+				unstaged = "",
+				staged = "󰄲",
+				conflict = "",
+			},
+		},
+	},
+})
+
+local map = vim.keymap.set
+map("n", "<leader>tt", "<cmd>Neotree toggle<cr>", { desc = "toggle neotree" })
+map("n", "<leader>tf", "<cmd>Neotree action=show<cr>", { desc = "show files in neotree" })
+map("n", "<leader>tc", "<cmd>Neotree action=close<cr>", { desc = "close neotree" })
+map("n", "<leader>tb", "<cmd>Neotree action=show source=buffers<cr>", { desc = "show buffers" })
+map("n", "<leader>tg", "<cmd>Neotree action=show source=git_status<cr>", { desc = "show changed files" })
+map("n", "<leader>tr", "<cmd>Neotree reveal<cr>", { desc = "show current file in tree" })
+
+-- Obsidian
+require("obsidian").setup({
+	workspaces = {
+		{
+			name = "core",
+			path = "~/obsidian/core",
+		},
+		{
+			name = "work",
+			path = "~/obsidian/work",
+		},
+		{
+			name = "DnD",
+			path = "~/obsidian/DnD/",
+		},
+	},
+	legacy_commands = false,
+	completion = {
+		blink = true,
+		nvim_cmp = false,
+		min_chars = 1,
+	},
+})
+
+-- Markdown preview
+vim.g.mkdp_filetypes = { "markdown" }
+
+map("n", "<leader>rm", "<cmd>MarkdownPreview<cr>", { desc = "run MarkdownPreview" })
+
+-- Which-key
 -- STOP! don't add more keybindings here
 -- unless you need specific customization,
 -- just define them like normal,
 -- and let which-key figure shit out
-local get_keybindings = function()
+local function get_keybindings()
 	local telescope = require("telescope.builtin")
 	local telescope_dap = require("telescope").extensions.dap
 	local dap = require("dap")
@@ -109,7 +204,6 @@ local get_keybindings = function()
 
 		{ "<leader>e", group = "errors" },
 		{ "<leader>el", vim.lsp.diagnostic.get_line_diagnostics, desc = "line diagnostics" },
-		-- { "<leader>et", vim.cmd([[TroubleToggle]]),              desc = "trouble" },
 
 		{
 			"<leader>f",
@@ -192,24 +286,6 @@ local get_keybindings = function()
 	return keybindings
 end
 
-return {
-	"folke/which-key.nvim",
-
-	event = "VeryLazy",
-	dependencies = {
-		"nvim-telescope/telescope.nvim",
-		"nvim-telescope/telescope-dap.nvim",
-		"mfussenegger/nvim-dap",
-		"nvim-treesitter/nvim-treesitter-context",
-		"nvim-tree/nvim-tree.lua",
-		"folke/trouble.nvim",
-		"nvim-neotest/neotest",
-		"kazhala/close-buffers.nvim",
-		"nvim-mini/mini.icons",
-	},
-	config = function()
-		local wk = require("which-key")
-		wk.setup()
-		wk.add(get_keybindings())
-	end,
-}
+local wk = require("which-key")
+wk.setup()
+wk.add(get_keybindings())

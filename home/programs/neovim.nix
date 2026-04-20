@@ -5,6 +5,8 @@
 {
   programs.neovim = {
     enable = true;
+    withRuby = false;
+    withPython3 = false;
     # Tools that neovim needs in its PATH. Mason manages everything else.
     extraPackages = with pkgs; [
       lua-language-server
@@ -15,5 +17,11 @@
     ];
   };
 
-  xdg.configFile."nvim".source = ./nvim;
+  # recursive = true creates ~/.config/nvim/ as a real (writable) directory
+  # with symlinks to individual files. vim.pack needs this to write its
+  # lockfile (nvim-pack-lock.json) into the config directory.
+  xdg.configFile."nvim" = {
+    source = ./nvim;
+    recursive = true;
+  };
 }

@@ -1,6 +1,4 @@
--- testing stuff
-
--- javascript testing shit
+-- Jest config for monorepo support
 local jest_config = {
 	jest_command = "pnpm test --",
 	jestConfigFile = function()
@@ -26,32 +24,38 @@ local jest_config = {
 		end
 	end,
 	env = { CI = true },
-	cwd = function(path)
+	cwd = function()
 		return vim.fn.getcwd()
 	end,
 	jest_test_discovery = true,
 }
 
-return {
-	"nvim-neotest/neotest",
-
-	dependencies = {
-		"nvim-neotest/nvim-nio",
-		"nvim-lua/plenary.nvim",
-		"antoinemadec/FixCursorHold.nvim",
-		"nvim-treesitter/nvim-treesitter",
-		"nvim-neotest/neotest-jest",
-		"mrcjkb/rustaceanvim",
+-- Neotest
+require("neotest").setup({
+	discovery = {
+		enabled = false,
 	},
-  config = function()
-    require("neotest").setup {
-      discovery = {
-        enabled = false,
-      },
-      adapters = {
-        require("neotest-jest")(jest_config),
-        require("rustaceanvim.neotest"),
-      },
-    }
-  end,
-}
+	adapters = {
+		require("neotest-jest")(jest_config),
+		require("rustaceanvim.neotest"),
+	},
+})
+
+-- Coverage
+local function get_lcov_file()
+	local file = vim.fn.expand("%:p")
+	if string.find(file, "/packages/") then
+		local match = string.match(file, "(.-/[^/]+/)coverage") .. "lcov.info"
+		print("using coverage report: ", match)
+		if vim.fn.filereadable(match) then
+			return match
+		else
+			print("file did not match expected: ", match)
+		end
+	end
+	print("no coverage file found")
+end
+
+require("coverage").setup({
+	lcov_file = get_lcov_file,
+})
