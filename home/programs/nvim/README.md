@@ -6,10 +6,22 @@ No external plugin manager (lazy.nvim, packer, etc.) required.
 ## Bootstrapping a new machine
 
 1. **Neovim 0.12+** is required. Verify with `nvim --version`.
-2. Use Nix home-manager to symlink this directory to `~/.config/nvim/`.
+2. Use Nix home-manager to deploy this directory to `~/.config/nvim/`.
+   The Nix module at `home/programs/neovim.nix` handles this.
 3. **Launch `nvim`**. On first start, `vim.pack.add()` clones all plugins
    (takes ~1 minute). Build hooks run automatically via `PackChanged`.
 4. **Check health** with `:checkhealth vim.pack` to verify everything installed.
+
+### Nix flake gotchas
+
+- **All config files must be git-tracked.** Nix flakes only see committed
+  or staged files. Untracked files won't be deployed.
+- **`recursive = true` is required** in the `xdg.configFile."nvim"` declaration
+  (see `home/programs/neovim.nix`). This makes `~/.config/nvim/` a real writable
+  directory so `vim.pack` can write its lockfile. Without it, the directory is a
+  read-only Nix store symlink and `vim.pack.add()` fails with `EACCES`.
+- If switching from a non-recursive to recursive config, you may need to
+  **manually remove the old symlink** (`rm ~/.config/nvim`) before rebuilding.
 
 ### Build dependencies
 
@@ -45,7 +57,7 @@ nvim/
 │   ├── editor.lua            mini.*, autoclose, flash, spider, comment, scrollview
 │   ├── git.lua               gitsigns, git-blame
 │   ├── lang.lua              rustaceanvim, clangd, cmake, guard, dap, jq
-│   ├── lsp.lua               capabilities, mason, LspAttach autocmd, vim.lsp.enable()
+│   ├── lsp.lua               capabilities, LspAttach autocmd, vim.lsp.enable()
 │   ├── navigation.lua        telescope + extensions, oil
 │   ├── testing.lua           neotest, coverage
 │   ├── treesitter.lua        treesitter, autotag, context, rainbow-delimiters
@@ -96,7 +108,6 @@ are on the runtimepath, so every `require()` call works.
 | Check plugin status | `:lua vim.print(vim.pack.get())` |
 | Remove a plugin | `:lua vim.pack.del({ 'plugin-name' })` |
 | Check health | `:checkhealth vim.pack` |
-| Install LSP servers | `:Mason` |
 
 ## Adding a new plugin
 

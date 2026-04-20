@@ -1,19 +1,29 @@
-# Neovim — config linked from repo, LSPs managed via Mason except for
-# the few that are cleanly packaged in nixpkgs.
-{ pkgs, ... }:
+# Neovim — plugins managed by vim.pack, LSP servers provided via nixpkgs.
+{ pkgs, hostname, ... }:
 
+let
+  # mcp-hub has no nixpkgs derivation; wrap npx to get it on PATH.
+  mcp-hub = pkgs.writeShellScriptBin "mcp-hub" ''
+    exec ${pkgs.nodejs}/bin/npx mcp-hub "$@"
+  '';
+
+  isBoxer = hostname == "m-ry6wtc3pxk";
+in
 {
   programs.neovim = {
     enable = true;
     withRuby = false;
     withPython3 = false;
-    # Tools that neovim needs in its PATH. Mason manages everything else.
+    # LSP servers and tools that neovim needs in its PATH.
     extraPackages = with pkgs; [
       lua-language-server
       nil          # nix LSP
       typos-lsp
+      yaml-language-server
       black        # Python formatter
       djhtml       # Django/Jinja template formatter
+    ] ++ pkgs.lib.optionals isBoxer [
+      mcp-hub
     ];
   };
 

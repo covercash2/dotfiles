@@ -77,6 +77,18 @@ map({ "n", "x", "o" }, "<leader>fw", function()
 end, { desc = "flash Word Under Cursor" })
 -- stylua: ignore end
 
+-- Close buffers
+local close_buffers = require("close_buffers")
+map("n", "<leader>bh", function()
+	close_buffers.delete({ type = "hidden" })
+end, { desc = "close hidden buffers" })
+map("n", "<leader>bo", function()
+	close_buffers.delete({ type = "other" })
+end, { desc = "close other buffers" })
+map("n", "<leader>bc", function()
+	close_buffers.delete({ type = "this" })
+end, { desc = "close this buffer" })
+
 -- Spider (subword motions)
 require("spider").setup({
 	skipInsignificantPunctuation = true,

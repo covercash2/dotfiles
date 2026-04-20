@@ -12,6 +12,13 @@ require("treesitter-context").setup({
 	multiline_threshold = 8,
 })
 
+-- Treesitter keymaps
+local map = vim.keymap.set
+map("n", "<leader>Tg", function()
+	require("treesitter-context").go_to_context(vim.v.count1)
+end, { desc = "go to context" })
+map("n", "<leader>Ts", require("telescope.builtin").treesitter, { desc = "structure (treesitter)" })
+
 -- Rainbow delimiters
 local rainbow_delimiters = require("rainbow-delimiters")
 require("rainbow-delimiters.setup").setup({

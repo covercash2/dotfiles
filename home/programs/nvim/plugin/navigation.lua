@@ -40,8 +40,13 @@ map("n", "<leader>vb", tb.git_branches, { desc = "list git branches" })
 map("n", "<leader>vs", tb.git_status, { desc = "list git status" })
 
 -- f for find
+map("n", "<leader>ff", tb.find_files, { desc = "find file" })
+map("n", "<leader>fb", tb.buffers, { desc = "find buffer" })
 map("n", "<leader>fG", tb.grep_string, { desc = "find string in files" })
 map("n", "<leader>fg", tb.live_grep, { desc = "search in files" })
+map("n", "<leader>fH", tb.help_tags, { desc = "help tags" })
+map("n", "<leader>fm", tb.marks, { desc = "find marks" })
+map("n", "<leader>fr", tb.lsp_references, { desc = "find references" })
 map("n", "<leader>fS", tb.spell_suggest, { desc = "fix spelling" })
 
 -- r for run

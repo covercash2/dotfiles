@@ -59,3 +59,15 @@ end
 require("coverage").setup({
 	lcov_file = get_lcov_file,
 })
+
+-- Neotest keymaps
+local map = vim.keymap.set
+map("n", "<leader>cd", '<cmd>lua require("neotest").run.run({strategy = "dap"})<cr>', { desc = "debug nearest test" })
+map("n", "<leader>cf", function()
+	require("neotest").run.run(vim.fn.expand("%"))
+end, { desc = "run all tests in this file" })
+map("n", "<leader>co", "<cmd>Neotest output<cr>", { desc = "open test output window" })
+map("n", "<leader>cp", "<cmd>Neotest output-panel toggle<cr>", { desc = "toggle test output panel" })
+map("n", "<leader>cq", "<cmd>Neotest stop<cr>", { desc = "stop tests" })
+map("n", "<leader>cs", "<cmd>Neotest summary<cr>", { desc = "neotest summary" })
+map("n", "<leader>ct", "<cmd>Neotest run<cr>", { desc = "run nearest test" })

@@ -4,17 +4,6 @@ vim.lsp.config("*", {
 	capabilities = require("blink.cmp").get_lsp_capabilities(),
 })
 
--- Mason
-require("mason").setup({
-	ui = {
-		icons = {
-			package_installed = "✓",
-			package_pending = "➜",
-			package_uninstalled = "✗",
-		},
-	},
-})
-
 -- Auto-show diagnostics on cursor hold.
 -- Uses a named augroup per buffer to deduplicate across multiple LSP clients.
 local function auto_show_hover(bufnr)
@@ -50,6 +39,21 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	end,
 })
 
+-- LSP keymaps
+local map = vim.keymap.set
+map("n", "<leader>bf", vim.lsp.buf.format, { desc = "format buffer" })
+map("n", "<leader>D", vim.lsp.buf.type_definition, { desc = "type definition" })
+map("n", "<leader>gd", vim.lsp.buf.definition, { desc = "definition" })
+map("n", "<leader>gD", vim.lsp.buf.declaration, { desc = "declaration" })
+map("n", "<leader>gi", vim.lsp.buf.implementation, { desc = "implementation" })
+map("n", "<leader>gr", vim.lsp.buf.references, { desc = "references" })
+map("n", "<leader>h", vim.lsp.buf.hover, { desc = "hover window" })
+map("n", "<leader>la", vim.lsp.buf.code_action, { desc = "code action" })
+map("n", "<leader>lA", vim.lsp.buf.add_workspace_folder, { desc = "add workspace" })
+map("n", "<leader>lr", vim.lsp.buf.rename, { desc = "rename" })
+map("n", "<leader>lR", vim.lsp.buf.remove_workspace_folder, { desc = "remove workspace folder" })
+map("n", "<leader>ls", vim.lsp.buf.signature_help, { desc = "signature help" })
+
 -- Enable servers. Per-server overrides live in lsp/*.lua.
 vim.lsp.enable({
 	"biome",
@@ -67,4 +71,5 @@ vim.lsp.enable({
 	"taplo",
 	"ts_ls",
 	"typos_lsp",
+	"yamlls",
 })

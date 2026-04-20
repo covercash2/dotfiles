@@ -89,3 +89,28 @@ end
 
 -- jq playground
 vim.keymap.set("n", "<leader>jq", vim.cmd.JqPlayground, { desc = "jq playground" })
+
+-- DAP keymaps
+local map = vim.keymap.set
+local dap = require("dap")
+local dap_widgets = require("dap.ui.widgets")
+local telescope_dap = require("telescope").extensions.dap
+
+map("n", "<leader>dc", telescope_dap.commands, { desc = "commands" })
+map("n", "<leader>dC", telescope_dap.configurations, { desc = "configurations" })
+map("n", "<leader>df", telescope_dap.frames, { desc = "frames" })
+map("n", "<leader>dh", dap_widgets.hover, { desc = "dap hover" })
+map("n", "<leader>di", dap.step_into, { desc = "step into" })
+map("n", "<leader>dl", telescope_dap.list_breakpoints, { desc = "list breakpoints" })
+map("n", "<leader>dn", dap.continue, { desc = "continue debugger" })
+map("n", "<leader>do", dap.step_over, { desc = "step over" })
+map("n", "<leader>dO", dap.step_out, { desc = "step out" })
+map("n", "<leader>dp", dap_widgets.preview, { desc = "dap preview" })
+map("n", "<leader>dr", dap.repl.open, { desc = "open REPL" })
+map("n", "<leader>dq", dap.terminate, { desc = "stop dap" })
+map("n", "<leader>dR", dap.run_last, { desc = "run last" })
+map("n", "<leader>ds", function()
+	dap_widgets.centered_float(dap_widgets.scopes)
+end, { desc = "dap scopes" })
+map("n", "<leader>dt", dap.toggle_breakpoint, { desc = "toggle breakpoint" })
+map("n", "<leader>dv", telescope_dap.variables, { desc = "variables" })
