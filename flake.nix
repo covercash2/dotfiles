@@ -117,6 +117,7 @@
           ./modules/zigbee_receiver.nix
           ./modules/ntfy.nix
           ./modules/sops.nix
+          ./modules/alerting.nix
 
           # ./modules/actualbudget.nix
           # ./modules/immich.nix
