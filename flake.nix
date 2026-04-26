@@ -103,7 +103,7 @@
           ./modules/green.nix
 
           ./modules/adguard.nix
-          ./modules/certificates.nix
+          ./modules/shared-ca.nix
           ./modules/foundryvtt.nix
           ./modules/homeassistant.nix
           ./modules/starship-jj.nix

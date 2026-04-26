@@ -5,6 +5,11 @@
   sops = {
     age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
 
+    secrets.ca_key = {
+      sopsFile = ../secrets/green.yaml;
+      mode = "0400";
+    };
+
     secrets.green_db_password = {
       sopsFile = ../secrets/green.yaml;
       owner = "green";

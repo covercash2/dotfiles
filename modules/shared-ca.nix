@@ -55,6 +55,7 @@ in
     systemd.services.mkcert-shared-setup = {
       description = "deploy shared mkcert CA and generate certificates for ${cfg.domain}";
       wantedBy = [ "multi-user.target" ];
+      before = [ "caddy.service" ];
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
@@ -79,7 +80,7 @@ in
 
         # rename the generated files
         for file in *.pem; do
-          if [[ "$file" != "rootCA.pem" && "$file" != "rootCA-key.pem" ]]; then
+          if [[ "$file" != "rootCA.pem" && "$file" != "rootCA-key.pem" && "$file" != "domain.pem" && "$file" != "domain-key.pem" ]]; then
             if [[ "$file" == *"-key.pem" ]]; then
               mv "$file" domain-key.pem
             else
