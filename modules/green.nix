@@ -93,6 +93,10 @@
           url = "miniflux.green.chrash.net";
           description = "Miniflux RSS reader";
         };
+        alertmanager = {
+          url = "alertmanager.green.chrash.net";
+          description = "Prometheus Alertmanager";
+        };
       };
 
       auth = {
@@ -199,6 +203,13 @@
           extraConfig = ''
             tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
             reverse_proxy localhost:${toString config.services.prometheus.port}
+          '';
+        };
+
+        ${config.services.green.routes.alertmanager.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            reverse_proxy localhost:${toString config.services.prometheus.alertmanager.port}
           '';
         };
 
