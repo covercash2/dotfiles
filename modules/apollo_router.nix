@@ -173,7 +173,7 @@ with lib;
         virtualHosts = {
           ${config.services.green.routes.apollo_router.url} = {
             extraConfig = ''
-              tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+              tls ${config.services.mkcert-shared.certPath} ${config.services.mkcert-shared.keyPath}
               reverse_proxy localhost:${toString config.services.apollo_router.port}
             '';
           };

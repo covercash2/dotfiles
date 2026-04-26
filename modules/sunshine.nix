@@ -27,7 +27,7 @@ in
       virtualHosts = {
         ${config.services.green.routes.sunshine.url} = {
           extraConfig = ''
-            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            tls ${config.services.mkcert-shared.certPath} ${config.services.mkcert-shared.keyPath}
             reverse_proxy https://localhost:${toString webUIPort} {
               transport http {
                 tls_insecure_skip_verify
