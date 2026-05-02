@@ -14,10 +14,9 @@
         "nix-command"
         "flakes"
       ];
-      # build up to one derivation per logical core in parallel
-      max-jobs = "auto";
-      # use all cores for each individual build job
-      cores = 0;
+      # limit parallel jobs and cores to keep the machine responsive during builds
+      max-jobs = 4;
+      cores = 4;
       extra-substituters = [ "https://devenv.cachix.org" ];
       extra-trusted-public-keys = [ "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw=" ];
     };
