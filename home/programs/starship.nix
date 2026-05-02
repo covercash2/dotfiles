@@ -18,12 +18,9 @@
       };
 
       custom.jj = {
-        command = "prompt";
-        format = "$output";
-        ignore_timeout = true;
-        shell = [ "starship-jj" "--ignore-working-copy" "starship" ];
-        use_stdin = false;
-        when = true;
+        when = "jj-starship detect";
+        shell = ["jj-starship"];
+        format = "$output ";
       };
     };
   };
