@@ -63,7 +63,7 @@ export def "secrets add" [
   --file: path      # read value from this file instead of prompting
 ] {
   let value = if $file != null {
-    open --raw $file
+    open --raw ($file | path expand)
   } else {
     let v = (input --suppress-output $"value for '($key)': ")
     print ""

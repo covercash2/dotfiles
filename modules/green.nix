@@ -145,6 +145,8 @@
               respond "OK"
             }
             handle_path /ca {
+              header Content-Type "application/x-pem-file"
+              header Content-Disposition `attachment; filename="ca.pem"`
               reverse_proxy localhost:${toString config.services.green.port}/api/ca
             }
           '';
@@ -394,7 +396,7 @@
     mkcert # create certificates and a local CA
     nss # for certutils
     openssl
-    pgcli # better CLI for Postgres
+    # pgcli # broken: cli-helpers 2.10.0 test failure (upstream nixpkgs issue)
     podman-tui
     podman-compose
     rops # version controllable secrets management
