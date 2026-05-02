@@ -11,12 +11,13 @@ const ALERTMANAGER_URL = "http://localhost:9093"
 # Send a test message directly to ntfy, bypassing Alertmanager.
 # Use this to confirm ntfy → phone is working.
 export def "alerting ntfy test" [
+  --title: string = "ntfy test"                # notification title
   --message: string = "test alert from nuenv"  # message body to send
   --topic: string = $NTFY_TOPIC                # ntfy topic to post to
 ] {
   let url = $"($NTFY_BASE_URL)/($topic)"
   print $"posting to ($url)"
-  run-external curl "-d" $message $url
+  run-external curl "-H" $"Title: ($title)" "-d" $message $url
 }
 
 # Fire a test alert through Alertmanager.
@@ -28,7 +29,7 @@ export def "alerting test" [
   --summary: string = "Manual test alert from nuenv"  # annotation: summary
   --alertmanager: string = $ALERTMANAGER_URL   # Alertmanager base URL
 ] {
-  let now = (date now | format date "%Y-%m-%dT%H:%M:%SZ")
+  let now = (date now | format date "%+")
   let payload = [{
     labels: {
       alertname: $alertname

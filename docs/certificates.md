@@ -23,23 +23,16 @@ Run these on `green` to generate the shared CA. Do this once — the CA key must
 never be regenerated or all devices will need to re-trust it.
 
 ```nu
-# 1. generate the CA
-cd /tmp
-mkdir shared-ca
-cd shared-ca
-CAROOT=$PWD mkcert -install
-# produces: rootCA.pem (cert) and rootCA-key.pem (key)
+# 1. find where mkcert keeps its CA (or run `mkcert -install` to generate one)
+let caroot = (mkcert -CAROOT | str trim)
 
 # 2. commit the CA cert to the repo
-cp rootCA.pem /path/to/dotfiles/certs/ca.pem
+cp $"($caroot)/rootCA.pem" ~/github/covercash2/dotfiles/certs/ca.pem
 # git add certs/ca.pem && git commit
 
-# 3. add the CA key to sops
-overlay use /path/to/dotfiles/nuenv/sops.nu
-secrets add ca_key   # paste the contents of rootCA-key.pem when prompted
-
-# 4. clean up — do not leave the key on disk
-rm -rf /tmp/shared-ca
+# 3. add the CA key to sops — use --file to preserve newlines in the PEM
+overlay use ~/github/covercash2/dotfiles/nuenv/sops.nu
+secrets add ca_key --file $"($caroot)/rootCA-key.pem"
 ```
 
 ## rebuilding after CA setup
@@ -73,6 +66,38 @@ compromised.
 3. Update `secrets/green.yaml` with the new `ca_key`.
 4. Replace `certs/ca.pem` in the repo with the new cert and commit.
 5. Rebuild all hosts and re-install the CA on non-NixOS devices.
+
+## troubleshooting
+
+**`permission denied` on `domain-key.pem` — caddy fails to start**
+
+The `mkcert-shared-setup` service didn't chown the key to caddy. Fix the live
+files without a full rebuild:
+
+```bash
+sudo chown caddy:caddy /var/lib/mkcert/domain.pem /var/lib/mkcert/domain-key.pem
+sudo systemctl start caddy
+```
+
+**caddy starts but clients still get SSL errors after a rebuild**
+
+Caddy may be serving a stale cert it loaded before `mkcert-shared-setup` ran.
+Check whether the fingerprint caddy is serving matches the cert on disk:
+
+```bash
+# cert caddy is serving
+bash -c "echo | openssl s_client -connect 127.0.0.1:443 -servername ntfy.green.chrash.net 2>/dev/null | openssl x509 -noout -fingerprint"
+
+# cert on disk
+openssl x509 -noout -fingerprint -in /var/lib/mkcert/domain.pem
+```
+
+If they differ, restart caddy: `sudo systemctl restart caddy`
+
+**`secrets add ca_key` stored the key without newlines**
+
+The interactive `secrets add` prompt reads a single line. Always use `--file`
+for PEM keys — see step 3 of the setup above.
 
 [mkcert]: https://github.com/FiloSottile/mkcert
 [sops-nix]: https://github.com/Mic92/sops-nix

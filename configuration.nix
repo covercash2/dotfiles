@@ -9,14 +9,18 @@
 
 {
   nix = {
-    settings.experimental-features = [
-      "nix-command"
-      "flakes"
-    ];
-    extraOptions = ''
-      extra-substituters = https://devenv.cachix.org
-      extra-trusted-public-keys = devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw=
-    '';
+    settings = {
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+      # build up to one derivation per logical core in parallel
+      max-jobs = "auto";
+      # use all cores for each individual build job
+      cores = 0;
+      extra-substituters = [ "https://devenv.cachix.org" ];
+      extra-trusted-public-keys = [ "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw=" ];
+    };
   };
 
   nixpkgs.config.allowUnfree = true;
