@@ -43,6 +43,7 @@ export def secrets [] {
   print ""
   print "subcommands:"
   print "  secrets list            show all secret key names (requires sudo)"
+  print "  secrets get <key>       print the value of a secret (requires sudo)"
   print "  secrets add <key>       add or update a secret (requires sudo)"
   print "  secrets edit            open the file in \$EDITOR interactively (requires TTY)"
 }
@@ -56,11 +57,18 @@ export def "secrets list" [] {
 }
 
 # Add or update a secret. Prompts for the value without echoing. Requires sudo.
+# Use --file to read the value from a file path instead (preserves newlines, useful for PEM keys).
 export def "secrets add" [
-  key: string  # name of the secret to add or update
+  key: string       # name of the secret to add or update
+  --file: path      # read value from this file instead of prompting
 ] {
-  let value = (input --suppress-output $"value for '($key)': ")
-  print ""
+  let value = if $file != null {
+    open --raw ($file | path expand)
+  } else {
+    let v = (input --suppress-output $"value for '($key)': ")
+    print ""
+    $v
+  }
   let path = ($SECRETS_FILE | path expand)
 
   # Decrypt → merge → re-encrypt. Re-encrypt only needs the public key.
@@ -72,6 +80,16 @@ export def "secrets add" [
   | save --force $path
 
   print $"saved '($key)'"
+}
+
+# Get the value of a secret. Requires sudo.
+export def "secrets get" [
+  key: string  # name of the secret to retrieve
+] {
+  let path = ($SECRETS_FILE | path expand)
+  with_age_key {
+    ^rops decrypt $path | from yaml | get $key
+  }
 }
 
 # Open the secrets file interactively using $EDITOR. Requires a TTY.

@@ -4,7 +4,6 @@
 {
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
-    max-jobs = 1;
   };
 
   time.timeZone = "America/Chicago";
@@ -58,6 +57,9 @@
   };
 
   security.sudo.wheelNeedsPassword = false;
+
+  # trust the homelab shared CA so green's services work without cert errors
+  security.pki.certificates = [ (builtins.readFile ../certs/ca.pem) ];
 
   environment.systemPackages = with pkgs; [
     git

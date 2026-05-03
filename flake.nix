@@ -103,10 +103,10 @@
           ./modules/green.nix
 
           ./modules/adguard.nix
-          ./modules/certificates.nix
+          ./modules/adguardhome-sync.nix
+          ./modules/shared-ca.nix
           ./modules/foundryvtt.nix
           ./modules/homeassistant.nix
-          ./modules/starship-jj.nix
           ./modules/openssh.nix
           ./modules/postgres.nix
           ./modules/steam_server.nix
@@ -153,6 +153,7 @@
             ./configuration.nix
             ./modules/foundry-disk.nix
             ./modules/foundry.nix
+            ./modules/adguard-replica.nix
             ./modules/openssh.nix
             disko.nixosModules.disko
             home-manager.nixosModules.home-manager

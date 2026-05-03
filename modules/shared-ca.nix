@@ -52,9 +52,18 @@ in
   config = lib.mkIf cfg.enable {
     environment.systemPackages = with pkgs; [ mkcert ];
 
+    # caddy must not start until mkcert-shared-setup has placed and chowned the certs.
+    # only wire this into caddy when caddy is actually enabled.
+    # this avoids creating or extending a caddy unit on hosts that do not use it.
+    systemd.services.caddy = lib.mkIf config.services.caddy.enable {
+      requires = [ "mkcert-shared-setup.service" ];
+      after = [ "mkcert-shared-setup.service" ];
+    };
+
     systemd.services.mkcert-shared-setup = {
       description = "deploy shared mkcert CA and generate certificates for ${cfg.domain}";
       wantedBy = [ "multi-user.target" ];
+      before = [ "caddy.service" ];
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
@@ -79,7 +88,7 @@ in
 
         # rename the generated files
         for file in *.pem; do
-          if [[ "$file" != "rootCA.pem" && "$file" != "rootCA-key.pem" ]]; then
+          if [[ "$file" != "rootCA.pem" && "$file" != "rootCA-key.pem" && "$file" != "domain.pem" && "$file" != "domain-key.pem" ]]; then
             if [[ "$file" == *"-key.pem" ]]; then
               mv "$file" domain-key.pem
             else
@@ -91,6 +100,7 @@ in
         # set proper permissions
         chmod 644 ${cfg.certPath}
         chmod 600 ${cfg.keyPath}
+        chown caddy:caddy ${cfg.certPath} ${cfg.keyPath}
 
         echo "certificates deployed successfully:"
         echo "  certificate: ${cfg.certPath}"

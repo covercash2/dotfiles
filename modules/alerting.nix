@@ -10,6 +10,16 @@
 { config, ... }:
 
 {
+  services.prometheus.alertmanager-ntfy = {
+    enable = true;
+    settings = {
+      ntfy = {
+        baseurl = "http://localhost:8083";
+        notification.topic = "homelab-alerts";
+      };
+    };
+  };
+
   # Tell Prometheus where Alertmanager is running
   services.prometheus.alertmanagers = [{
     static_configs = [{
@@ -33,11 +43,9 @@
       receivers = [{
         name = "ntfy";
         webhook_configs = [{
-          # ntfy topic: homelab-alerts
-          # NOTE: Alertmanager sends its own JSON format — ntfy will display
-          # it as raw JSON. Good enough for now; format can be improved later
-          # with a template or a thin translation service.
-          url = "http://localhost:8083/homelab-alerts";
+          # alertmanager-ntfy translates Alertmanager JSON into readable
+          # ntfy notifications (title, description, priority, emoji tags)
+          url = "http://127.0.0.1:8000/hook";
           send_resolved = true;
         }];
       }];

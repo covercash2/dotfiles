@@ -1,6 +1,6 @@
 # my server config
 
-{ pkgs, config, ... }:
+{ pkgs, config, lib, ... }:
 
 {
   # disable intel integrated graphics kernel module
@@ -24,7 +24,7 @@
     defaultGateway = "192.168.2.1";
   };
 
-  nix.settings.max-jobs = 4;
+  nix.settings.max-jobs = lib.mkForce 4;
 
   programs.nixos-cli = {
     enable = true;
@@ -35,9 +35,11 @@
 
   services = {
 
-    mkcert = {
+    mkcert-shared = {
       enable = true;
       domain = "*.green.chrash.net";
+      rootCACert = ../certs/ca.pem;
+      rootCAKey = config.sops.secrets.ca_key.path;
     };
 
     tailscale.permitCertUid = "caddy";
@@ -46,7 +48,7 @@
       enable = true;
 
       port = 47336;
-      caPath = config.services.mkcert.caPath;
+      caPath = config.services.mkcert-shared.caPath;
 
       routes = {
         prometheus = {
@@ -132,7 +134,7 @@
       virtualHosts = {
         "home.green.chrash.net" = {
           extraConfig = ''
-            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            tls ${config.services.mkcert-shared.certPath} ${config.services.mkcert-shared.keyPath}
             reverse_proxy localhost:${toString config.services.green.port}
           '';
         };
@@ -143,6 +145,8 @@
               respond "OK"
             }
             handle_path /ca {
+              header Content-Type "application/x-pem-file"
+              header Content-Disposition `attachment; filename="ca.pem"`
               reverse_proxy localhost:${toString config.services.green.port}/api/ca
             }
           '';
@@ -150,35 +154,35 @@
 
         "dev.green.chrash.net" = {
           extraConfig = ''
-            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            tls ${config.services.mkcert-shared.certPath} ${config.services.mkcert-shared.keyPath}
             reverse_proxy localhost:10000
           '';
         };
 
         ${config.services.green.routes.foundry.url} = {
           extraConfig = ''
-            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            tls ${config.services.mkcert-shared.certPath} ${config.services.mkcert-shared.keyPath}
             reverse_proxy localhost:30000
           '';
         };
 
         ${config.services.green.routes.adguard.url} = {
           extraConfig = ''
-            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            tls ${config.services.mkcert-shared.certPath} ${config.services.mkcert-shared.keyPath}
             reverse_proxy localhost:${toString config.services.adguardhome.port}
           '';
         };
 
         ${config.services.green.routes.homeassistant.url} = {
           extraConfig = ''
-            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            tls ${config.services.mkcert-shared.certPath} ${config.services.mkcert-shared.keyPath}
             reverse_proxy localhost:8123
           '';
         };
 
         ${config.services.green.routes.ultron.url} = {
           extraConfig = ''
-            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            tls ${config.services.mkcert-shared.certPath} ${config.services.mkcert-shared.keyPath}
             reverse_proxy localhost:${toString config.services.ultron.port} {
               health_uri /healthcheck
             }
@@ -187,56 +191,56 @@
 
         ${config.services.green.routes.frigate.url} = {
           extraConfig = ''
-            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            tls ${config.services.mkcert-shared.certPath} ${config.services.mkcert-shared.keyPath}
             reverse_proxy localhost:8971
           '';
         };
 
         ${config.services.green.routes.grafana.url} = {
           extraConfig = ''
-            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            tls ${config.services.mkcert-shared.certPath} ${config.services.mkcert-shared.keyPath}
             reverse_proxy localhost:${toString config.services.grafana.settings.server.http_port}
           '';
         };
 
         ${config.services.green.routes.prometheus.url} = {
           extraConfig = ''
-            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            tls ${config.services.mkcert-shared.certPath} ${config.services.mkcert-shared.keyPath}
             reverse_proxy localhost:${toString config.services.prometheus.port}
           '';
         };
 
         ${config.services.green.routes.alertmanager.url} = {
           extraConfig = ''
-            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            tls ${config.services.mkcert-shared.certPath} ${config.services.mkcert-shared.keyPath}
             reverse_proxy localhost:${toString config.services.prometheus.alertmanager.port}
           '';
         };
 
         ${config.services.green.routes.postgres.url} = {
           extraConfig = ''
-            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            tls ${config.services.mkcert-shared.certPath} ${config.services.mkcert-shared.keyPath}
             reverse_proxy localhost:${toString config.services.pgadmin.port}
           '';
         };
 
         ${config.services.green.routes.zwave.url} = {
           extraConfig = ''
-            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            tls ${config.services.mkcert-shared.certPath} ${config.services.mkcert-shared.keyPath}
             reverse_proxy localhost:${config.services.zwave-js-ui.settings.PORT}
           '';
         };
 
         ${config.services.green.routes.miniflux.url} = {
           extraConfig = ''
-            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            tls ${config.services.mkcert-shared.certPath} ${config.services.mkcert-shared.keyPath}
             reverse_proxy localhost:8585
           '';
         };
 
         "ntfy.green.chrash.net" = {
           extraConfig = ''
-            tls ${config.services.mkcert.certPath} ${config.services.mkcert.keyPath}
+            tls ${config.services.mkcert-shared.certPath} ${config.services.mkcert-shared.keyPath}
             reverse_proxy localhost:8083
           '';
         };
@@ -392,7 +396,7 @@
     mkcert # create certificates and a local CA
     nss # for certutils
     openssl
-    pgcli # better CLI for Postgres
+    # pgcli # broken: cli-helpers 2.10.0 test failure (upstream nixpkgs issue)
     podman-tui
     podman-compose
     rops # version controllable secrets management
@@ -408,7 +412,6 @@
     ruff
 
     # Javascript
-    deno
     nodejs_24
   ];
 

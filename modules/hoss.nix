@@ -33,6 +33,9 @@
     enable = true;
   };
 
+  # trust the homelab shared CA so green's services work without cert errors
+  security.pki.certificates = [ (builtins.readFile ../certs/ca.pem) ];
+
   environment.systemPackages = with pkgs; [
     devenv
     direnv

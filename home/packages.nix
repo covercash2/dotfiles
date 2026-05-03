@@ -16,6 +16,7 @@
     fastfetch # neofetch replacement
     gh # GitHub CLI
 
+    jj-starship
     jujutsu
     just
     k9s
