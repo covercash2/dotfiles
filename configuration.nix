@@ -18,7 +18,12 @@
       max-jobs = 4;
       cores = 4;
       extra-substituters = [ "https://devenv.cachix.org" ];
-      extra-trusted-public-keys = [ "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw=" ];
+      extra-trusted-public-keys = [
+        "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
+        "hoss.chrash.net:MOydjP63PR69FuIpPoXXBtIWPHk0AVExmifkGPaK1X0="
+      ];
+      # wheel users can pass --no-check-sigs when copying from trusted local machines
+      trusted-users = [ "root" "@wheel" ];
     };
   };
 
@@ -54,6 +59,12 @@
       useDefaultShell = true;
       # User packages are now managed by home-manager (see nixos/home/packages.nix)
       packages = [ ];
+      openssh.authorizedKeys.keyFiles = [
+        (builtins.fetchurl {
+          url = "https://github.com/covercash2.keys";
+          sha256 = "0d63kky16b3lz048mkdf8l1nf8lp4kx0clh7xn8rwczhkfvvmxh2";
+        })
+      ];
     };
   };
 
@@ -66,6 +77,7 @@
     neovim
     nushell
     pciutils
+    rops
     uv # python package manager
     wget
 

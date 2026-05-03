@@ -46,15 +46,7 @@
   };
 
   users.users.root.initialPassword = "foundry";
-  users.users.chrash = {
-    initialPassword = "foundry";
-    openssh.authorizedKeys.keyFiles = [
-      (builtins.fetchurl {
-        url = "https://github.com/covercash2.keys";
-        sha256 = "1bs13flz7j7c44ky79fbr1l59hvzmryqkfs2dr4w9wc00jykf7sc";
-      })
-    ];
-  };
+  users.users.chrash.initialPassword = "foundry";
 
   security.sudo.wheelNeedsPassword = false;
 
