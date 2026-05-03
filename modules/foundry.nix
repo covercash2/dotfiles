@@ -77,9 +77,21 @@
     };
   };
 
+  # Ingress: proxy public traffic to internal services over Tailscale
+  services.caddy = {
+    enable = true;
+    virtualHosts."foundry.covercash.dev" = {
+      extraConfig = ''
+        reverse_proxy green.faun-truck.ts.net:30000
+      '';
+    };
+  };
+
   networking.firewall = {
     enable = true;
     allowedTCPPorts = [
+      80   # HTTP (ACME challenge + redirect)
+      443  # HTTPS
       9100 # node_exporter for prometheus system resource metrics
     ];
   };
