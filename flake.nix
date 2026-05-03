@@ -134,6 +134,8 @@
             ./modules/openssh.nix
             ./modules/embedded_dev.nix
             ./modules/steam_server.nix
+            ./modules/hoss-builder.nix
+            sops-nix.nixosModules.sops
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;

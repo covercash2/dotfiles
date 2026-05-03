@@ -57,12 +57,6 @@
           #python313Packages.huggingface-hub
           # mistral-rs
         ];
-        openssh.authorizedKeys.keyFiles = [
-          (builtins.fetchurl {
-            url = "https://github.com/covercash2.keys";
-            sha256 = "0c6zpk19saxk0vfgwlkip0fcb6hp4nz3qwrfr0zs2z76qwxxjkbd";
-          })
-        ];
       };
     };
   };
