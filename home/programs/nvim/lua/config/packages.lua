@@ -57,11 +57,12 @@ vim.pack.add({
 	gh .. "vuciv/golf",
 
 	-- Git
-	gh .. "tpope/vim-fugitive",
-	gh .. "f-person/git-blame.nvim",
-	gh .. "lewis6991/gitsigns.nvim",
 	gh .. "akinsho/git-conflict.nvim",
 	gh .. "almo7aya/openingh.nvim",
+	gh .. "f-person/git-blame.nvim",
+	gh .. "lewis6991/gitsigns.nvim",
+	gh .. "tpope/vim-fugitive",
+  gh .. "sindrets/diffview.nvim",
 
 	-- Formatting / linting
 	gh .. "nvimdev/guard.nvim",
@@ -93,7 +94,10 @@ vim.pack.add({
 	{ src = gh .. "s1n7ax/nvim-window-picker", name = "window-picker", version = vim.version.range(">=2.0.0 <3.0.0") },
 
 	-- Language-specific
-	{ src = gh .. "mrcjkb/rustaceanvim", version = vim.version.range(">=8.0.0 <9.0.0") },
+	{
+    src = gh .. "mrcjkb/rustaceanvim",
+    version = vim.version.range("^9"),
+  },
 	gh .. "p00f/clangd_extensions.nvim",
 	gh .. "Civitasv/cmake-tools.nvim",
 	gh .. "phelipetls/jsonpath.nvim",

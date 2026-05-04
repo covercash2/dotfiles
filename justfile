@@ -7,7 +7,7 @@ default:
 # run home-manager for standalone hosts (macOS, VPS)
 # uses `nix run` so it works even before home-manager is in PATH
 home:
-  nix run github:nix-community/home-manager -- switch --flake .#eve
+  nix run github:nix-community/home-manager -- switch --flake .#eve --print-build-logs
 
 home-foundry:
   home-manager switch --flake .#foundry

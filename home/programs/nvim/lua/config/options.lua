@@ -17,3 +17,5 @@ vim.o.clipboard = "unnamedplus"
 vim.o.updatetime = 150
 
 vim.o.breakindent = true
+
+vim.o.exrc = true

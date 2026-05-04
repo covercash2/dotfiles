@@ -15,6 +15,7 @@
     dust # like du but Rust
     fastfetch # neofetch replacement
     gh # GitHub CLI
+    git-filter-repo # remove secrets from repos
 
     jj-starship
     jujutsu

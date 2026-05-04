@@ -1,13 +1,15 @@
 -- Rustaceanvim
-vim.g.rustaceanvim = {
-	-- TODO update to lspmux
-	-- https://github.com/mrcjkb/rustaceanvim/issues/870
-	ra_multiplex = {
-		enable = true,
-		host = "127.0.0.1",
-		port = 27631,
-	},
-}
+-- Deep-extend so per-project .nvim.lua (exrc) settings are preserved
+-- (exrc is sourced before plugin/ files in Neovim's startup sequence)
+-- vim.g.rustaceanvim = vim.tbl_deep_extend("force", vim.g.rustaceanvim or {}, {
+-- 	-- TODO update to lspmux
+-- 	-- https://github.com/mrcjkb/rustaceanvim/issues/870
+-- 	-- ra_multiplex = {
+-- 	-- 	enable = true,
+-- 	-- 	host = "127.0.0.1",
+-- 	-- 	port = 27631,
+-- 	-- },
+-- })
 
 vim.keymap.set("n", "<leader>gX", "<cmd>RustLsp externalDocs<cr>", { desc = "Open external docs" })
 

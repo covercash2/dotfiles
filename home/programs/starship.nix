@@ -17,6 +17,12 @@
         format = "[$time]($style) ";
       };
 
+      git_branch.disabled = true;
+      git_commit.disabled = true;
+      git_state.disabled = true;
+      git_metrics.disabled = true;
+      git_status.disabled = true;
+
       custom.jj = {
         when = "jj-starship detect";
         shell = ["jj-starship"];
