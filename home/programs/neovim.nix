@@ -1,14 +1,6 @@
 # Neovim — plugins managed by vim.pack, LSP servers provided via nixpkgs.
-{ pkgs, hostname, ... }:
+{ pkgs, ... }:
 
-let
-  # mcp-hub has no nixpkgs derivation; wrap npx to get it on PATH.
-  mcp-hub = pkgs.writeShellScriptBin "mcp-hub" ''
-    exec ${pkgs.nodejs}/bin/npx mcp-hub "$@"
-  '';
-
-  isBoxer = hostname == "m-ry6wtc3pxk";
-in
 {
   programs.neovim = {
     enable = true;
@@ -16,16 +8,16 @@ in
     withPython3 = false;
     # LSP servers and tools that neovim needs in its PATH.
     extraPackages = with pkgs; [
+      basedpyright
       lua-language-server
       nil          # nix LSP
-      nodePackages.vscode-langservers-extracted  # jsonls, htmlls, cssls, eslint
+      vscode-langservers-extracted  # jsonls, htmlls, cssls, eslint
+      ruff
       tree-sitter
       typos-lsp
       yaml-language-server
       black        # Python formatter
       djhtml       # Django/Jinja template formatter
-    ] ++ pkgs.lib.optionals isBoxer [
-      mcp-hub
     ];
   };
 

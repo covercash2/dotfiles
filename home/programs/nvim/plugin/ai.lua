@@ -45,35 +45,10 @@ vim.keymap.set("n", "<leader>ap", function()
 	require("copilot.panel").toggle()
 end, { desc = "toggle Copilot panel" })
 
--- MCPHub
-require("mcphub").setup({
-	use_bundled_binary = true,
-	port = 37373,
-	config = vim.fn.expand("~/.config/mcphub/servers.json"),
-	extensions = {
-		avante = {
-			make_slash_commands = true,
-		},
-	},
-})
-
-vim.keymap.set("n", "<leader>am", function()
-	vim.cmd("MCPHub")
-end, { desc = "toggle MCP Hub" })
-
 -- Avante
 require("avante").setup({
 	provider = "copilot",
 	instructions_file = "AGENTS.md",
-	system_prompt = function()
-		local hub = require("mcphub").get_hub_instance()
-		return hub and hub:get_active_servers_prompt() or ""
-	end,
-	custom_tools = function()
-		return {
-			require("mcphub.extensions.avante").mcp_tool(),
-		}
-	end,
 })
 
 vim.keymap.set("n", "<leader>at", function()

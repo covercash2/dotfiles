@@ -14,12 +14,12 @@
 
     path = [ pkgs.nodejs_24 ];
 
-    script = "node ./dist/main.js --dataPath=./data";
+    script = "node ./dist/main.js --dataPath=./data --world=ghurt";
 
     serviceConfig = {
       # recommended for long-running services
       Type = "exec";
-      Restart = "on-success";
+      Restart = "on-failure";
       User = "foundry";
       Group = "foundry";
       WorkingDirectory = "/mnt/space/foundry";

@@ -66,7 +66,7 @@ vim.lsp.enable({
 	"nil_ls",
 	"nushell",
 	"postgres_lsp",
-	"pyright",
+	"basedpyright",
 	"ruff",
 	"svelte",
 	"taplo",
