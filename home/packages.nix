@@ -37,6 +37,7 @@
     typos # find typos in source code projects
     # typos-lsp: via programs.neovim.extraPackages
     tree
+    xh # a Rust-based HTTP CLI client
     yt-dlp
     zellij # terminal multiplexer
     zoxide # cd replacement with a memory
