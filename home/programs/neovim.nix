@@ -18,6 +18,8 @@ in
     extraPackages = with pkgs; [
       lua-language-server
       nil          # nix LSP
+      nodePackages.vscode-langservers-extracted  # jsonls, htmlls, cssls, eslint
+      tree-sitter
       typos-lsp
       yaml-language-server
       black        # Python formatter

@@ -58,6 +58,7 @@ map("n", "<leader>ls", vim.lsp.buf.signature_help, { desc = "signature help" })
 vim.lsp.enable({
 	"biome",
 	"eslint",
+	"jsonls",
 	"helm_ls",
 	"html",
 	"luau_lsp",
