@@ -425,6 +425,32 @@
       group = "miniflux";
     };
   };
+  security.sudo.extraRules = [
+    {
+      users = [ "chrash" ];
+      commands = [
+        {
+          command = "/run/current-system/sw/bin/systemctl stop foundryvtt";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "/run/current-system/sw/bin/systemctl start foundryvtt";
+          options = [ "NOPASSWD" ];
+        }
+      ];
+    }
+    {
+      users = [ "chrash" ];
+      runAs = "foundry";
+      commands = [
+        {
+          command = "/run/current-system/sw/bin/node";
+          options = [ "NOPASSWD" ];
+        }
+      ];
+    }
+  ];
+
   users.users.chrash = {
     extraGroups = [
       "iot"
