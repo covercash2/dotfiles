@@ -104,6 +104,7 @@
 
           ./modules/adguard.nix
           ./modules/adguardhome-sync.nix
+          ./modules/dnsmasq.nix
           ./modules/shared-ca.nix
           ./modules/foundryvtt.nix
           ./modules/homeassistant.nix
@@ -131,10 +132,12 @@
             ./modules/nvidia.nix
             ./modules/desktop.nix
             ./modules/hoss.nix
+            ./modules/hoss-sops.nix
             ./modules/openssh.nix
             ./modules/embedded_dev.nix
             ./modules/steam_server.nix
             ./modules/hoss-builder.nix
+            ./modules/shared-ca.nix
             sops-nix.nixosModules.sops
             home-manager.nixosModules.home-manager
             {

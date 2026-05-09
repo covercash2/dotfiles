@@ -1,5 +1,9 @@
 { config, lib, pkgs, ... }:
 
+let
+  sunshineWebUIPort = config.services.sunshine.settings.port + 1;
+in
+
 {
   networking = {
     hostName = "hoss";
@@ -27,6 +31,33 @@
   services = {
     tailscale.permitCertUid = "caddy";
     blueman.enable = true;
+
+    sunshine = {
+      enable = true;
+      capSysAdmin = true;
+      openFirewall = true;
+    };
+
+    mkcert-shared = {
+      enable = true;
+      domain = "*.hoss.chrash.net";
+      rootCACert = ../certs/ca.pem;
+      rootCAKey = config.sops.secrets.ca_key.path;
+    };
+
+    caddy = {
+      enable = true;
+      virtualHosts."sunshine.hoss.chrash.net" = {
+        extraConfig = ''
+          tls ${config.services.mkcert-shared.certPath} ${config.services.mkcert-shared.keyPath}
+          reverse_proxy https://localhost:${toString sunshineWebUIPort} {
+            transport http {
+              tls_insecure_skip_verify
+            }
+          }
+        '';
+      };
+    };
   };
 
   networking.firewall = {
@@ -40,6 +71,7 @@
     devenv
     direnv
     nvidia-container-toolkit
+    ssh-to-age
     zenith-nvidia
   ];
 
@@ -50,8 +82,11 @@
     };
     users = {
       chrash = {
+        linger = true;
         extraGroups = [
-          "hf" # huggingface
+          "hf"    # huggingface
+          "video" # /dev/dri access for Sunshine capture
+          "input" # /dev/uinput access for virtual input devices
         ];
         packages = with pkgs; [
           #python313Packages.huggingface-hub
