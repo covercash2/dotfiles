@@ -40,12 +40,12 @@ in
         username: admin
         password: ${config.sops.placeholder.adguardhome_origin_password}
 
-      replica1:
-        url: http://${foundryTailscaleIp}:3000
-        username: admin
-        password: ${config.sops.placeholder.adguardhome_replica_password}
+      replicas:
+        - url: http://${foundryTailscaleIp}:3000
+          username: admin
+          password: ${config.sops.placeholder.adguardhome_replica_password}
     '';
-    mode = "0400";
+    mode = "0444";
   };
 
   virtualisation.oci-containers.containers.adguardhome-sync = {
