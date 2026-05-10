@@ -14,7 +14,8 @@
         "nix-command"
         "flakes"
       ];
-      # limit parallel jobs and cores to keep the machine responsive during builds
+      # 4 jobs × 4 cores each is a reasonable ceiling for all machines.
+      # Do NOT set cores = 0 (all cores per job) — with multiple jobs it exhausts memory.
       max-jobs = 4;
       cores = 4;
       extra-substituters = [ "https://devenv.cachix.org" ];
@@ -25,6 +26,38 @@
       # wheel users can pass --no-check-sigs when copying from trusted local machines
       trusted-users = [ "root" "@wheel" ];
     };
+    # Builds run at idle CPU priority — they yield to everything else,
+    # keeping the system accessible during heavy updates.
+    daemonCPUSchedPolicy = "idle";
+    daemonIOSchedClass = "idle";
+  };
+
+  # Kill builds before the system freezes.
+  # OOMScoreAdjust makes the kernel OOM killer prefer nix build processes over
+  # system services. The memory caps (percentage-based, so they scale per machine)
+  # ensure the nix-daemon cgroup is sacrificed before RAM is fully exhausted.
+  # MemoryHigh starts throttling at 70%; MemoryMax hard-kills at 80%.
+  systemd.services.nix-daemon.serviceConfig = {
+    OOMScoreAdjust = 500;
+    MemoryHigh = "70%";
+    MemoryMax = "80%";
+  };
+
+  # systemd-oomd acts proactively on memory pressure, well before the kernel
+  # OOM killer triggers — preventing the full system freeze that requires a
+  # hard reboot to recover from.
+  systemd.oomd = {
+    enable = true;
+    enableSystemSlice = true;
+    enableUserServices = true;
+  };
+
+  # Without swap, memory exhaustion is a cliff — the kernel has no buffer in
+  # which to detect pressure and act. zram gives oomd time to react by
+  # providing compressed in-memory swap before the system seizes.
+  zramSwap = {
+    enable = true;
+    memoryPercent = 10;
   };
 
   nixpkgs.config.allowUnfree = true;
