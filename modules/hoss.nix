@@ -5,6 +5,14 @@ let
 in
 
 {
+  boot.kernelModules = [ "uinput" ];
+
+  services.getty.autologinUser = "chrash";
+
+  systemd.user.services.sunshine = {
+    wantedBy = lib.mkForce [ "default.target" ];
+  };
+
   networking = {
     hostName = "hoss";
     interfaces.enp5s0 = {
@@ -47,6 +55,7 @@ in
 
     caddy = {
       enable = true;
+      openFirewall = true;
       virtualHosts."sunshine.hoss.chrash.net" = {
         extraConfig = ''
           tls ${config.services.mkcert-shared.certPath} ${config.services.mkcert-shared.keyPath}
@@ -67,13 +76,17 @@ in
   # trust the homelab shared CA so green's services work without cert errors
   security.pki.certificates = [ (builtins.readFile ../certs/ca.pem) ];
 
+  nixpkgs.config.cudaSupport = true;
+
   environment.systemPackages = with pkgs; [
     devenv
     direnv
     nvidia-container-toolkit
     ssh-to-age
     zenith-nvidia
-  ];
+  ] ++ (with pkgs.cudaPackages; [
+    cuda_cudart
+  ]);
 
   users = {
     groups = {

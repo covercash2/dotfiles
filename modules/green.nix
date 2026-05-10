@@ -24,7 +24,7 @@
     defaultGateway = "192.168.2.1";
   };
 
-  nix.settings.max-jobs = lib.mkForce 4;
+  nix.settings.max-jobs = lib.mkForce 1;
 
   programs.nixos-cli = {
     enable = true;
