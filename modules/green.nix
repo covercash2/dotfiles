@@ -26,6 +26,11 @@
 
   nix.settings.max-jobs = lib.mkForce 1;
 
+  hardware.nvidia-container-toolkit = {
+    enable = true;
+    device-name-strategy = "type-index";
+  };
+
   programs.nixos-cli = {
     enable = true;
     settings = {
