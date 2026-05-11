@@ -34,6 +34,12 @@ in
       enable = true;
       powerOnBoot = true;
     };
+
+    nvidia-container-toolkit = {
+      enable = true;
+      # https://forums.developer.nvidia.com/t/nvidia-container-toolkit-podman-error-error-setting-up-cdi-devices-unresolvable-cdi-devices-nvidia-com-gpu-all/272286
+      device-name-strategy = "type-index";
+    };
   };
 
   services = {
@@ -44,6 +50,16 @@ in
       enable = true;
       capSysAdmin = true;
       openFirewall = true;
+    };
+
+    ollama = {
+      enable = true;
+      user = "ollama";
+      host = "0.0.0.0";
+      port = 11434;
+      openFirewall = true;
+      models = "/mnt/space/ollama/models";
+      home = "/mnt/space/ollama";
     };
 
     mkcert-shared = {
@@ -76,24 +92,25 @@ in
   # trust the homelab shared CA so green's services work without cert errors
   security.pki.certificates = [ (builtins.readFile ../certs/ca.pem) ];
 
-  nixpkgs.config.cudaSupport = true;
-
   environment.systemPackages = with pkgs; [
     devenv
     direnv
-    nvidia-container-toolkit
     ssh-to-age
     zenith-nvidia
-  ] ++ (with pkgs.cudaPackages; [
-    cuda_cudart
-  ]);
+  ];
 
   users = {
     groups = {
       # huggingface users
       hf.name = "hf";
+      ollama.name = "ollama";
     };
     users = {
+      ollama = {
+        isSystemUser = true;
+        group = "ollama";
+        home = "/mnt/space/ollama";
+      };
       chrash = {
         linger = true;
         extraGroups = [
