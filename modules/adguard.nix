@@ -7,11 +7,13 @@
     enable = true;
     # only applies to the admin UI port, not DNS ports
     openFirewall = true;
-    mutableSettings = true;
+    mutableSettings = false;
     port = 3000; # the port for the HTTP portal
     settings = {
       dns = {
         upstream_dns = [
+          # Internal zone — dnsmasq handles all *.chrash.net subdomains
+          "[/chrash.net/]127.0.0.1:5353"
           # Cloudflare DNS
           "https://dns.cloudflare.com/dns-query"
           "1.1.1.1"
@@ -62,16 +64,6 @@
         # Use private PTR resolvers for reverse DNS of local addresses
         use_private_ptr_resolvers = true;
 
-        # DNS rewrites for internal domains
-        # NOTE: For a more scalable approach, consider setting up a dedicated internal
-        # DNS server (dnsmasq/unbound) and using conditional forwarding:
-        #   upstream_dns = [ "[/*.green.chrash.net/]192.168.1.1" ... ];
-        rewrites = [
-          {
-            domain = "*.green.chrash.net";
-            answer = "100.64.163.18"; # Tailscale IP of this server
-          }
-        ];
       };
 
       filtering = {

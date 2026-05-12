@@ -33,6 +33,10 @@ Hosts without a local repo copy (e.g. VPS) pull directly from GitHub:
 sudo nixos-rebuild switch --flake github:covercash2/dotfiles#<host>
 ```
 
+## Network topology
+
+See [docs/topology.md](./docs/topology.md) for machine inventory, services, IPs, and infrastructure overview.
+
 ## Digital Ocean VPS
 
 See [docs/digital_ocean.md](./docs/digital_ocean.md).

@@ -1,6 +1,18 @@
 { config, lib, pkgs, ... }:
 
+let
+  sunshineWebUIPort = config.services.sunshine.settings.port + 1;
+in
+
 {
+  boot.kernelModules = [ "uinput" ];
+
+  services.getty.autologinUser = "chrash";
+
+  systemd.user.services.sunshine = {
+    wantedBy = lib.mkForce [ "default.target" ];
+  };
+
   networking = {
     hostName = "hoss";
     interfaces.enp5s0 = {
@@ -22,11 +34,56 @@
       enable = true;
       powerOnBoot = true;
     };
+
+    nvidia-container-toolkit = {
+      enable = true;
+      # https://forums.developer.nvidia.com/t/nvidia-container-toolkit-podman-error-error-setting-up-cdi-devices-unresolvable-cdi-devices-nvidia-com-gpu-all/272286
+      device-name-strategy = "type-index";
+    };
   };
 
   services = {
     tailscale.permitCertUid = "caddy";
     blueman.enable = true;
+
+    sunshine = {
+      enable = true;
+      capSysAdmin = true;
+      openFirewall = true;
+    };
+
+    ollama = {
+      enable = true;
+      package = pkgs.ollama-cuda;
+      user = "ollama";
+      host = "0.0.0.0";
+      port = 11434;
+      openFirewall = true;
+      models = "/mnt/space/ollama/models";
+      home = "/mnt/space/ollama";
+    };
+
+    mkcert-shared = {
+      enable = true;
+      domain = "*.hoss.chrash.net";
+      rootCACert = ../certs/ca.pem;
+      rootCAKey = config.sops.secrets.ca_key.path;
+    };
+
+    caddy = {
+      enable = true;
+      openFirewall = true;
+      virtualHosts."sunshine.hoss.chrash.net" = {
+        extraConfig = ''
+          tls ${config.services.mkcert-shared.certPath} ${config.services.mkcert-shared.keyPath}
+          reverse_proxy https://localhost:${toString sunshineWebUIPort} {
+            transport http {
+              tls_insecure_skip_verify
+            }
+          }
+        '';
+      };
+    };
   };
 
   networking.firewall = {
@@ -39,7 +96,7 @@
   environment.systemPackages = with pkgs; [
     devenv
     direnv
-    nvidia-container-toolkit
+    ssh-to-age
     zenith-nvidia
   ];
 
@@ -47,11 +104,20 @@
     groups = {
       # huggingface users
       hf.name = "hf";
+      ollama.name = "ollama";
     };
     users = {
+      ollama = {
+        isSystemUser = true;
+        group = "ollama";
+        home = "/mnt/space/ollama";
+      };
       chrash = {
+        linger = true;
         extraGroups = [
-          "hf" # huggingface
+          "hf"    # huggingface
+          "video" # /dev/dri access for Sunshine capture
+          "input" # /dev/uinput access for virtual input devices
         ];
         packages = with pkgs; [
           #python313Packages.huggingface-hub
