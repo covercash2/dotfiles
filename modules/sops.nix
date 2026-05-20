@@ -30,6 +30,12 @@
       mode = "0400";
     };
 
+    secrets.homeassistant_prometheus_token = {
+      sopsFile = ../secrets/green.yaml;
+      owner = "prometheus";
+      mode = "0400";
+    };
+
     secrets.miniflux_admin_password = {
       sopsFile = ../secrets/green.yaml;
       owner = "miniflux";

@@ -16,6 +16,7 @@
       address = [
         "/green.chrash.net/100.64.163.18"
         "/hoss.chrash.net/100.74.58.55"
+        "/foundry.chrash.net/100.127.25.99"
       ];
     };
   };

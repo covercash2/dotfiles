@@ -17,10 +17,7 @@
         }
       ];
     };
-    nameservers = [
-      "8.8.8.8"
-      "1.1.1.1"
-    ];
+    nameservers = [ "127.0.0.1" ];
     defaultGateway = "192.168.2.1";
   };
 
@@ -287,10 +284,38 @@
           secret_key = "change_this_secret_key_for_production";
         };
       };
+      provision = {
+        enable = true;
+        datasources.settings = {
+          apiVersion = 1;
+          datasources = [
+            {
+              name = "Prometheus";
+              type = "prometheus";
+              url = "http://localhost:${toString config.services.prometheus.port}";
+              isDefault = true;
+              jsonData.timeInterval = "5s";
+            }
+          ];
+        };
+        dashboards.settings = {
+          apiVersion = 1;
+          providers = [
+            {
+              name = "default";
+              type = "file";
+              disableDeletion = true;
+              updateIntervalSeconds = 10;
+              options.path = ./grafana/dashboards;
+            }
+          ];
+        };
+      };
     };
     # metrics
     prometheus = {
       enable = true;
+      checkConfig = "syntax-only"; # bearer_token_file path doesn't exist in the Nix build sandbox
       scrapeConfigs = [
         {
           job_name = "prometheus";
@@ -301,6 +326,8 @@
         }
         {
           job_name = "homeassistant";
+          metrics_path = "/api/prometheus";
+          bearer_token_file = config.sops.secrets.homeassistant_prometheus_token.path;
           static_configs = [
             { targets = [ "localhost:8123" ]; }
           ];
@@ -320,7 +347,7 @@
         {
           job_name = "foundry_system";
           static_configs = [
-            { targets = [ "foundry:9100" ]; }
+            { targets = [ "foundry.chrash.net:9100" ]; }
           ];
         }
       ];
