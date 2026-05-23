@@ -5,7 +5,12 @@ let
 in
 
 {
+  nixpkgs.config.permittedInsecurePackages = [
+    "electron-39.8.10"
+  ];
+
   boot.kernelModules = [ "uinput" ];
+  boot.loader.systemd-boot.configurationLimit = 5;
 
   services.getty.autologinUser = "chrash";
 
@@ -54,10 +59,10 @@ in
 
     ollama = {
       enable = true;
+      package = pkgs.ollama-cuda;
       user = "ollama";
       host = "0.0.0.0";
       port = 11434;
-      openFirewall = true;
       models = "/mnt/space/ollama/models";
       home = "/mnt/space/ollama";
     };
@@ -72,21 +77,32 @@ in
     caddy = {
       enable = true;
       openFirewall = true;
-      virtualHosts."sunshine.hoss.chrash.net" = {
-        extraConfig = ''
-          tls ${config.services.mkcert-shared.certPath} ${config.services.mkcert-shared.keyPath}
-          reverse_proxy https://localhost:${toString sunshineWebUIPort} {
-            transport http {
-              tls_insecure_skip_verify
+
+      virtualHosts = {
+        "sunshine.hoss.chrash.net" = {
+          extraConfig = ''
+            tls ${config.services.mkcert-shared.certPath} ${config.services.mkcert-shared.keyPath}
+            reverse_proxy https://localhost:${toString sunshineWebUIPort} {
+              transport http {
+                tls_insecure_skip_verify
+              }
             }
-          }
-        '';
+          '';
+        };
+
+        "ollama.hoss.chrash.net" = {
+          extraConfig = ''
+            tls ${config.services.mkcert-shared.certPath} ${config.services.mkcert-shared.keyPath}
+            reverse_proxy localhost:${toString config.services.ollama.port}
+          '';
+        };
       };
     };
   };
 
   networking.firewall = {
     enable = true;
+    allowedTCPPorts = [ 9100 ]; # node_exporter for Prometheus on green
   };
 
   # trust the homelab shared CA so green's services work without cert errors

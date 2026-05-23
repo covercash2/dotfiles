@@ -24,12 +24,20 @@
         "hoss.chrash.net:MOydjP63PR69FuIpPoXXBtIWPHk0AVExmifkGPaK1X0="
       ];
       # wheel users can pass --no-check-sigs when copying from trusted local machines
-      trusted-users = [ "root" "@wheel" ];
+      trusted-users = [
+        "root"
+        "@wheel"
+      ];
     };
     # Builds run at idle CPU priority — they yield to everything else,
     # keeping the system accessible during heavy updates.
     daemonCPUSchedPolicy = "idle";
     daemonIOSchedClass = "idle";
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 30d";
+    };
   };
 
   # Kill builds before the system freezes.
@@ -49,7 +57,7 @@
   systemd.oomd = {
     enable = true;
     enableSystemSlice = true;
-    enableUserServices = true;
+    enableUserSlices = true;
   };
 
   # Without swap, memory exhaustion is a cliff — the kernel has no buffer in
