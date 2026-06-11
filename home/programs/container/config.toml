@@ -1,0 +1,6 @@
+[container]
+cpus = 4
+memory = "2g"
+
+[dns]
+domain = "test"
