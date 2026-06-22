@@ -104,6 +104,7 @@ vim.pack.add({
 	gh .. "p00f/clangd_extensions.nvim",
 	gh .. "Civitasv/cmake-tools.nvim",
 	gh .. "phelipetls/jsonpath.nvim",
+  gh .. "immanuwell/droast.nvim",
 
 	-- Markdown / notes
 	gh .. "iamcco/markdown-preview.nvim",

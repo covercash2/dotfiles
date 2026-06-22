@@ -41,3 +41,18 @@ def timezones []: nothing -> record {
 def tz_labels [] {
   timezones | columns
 }
+
+export def runtime [
+  fn: closure
+] {
+  let start = (date now)
+  do -i { your_command_here } &
+  let pid = $env.last_exit_code.pid
+
+  while (ps | where pid == $pid | length) > 0 {
+      let elapsed = (date now) - $start
+      print $"elapsed ($elapsed.sec)"
+      sleep 1sec
+  }
+  print "\nDone!"
+}

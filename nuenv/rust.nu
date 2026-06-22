@@ -96,3 +96,10 @@ export def "xtask" [
 
   run-external ...$args
 }
+
+export def "errors" [
+  run: closure
+] {
+  do $run
+  | 
+}

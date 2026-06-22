@@ -65,10 +65,10 @@ map("n", "<leader>xq", function()
 	if not success and err then
 		vim.notify(err, vim.log.levels.ERROR)
 	end
-end, { desc = "Quickfix List" })
+end, { desc = "quickfix List" })
 
-map("n", "[q", vim.cmd.cprev, { desc = "Previous Quickfix" })
-map("n", "]q", vim.cmd.cnext, { desc = "Next Quickfix" })
+map("n", "[q", vim.cmd.cprev, { desc = "previous quickfix" })
+map("n", "]q", vim.cmd.cnext, { desc = "next quickfix" })
 
 -- diagnostic
 local diagnostic_goto = function(next, severity)

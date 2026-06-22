@@ -34,9 +34,11 @@
 
     ripgrep
     starship
+    tailscale
     typos # find typos in source code projects
     # typos-lsp: via programs.neovim.extraPackages
     tree
+    uv
     xh # a Rust-based HTTP CLI client
     yt-dlp
     zellij # terminal multiplexer
@@ -60,5 +62,9 @@
     wl-clipboard
     wofi # runner a la rofi, Spotlight
     xdg-utils # e.g. xdg-open
+  ] ++ lib.optionals (pkgs.stdenv.isDarwin) [
+    bitwarden-desktop
+    firefox
+    obsidian # note taking software
   ];
 }
