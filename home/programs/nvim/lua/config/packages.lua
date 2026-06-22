@@ -64,6 +64,9 @@ vim.pack.add({
 	gh .. "tpope/vim-fugitive",
   gh .. "sindrets/diffview.nvim",
 
+  -- Jujutsu (jj)
+  gh .. "NicolasGB/jj.nvim",
+
 	-- Formatting / linting
 	gh .. "nvimdev/guard.nvim",
 	gh .. "nvimdev/guard-collection",
@@ -101,7 +104,6 @@ vim.pack.add({
 	gh .. "p00f/clangd_extensions.nvim",
 	gh .. "Civitasv/cmake-tools.nvim",
 	gh .. "phelipetls/jsonpath.nvim",
-	gh .. "yochem/jq-playground.nvim",
 
 	-- Markdown / notes
 	gh .. "iamcco/markdown-preview.nvim",

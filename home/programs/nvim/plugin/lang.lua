@@ -89,9 +89,6 @@ for _, language in ipairs({ "typescript", "javascript" }) do
 	}
 end
 
--- jq playground
-vim.keymap.set("n", "<leader>jq", vim.cmd.JqPlayground, { desc = "jq playground" })
-
 -- DAP keymaps
 local map = vim.keymap.set
 local dap = require("dap")
