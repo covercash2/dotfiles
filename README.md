@@ -41,6 +41,10 @@ See [docs/topology.md](./docs/topology.md) for machine inventory, services, IPs,
 
 See [docs/digital_ocean.md](./docs/digital_ocean.md).
 
+## troubleshooting
+
+See [docs/troubleshooting.md](./docs/troubleshooting.md).
+
 ## home-manager
 
 User config lives in [`home/`](./home/). Host-specific values (e.g. git email)
