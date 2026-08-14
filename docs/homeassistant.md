@@ -1,4 +1,4 @@
-# HomeAssistant
+# Home Assistant
 
 IoT stuff.
 
