@@ -16,6 +16,10 @@ home-foundry:
 deploy-foundry:
   nix run github:nix-community/nixos-anywhere -- --flake .#foundry chrash@foundry
 
+# build the foundry config on hoss and deploy it to foundry over ssh
+switch-foundry:
+  nixos-rebuild switch --flake .#foundry --build-host chrash@hoss --target-host chrash@foundry --use-remote-sudo --print-build-logs
+
 # build the system configuration without switching
 build:
   nixos-rebuild build --flake .#{{hostname}} --print-build-logs
