@@ -12,6 +12,15 @@
 
   networking.hostName = "foundry";
 
+  # AdGuardHome (modules/adguard-replica.nix) needs the whole port 53 for its
+  # wildcard bind. resolved's stub listener grabs 127.0.0.53/127.0.0.54:53,
+  # which blocks that bind if resolved restarts first during activation —
+  # order-dependent, so it doesn't always reproduce. Disabling the stub
+  # listener avoids the race entirely; foundry's own resolv.conf falls back
+  # to the upstream nameservers configured below instead of routing through
+  # the stub.
+  services.resolved.settings.Resolve.DNSStubListener = "no";
+
   # Tailscale exit node — enables IP forwarding and advertises this droplet
   # as an exit node. Must also be approved in the Tailscale admin console.
   services.tailscale.useRoutingFeatures = "server";

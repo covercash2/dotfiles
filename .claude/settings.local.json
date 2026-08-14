@@ -39,7 +39,8 @@
       "Bash(nix-env -qaP '.*sync.*')",
       "Bash(nix-instantiate --parse modules/adguard-replica.nix)",
       "Bash(nix-instantiate --parse modules/adguardhome-sync.nix)",
-      "Bash(curl -sI \"https://cache.nixos.org/nj8hdb8an3j79nrvb1lf1vi1w3pbs4f8.narinfo\")"
+      "Bash(curl -sI \"https://cache.nixos.org/nj8hdb8an3j79nrvb1lf1vi1w3pbs4f8.narinfo\")",
+      "Bash(jj show *)"
     ]
   }
 }
