@@ -29,7 +29,7 @@ tailnet). works from any machine on the tailnet, not just from `hoss` —
 `--build-host` pins the build step to `hoss` regardless of where the command
 runs.
 
-## first-time ssh trust
+## first-time `ssh` trust
 
 ```bash
 ssh-keyscan foundry >> ~/.ssh/known_hosts
