@@ -133,11 +133,13 @@
             ./modules/desktop.nix
             ./modules/hoss.nix
             ./modules/hoss-sops.nix
+            ./modules/hoss-green.nix
             ./modules/openssh.nix
             ./modules/embedded_dev.nix
             ./modules/steam_server.nix
             ./modules/hoss-builder.nix
             ./modules/shared-ca.nix
+            green.nixosModules.default
             sops-nix.nixosModules.sops
             home-manager.nixosModules.home-manager
             {

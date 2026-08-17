@@ -28,12 +28,18 @@
       ensureDatabases = [ "chrash" "green" ];
       authentication = pkgs.lib.mkOverride 10 ''
         ## allow local to connect
-        #type database  DBuser origin-address auth-method
-        local all       all                   trust
-        local sameuser  all     peer          map=superuser_map
-        host  sameuser  all     ::1/128       scram-sha-256
-        host  green     green   127.0.0.1/32  scram-sha-256
-        host  green     green   ::1/128       scram-sha-256
+        #type database  DBuser origin-address  auth-method
+        local all       all                    trust
+        local sameuser  all     peer           map=superuser_map
+        host  sameuser  all     ::1/128         scram-sha-256
+        host  green     green   127.0.0.1/32    scram-sha-256
+        host  green     green   ::1/128         scram-sha-256
+
+        # hoss running the green service remotely, over Tailscale
+        # MagicDNS. Postgres resolves hostname pg_hba entries once at
+        # startup/reload, so this stays scoped to hoss specifically
+        # rather than the whole tailnet.
+        host  green     green   hoss.faun-truck.ts.net  scram-sha-256
       '';
       identMap = ''
         # ArbitraryMapName systemUser DBUser
@@ -50,6 +56,12 @@
     home = "/mnt/space/postgres";
     description = "PostgreSQL server user";
   };
+
+  # Postgres is reachable cross-host only over Tailscale (see the pg_hba
+  # rule above) — not opened on the general LAN-facing firewall.
+  networking.firewall.interfaces.tailscale0.allowedTCPPorts = [
+    config.services.postgresql.settings.port
+  ];
 
   # Automatically refresh collation versions after glibc upgrades to prevent
   # postgresql-setup.service from failing with a collation version mismatch.
