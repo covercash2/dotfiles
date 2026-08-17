@@ -94,6 +94,11 @@
         reverse_proxy green.faun-truck.ts.net:30000
       '';
     };
+    virtualHosts."covercash.dev" = {
+      extraConfig = ''
+        reverse_proxy https://home.green.chrash.net
+      '';
+    };
   };
 
   networking.firewall = {

@@ -365,7 +365,6 @@
       30000 # foundry VTT
       8123 # home assistant
       8971 # frigate
-      (config.services.postgresql.settings.port)
       443
       80
       (config.services.ultron.port)
