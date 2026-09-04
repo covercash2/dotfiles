@@ -14,6 +14,10 @@
         upstream_dns = [
           # Internal zone — dnsmasq handles all *.chrash.net subdomains
           "[/chrash.net/]127.0.0.1:5353"
+          # Tailscale MagicDNS zone — needed so hostname-based pg_hba
+          # entries (and anything else resolving *.ts.net peers) work;
+          # public upstreams below don't know this zone.
+          "[/ts.net/]100.100.100.100"
           # Cloudflare DNS
           "https://dns.cloudflare.com/dns-query"
           "1.1.1.1"
