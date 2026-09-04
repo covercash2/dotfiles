@@ -23,6 +23,13 @@
 
   nix.settings.max-jobs = lib.mkForce 1;
 
+  # Ensure the shared vault directory exists (and is owned by the green
+  # service user) before green starts — it now unconditionally reads
+  # vaultPath/recipeVaultPath/blogVaultPath, all pointed at this directory.
+  systemd.tmpfiles.rules = [
+    "d /var/lib/green/vault 0750 green green - -"
+  ];
+
   hardware.nvidia-container-toolkit = {
     enable = true;
     device-name-strategy = "type-index";
@@ -114,7 +121,13 @@
         ntfyUrl = "https://ntfy.green.chrash.net/green-recovery";
       };
 
-      # vaultPath = "/path/to/obsidian/vault";  # uncomment and set to enable /notes
+      # Shared Obsidian vault: notes tagged `recipe` show up under /recipes,
+      # notes tagged `blog` under /blog, everything else under /notes.
+      vaultPath = "/var/lib/green/vault";
+      recipeVaultPath = "/var/lib/green/vault";
+      blogVaultPath = "/var/lib/green/vault";
+      # aboutPath unset until real about-me content exists — set to
+      # /var/lib/green/about.md once written.
 
       mqtt = {
         host = "localhost";
