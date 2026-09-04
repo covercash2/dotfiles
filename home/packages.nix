@@ -31,7 +31,6 @@
     # nushellPlugins.net # list net interfaces: `$ net`
     nushellPlugins.skim # fuzzy finder for everything: `$ ps | sk`
     nushellPlugins.highlight # highlight raw text: `$ open --raw data.json | highlight`
-    nushellPlugins.semver
 
     ripgrep
     starship
