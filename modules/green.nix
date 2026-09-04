@@ -110,7 +110,7 @@
         # EnvironmentFile (GREEN_DB_URL) rendered by sops-nix from secrets/green.yaml.
         dbUrl = "";
         dbUrlFile = config.sops.templates."green-env".path;
-        gmUsers = [ "chrash" ];
+        adminUsers = [ "chrash" ];
         ntfyUrl = "https://ntfy.green.chrash.net/green-recovery";
       };
 
@@ -120,6 +120,7 @@
         host = "localhost";
         port = 1883;
         username = "green";
+        clientId = "green";
         integrations = [
           { pattern = "zigbee2mqtt/{device}/**"; }
           { pattern = "homeassistant/*/{device}/**"; name = "Home Assistant"; }
