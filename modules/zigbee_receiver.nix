@@ -14,7 +14,6 @@
 
 {
   config,
-  lib,
   pkgs,
   ...
 }:
@@ -98,9 +97,22 @@
         };
         permit_join = true;
 
+        # TODO: DELETE once the SLZB-MR1U migration is confirmed stable.
+        # Previous coordinator: Sonoff Zigbee 3.0 USB Dongle Plus (CC2652P),
+        # attached to green over USB via the ttyUSBSonoffZigbee udev symlink.
+        # serial = {
+        #   port = "/dev/ttyUSBSonoffZigbee";
+        #   adapter = "zstack";
+        # };
+
+        # SLZB-MR1U over the network. Port 7638 = CC2652P7 radio (Z-Stack,
+        # same stack as the old Sonoff so the coordinator backup restores);
+        # port 6638 = the EFR32MG21 radio (ember). Static IP set on the device.
         serial = {
-          port = "/dev/ttyUSBSonoffZigbee";
+          port = "tcp://192.168.2.165:7638";
           adapter = "zstack";
+          baudrate = 115200; # ignored over TCP; kept to match SLZB's generated config
+          disable_led = false;
         };
 
         mqtt = {
@@ -115,6 +127,7 @@
             "console"
             "file"
           ];
+          transmit_power = 20; # SLZB-MR1U max
         };
 
         availability = {
@@ -160,7 +173,7 @@
           "0xa4c1385989d0c74d" = {
             friendly_name = "living room presence sensor";
           };
-          # "0xb0ce1814000" is a prefix for Sengled light bulbs?
+          # "0xb0ce1814000" is a prefix for Sengled light bulbs
           "0xb0ce18140003dc0e" = {
             friendly_name = "tree light left";
             availability = true;
@@ -190,10 +203,13 @@
             friendly_name = "laundry light";
           };
           "0xb0ce18140363e41f" = {
-            friendly_name = "0xb0ce18140363e41f";
+            friendly_name = "kitchen cabinet lights";
           };
           "0xf4b3b1fffee7b489" = {
             friendly_name = "0xf4b3b1fffee7b489";
+          };
+          "0xB0CE18140363E41F" = {
+            friendly_name = "kitchen cabinet lights";
           };
         };
       };
