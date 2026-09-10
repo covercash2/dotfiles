@@ -23,12 +23,15 @@
 
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixos-cli.url = "github:nix-community/nixos-cli";
-    sops-nix.url = "github:Mic92/sops-nix";
+
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nixos-cli.url = "github:nix-community/nixos-cli";
+    sops-nix.url = "github:Mic92/sops-nix";
+    hermes-agent.url = "github:NousResearch/hermes-agent";
   };
 
   outputs =
@@ -36,11 +39,12 @@
       nixpkgs,
       home-manager,
 
+      disko,
       green,
-      ultron,
+      hermes-agent,
       nixos-cli,
       sops-nix,
-      disko,
+      ultron,
       ...
     }:
     let
@@ -139,9 +143,11 @@
             ./modules/steam_server.nix
             ./modules/hoss-builder.nix
             ./modules/shared-ca.nix
+            ./modules/hermes.nix
             green.nixosModules.default
             sops-nix.nixosModules.sops
             home-manager.nixosModules.home-manager
+            hermes-agent.nixosModules.default
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
