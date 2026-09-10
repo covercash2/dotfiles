@@ -35,11 +35,18 @@
         host  green     green   127.0.0.1/32    scram-sha-256
         host  green     green   ::1/128         scram-sha-256
 
-        # hoss running the green service remotely, over Tailscale
-        # MagicDNS. Postgres resolves hostname pg_hba entries once at
-        # startup/reload, so this stays scoped to hoss specifically
-        # rather than the whole tailnet.
-        host  green     green   hoss.faun-truck.ts.net  scram-sha-256
+        # hoss running the green service remotely, over Tailscale.
+        # This must be the IP, not the hostname: Postgres's hostname-based
+        # pg_hba matching requires a *reverse* DNS lookup on the connecting
+        # IP (not just a forward lookup of the pg_hba entry), and green's
+        # resolver doesn't forward the Tailscale CGNAT reverse zone
+        # (100.64.0.0/10) to Tailscale's DNS — only the forward
+        # faun-truck.ts.net zone. Confirmed via:
+        #   getent hosts 100.74.58.55   # fails on green
+        #   getent hosts hoss.faun-truck.ts.net   # succeeds
+        # If hoss's Tailscale IP ever changes (`tailscale status` on hoss),
+        # update this to match.
+        host  green     green   100.74.58.55/32  scram-sha-256
       '';
       identMap = ''
         # ArbitraryMapName systemUser DBUser

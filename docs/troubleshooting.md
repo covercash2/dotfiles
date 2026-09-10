@@ -46,6 +46,40 @@ whole port.
 (`sudo ss -tulnp | grep :<port>`), not just the wildcard address, before
 assuming the port is free.
 
+## every `nix` build fails with `opening file "/run/secrets/nix_signing_key": No such file or directory`
+
+`modules/hoss-builder.nix` sets `nix.settings.secret-key-files` to a `sops-nix`
+secret path so hoss signs the store paths it builds for the rest of the fleet.
+if `sops-install-secrets` fails during activation, `/run/secrets/` is never
+created, that file goes missing, and `nix` then refuses **every** local build —
+including the `nixos-rebuild` that would fix the config. a bootstrap deadlock.
+
+`sops-install-secrets` validates the whole manifest up front and aborts all of
+it on the first problem. the usual cause is a secret whose `owner`/`group`
+names a user that doesn't exist in the current system:
+
+```
+sops-install-secrets: manifest is not valid: failed to lookup user 'green'
+Activation script snippet 'setupSecrets' failed (1)
+```
+
+hit this on hoss: `modules/hoss-sops.nix` declared `green_db_password` and the
+`green-env` template as `owner = "green"`, but the `green` user only exists when
+`services.green.enable` is true (`modules/hoss-green.nix`, off by default). the
+fix there gates the ownership on `config.services.green.enable` and falls back
+to root otherwise.
+
+**recovery** (two steps — the config fix alone can't apply itself):
+
+1. fix the offending `owner`/`group` (or whatever failed manifest validation —
+   check `journalctl -b | grep -A1 'setting up secrets'`).
+2. `just rescue-switch` — rebuilds once with `--option secret-key-files ''` so
+   the build isn't blocked by the missing key. activation then repopulates
+   `/run/secrets/`, and plain `just switch` works again.
+
+check `ls /run/secrets/` afterwards; `mkcert-shared` also reissues the host
+certs on its own once `ca_key` is back.
+
 ## ssh one-liners with bash syntax fail on hosts where the login shell is `nu`
 
 `chrash`'s login shell is `nu` (nushell) on most hosts, including `foundry`.
