@@ -5,6 +5,13 @@
 let
   cfg = config.services.mkcert-shared;
   certDir = "/var/lib/mkcert";
+  # for use inside the SAN-matching regex below — escape regex metacharacters
+  # so the domain (which may be a wildcard like "*.green.chrash.net") is
+  # matched literally instead of "*" and "." being treated as regex syntax.
+  escapedDomain = lib.replaceStrings
+    [ "\\" "."  "*"  "+"  "?"  "("  ")"  "["  "]"  "{"  "}"  "^"  "$"  "|" ]
+    [ "\\\\" "\\." "\\*" "\\+" "\\?" "\\(" "\\)" "\\[" "\\]" "\\{" "\\}" "\\^" "\\$" "\\|" ]
+    cfg.domain;
 in
 {
   options.services.mkcert-shared = {
@@ -78,6 +85,18 @@ in
         cp ${cfg.rootCAKey} ${certDir}/rootCA-key.pem
         chmod 644 ${cfg.caPath}
         chmod 600 ${certDir}/rootCA-key.pem
+
+        # skip regenerating the leaf certificate if the existing one is
+        # still valid for this domain — only touch it when it's expired,
+        # expiring soon, signed by a different CA, or missing.
+        if [[ -f ${cfg.certPath} ]] \
+          && ${pkgs.openssl}/bin/openssl verify -CAfile ${cfg.caPath} ${cfg.certPath} >/dev/null 2>&1 \
+          && ${pkgs.openssl}/bin/openssl x509 -in ${cfg.certPath} -noout -checkend 2592000 \
+          && ${pkgs.openssl}/bin/openssl x509 -in ${cfg.certPath} -noout -ext subjectAltName \
+            | grep -qE "(^|[, ])DNS:${escapedDomain}([, ]|$)"; then
+          echo "existing certificate for ${cfg.domain} is still valid, skipping regeneration"
+          exit 0
+        fi
 
         # set CAROOT so mkcert uses our shared CA
         export CAROOT=${certDir}
