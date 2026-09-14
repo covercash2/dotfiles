@@ -43,13 +43,16 @@
     yt-dlp
     zellij # terminal multiplexer
     zoxide # cd replacement with a memory
+
   ] ++ lib.optionals pkgs.stdenv.isLinux [
     cyme # lsusb replacement in Rust
     ethtool # network tool
+    net-tools # for netstat
     gcc
     libgcc
     lshw
     usbutils # lsusb etc
+
   ] ++ lib.optionals (pkgs.stdenv.isLinux && withDesktop) [
     bitwarden-desktop
     discord

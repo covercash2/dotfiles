@@ -96,6 +96,10 @@
           url = "zwave.green.chrash.net";
           description = "Z-Wave JS controls";
         };
+        zigbee = {
+          url = "zigbee.green.chrash.net";
+          description = "Zigbee2MQTT frontend and network map";
+        };
         dev = {
           url = "dev.green.chrash.net";
           description = "Development server";
@@ -244,6 +248,13 @@
           extraConfig = ''
             tls ${config.services.mkcert-shared.certPath} ${config.services.mkcert-shared.keyPath}
             reverse_proxy localhost:${config.services.zwave-js-ui.settings.PORT}
+          '';
+        };
+
+        ${config.services.green.routes.zigbee.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert-shared.certPath} ${config.services.mkcert-shared.keyPath}
+            reverse_proxy ${config.services.zigbee2mqtt.settings.frontend.host}:${toString config.services.zigbee2mqtt.settings.frontend.port}
           '';
         };
 

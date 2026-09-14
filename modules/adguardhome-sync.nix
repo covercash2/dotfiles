@@ -35,6 +35,12 @@ in
       cron: "*/30 * * * *"
       runOnStart: true
 
+      # Remote-trigger API for this sync process itself (unrelated to AdGuard's
+      # own admin UI on 3000). Moved off the 8080 default to avoid colliding
+      # with other services that assume 8080 is free.
+      api:
+        port: 8899
+
       origin:
         url: http://127.0.0.1:3000
         username: admin

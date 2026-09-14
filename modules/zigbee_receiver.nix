@@ -97,6 +97,14 @@
         };
         permit_join = true;
 
+        # Web UI + network map, for debugging device availability/routing.
+        # Bound to green's LAN address only — not reachable from the WAN.
+        frontend = {
+          enabled = true;
+          port = 8877;
+          host = "192.168.2.216";
+        };
+
         # TODO: DELETE once the SLZB-MR1U migration is confirmed stable.
         # Previous coordinator: Sonoff Zigbee 3.0 USB Dongle Plus (CC2652P),
         # attached to green over USB via the ttyUSBSonoffZigbee udev symlink.
@@ -208,9 +216,6 @@
           "0xf4b3b1fffee7b489" = {
             friendly_name = "0xf4b3b1fffee7b489";
           };
-          "0xB0CE18140363E41F" = {
-            friendly_name = "kitchen cabinet lights";
-          };
         };
       };
     };
@@ -226,4 +231,13 @@
       packages = [ pkgs.mosquitto ];
     };
   };
+
+  # zigbee2mqtt frontend (bound to the LAN address above, so this only opens
+  # it up on the LAN, not the WAN).
+  networking.firewall.allowedTCPPorts = [ 8877 ];
+
+  # zigbee2mqtt's onboarding/recovery server (only started when the config
+  # fails validation) is hardcoded to 0.0.0.0:8080 unless overridden here;
+  # moved off 8080 so it can't collide with other services.
+  systemd.services.zigbee2mqtt.environment.Z2M_ONBOARD_URL = "http://0.0.0.0:8081";
 }
