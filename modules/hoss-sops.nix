@@ -37,5 +37,24 @@ in
       group = greenOwner;
       mode = "0400";
     };
+
+    secrets.discord_bot_token = {
+      sopsFile = ../secrets/hoss.yaml;
+      mode = "0400";
+    };
+
+    secrets.discord_allowed_user = {
+      sopsFile = ../secrets/hoss.yaml;
+      mode = "0400";
+    };
+
+    # consumed by modules/hermes.nix via services.hermes-agent.environmentFiles.
+    templates."hermes-discord-env" = {
+      content = ''
+        DISCORD_BOT_TOKEN=${config.sops.placeholder.discord_bot_token}
+        DISCORD_ALLOWED_USERS=${config.sops.placeholder.discord_allowed_user}
+      '';
+      mode = "0400";
+    };
   };
 }
