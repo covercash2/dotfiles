@@ -9,23 +9,11 @@ and [`modules/foundry.nix`](../modules/foundry.nix) for the config.
 just switch-foundry
 ```
 
-builds the `foundry` config on `hoss`, copies the closure to `foundry`, and
-activates it there:
+see the `switch-foundry` recipe in [`justfile`](../justfile) — builds on
+`hoss` (which [`modules/hoss-builder.nix`](../modules/hoss-builder.nix)
+signs for), deploys to `foundry` over Tailscale.
 
-```just
-switch-foundry:
-  nixos-rebuild switch --flake .#foundry --build-host chrash@hoss --target-host chrash@foundry --use-remote-sudo --print-build-logs
-```
-
-- `--build-host chrash@hoss` — build on `hoss`, not the droplet.
-  [`modules/hoss-builder.nix`](../modules/hoss-builder.nix) signs `hoss`'s
-  store paths so `foundry` trusts them without `--no-check-sigs`.
-- `--target-host chrash@foundry` — copy the closure to `foundry` and
-  activate.
-- `--use-remote-sudo` — activation runs as `chrash` via `sudo`, not root.
-
-`hoss` and `foundry` both resolve via Tailscale MagicDNS (`faun-truck`
-tailnet). works from any machine on the tailnet, not just from `hoss` —
+works from any machine on the tailnet, not just from `hoss` —
 `--build-host` pins the build step to `hoss` regardless of where the command
 runs.
 

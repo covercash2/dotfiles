@@ -1,12 +1,8 @@
-# Helpers for the hermes-agent service on hoss (modules/hermes.nix).
+# Helpers for the hermes-agent service (modules/hermes.nix).
 #
-# hermes-agent runs as the dedicated `hermes` system user, and its state dir
-# (/var/lib/hermes/.hermes) is `chmod 2770 hermes:hermes` — chrash isn't in
-# that group, so reading config/sessions or running the `hermes` CLI with the
-# right $HOME needs `sudo -u hermes`. restarting the unit needs root outright.
-# these wrap that so you don't have to retype it.
-#
-# requires: running on hoss, sudo access.
+# state dir is chmod 2770 hermes:hermes, so reading config/sessions or
+# running the `hermes` CLI needs `sudo -u hermes`; restarting the unit needs
+# root.
 #
 # usage:
 #   overlay use nuenv/hermes.nu
@@ -59,9 +55,8 @@ export def "hermes-agent logs" [
   run-external sudo journalctl "-u" hermes-agent "-n" ($lines | into string) "-f"
 }
 
-# restart the unit (e.g. after `just switch` merges a new config.yaml —
-# nixos-rebuild does NOT restart this unit on its own, since only the config
-# file changed, not the unit definition) and tail the startup log
+# restart the unit and tail the startup log — nixos-rebuild won't restart it
+# on its own for a config-only change
 export def "hermes-agent restart" [] {
   run-external sudo systemctl restart hermes-agent
   run-external sudo journalctl "-u" hermes-agent "-n" "0" "-f"
