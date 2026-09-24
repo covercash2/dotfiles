@@ -45,6 +45,11 @@ see [docs/digital_ocean.md](./docs/digital_ocean.md).
 
 see [docs/troubleshooting.md](./docs/troubleshooting.md).
 
+## style
+
+writing conventions for docs and comments — see [docs/styleguide.md](./docs/styleguide.md) and
+[AGENTS.md](./AGENTS.md).
+
 ## home-manager
 
 user config lives in [`home/`](./home/). host-specific values (e.g. git email)

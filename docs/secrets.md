@@ -1,36 +1,27 @@
 # secrets
 
-secrets are managed with [sops-nix] and encrypted with [rops] (a Rust implementation of sops)
-using the host's SSH ed25519 key converted to an age key.
+secrets are managed with [sops-nix] and encrypted with [rops] (a Rust implementation of sops),
+one file per host (`secrets/<host>.yaml`), each encrypted to that host's own age key (its SSH
+ed25519 key, converted via `ssh-to-age`) — see the one-file-per-host/single-recipient model in
+`nuenv/sops.nu`.
 
 ## how it works
 
-- `secrets/green.yaml` is an age-encrypted YAML file committed to the repo.
+- `secrets/<host>.yaml` is age-encrypted and committed to the repo.
 - at NixOS activation, `sops-nix` reads `/etc/ssh/ssh_host_ed25519_key`, derives the age private
-  key internally, and decrypts secrets declared under `sops.secrets.*` in `modules/sops.nix`.
+  key internally, and decrypts secrets declared under `sops.secrets.*` in that host's sops module.
 - `sops.templates.*` can interpolate decrypted values into rendered files (e.g. an
   `EnvironmentFile` for a systemd service).
 
-the age public key derived from the host SSH key is:
+host age public keys are pinned in `.sops.yaml` and mirrored in `HOST_PUBKEYS` in
+`nuenv/sops.nu` — run `secrets` (no args) to list known hosts.
 
-```
-age1lvh945n6pxhwxqyrt6x5fcyvgeytnh4cg47zj2000ltmqal4xyjs0adv96
-```
+## current secrets
 
-this is pinned in `.sops.yaml` under the `host_green` anchor.
-
-> **known issue:** `.sops.yaml` has `path_regex: nixos/secrets/.*\.yaml$` but the actual file
-> lives at `secrets/green.yaml`. the creation rules therefore do **not** auto-apply. you must
-> always pass `--age` explicitly when encrypting.
-
-## current secrets (`modules/sops.nix`)
-
-| key | owner | use |
-|-----|-------|-----|
-| `green_db_password` | green | interpolated into `green-env` template as `GREEN_DB_URL` |
-| `mqtt_password` | green | interpolated into `green-env` template as `GREEN_MQTT_PASSWORD` |
-| `pgadmin_password` | pgadmin | pgAdmin admin password |
-| `miniflux_admin_password` | miniflux | rendered into `miniflux-credentials` template as `ADMIN_PASSWORD` |
+declared in each host's sops module (`modules/sops.nix` for green,
+[`modules/hoss-sops.nix`](../modules/hoss-sops.nix) for hoss) — `sops.secrets.*` and
+`sops.templates.*` there are the source of truth for what exists, who owns
+it, and what it's used for.
 
 ## managing secrets with `nuenv/sops.nu`
 
@@ -40,13 +31,14 @@ this is pinned in `.sops.yaml` under the `host_green` anchor.
 overlay use nuenv/sops.nu
 ```
 
-all commands derive the age private key from `/etc/ssh/ssh_host_ed25519_key` via `sudo ssh-to-age`
-and pass it to `rops` via the `ROPS_AGE` environment variable.
+commands take `--host` (default `green`) and derive the age private key from
+`/etc/ssh/ssh_host_ed25519_key` via `sudo ssh-to-age`.
 
 ```nu
-secrets list                         # show all secret key names (requires sudo)
-secrets add miniflux_admin_password  # prompt for value and save it (requires sudo)
-secrets edit                         # open in $EDITOR interactively (requires TTY + sudo)
+secrets list --host hoss              # show a host's secret key names (requires sudo)
+secrets add miniflux_admin_password   # prompt for value and save to green's file (requires sudo)
+secrets edit                          # open green's file in $EDITOR (requires TTY + sudo)
+secrets init --host hoss my_key       # bootstrap a new host's secrets file (no sudo needed)
 ```
 
 ## raw `rops` commands
@@ -56,18 +48,18 @@ for cases where `sops.nu` is not available or you need more control.
 **decrypt (read):**
 ```nu
 with-env {ROPS_AGE: (sudo ssh-to-age -private-key -i /etc/ssh/ssh_host_ed25519_key | str trim)} {
-  rops decrypt secrets/green.yaml
+  rops decrypt secrets/<host>.yaml
 }
 ```
 
 **add or update a key (decrypt → edit → re-encrypt):**
 ```nu
 with-env {ROPS_AGE: (sudo ssh-to-age -private-key -i /etc/ssh/ssh_host_ed25519_key | str trim)} {
-  rops decrypt secrets/green.yaml | save /tmp/s.yaml
+  rops decrypt secrets/<host>.yaml | save /tmp/s.yaml
 }
 # edit /tmp/s.yaml
-rops encrypt --age age1lvh945n6pxhwxqyrt6x5fcyvgeytnh4cg47zj2000ltmqal4xyjs0adv96 -f yaml /tmp/s.yaml
-| save --force secrets/green.yaml
+rops encrypt --age <host's pubkey — see HOST_PUBKEYS in nuenv/sops.nu> -f yaml /tmp/s.yaml
+| save --force secrets/<host>.yaml
 rm /tmp/s.yaml
 ```
 
@@ -76,11 +68,11 @@ rm /tmp/s.yaml
 
 ## declaring a new secret in NixOS
 
-1. add the key+value to `secrets/green.yaml` via `secrets add <key>` or the raw commands above.
-2. declare it in `modules/sops.nix`:
+1. add the key+value via `secrets add <key> [--host <h>]` or the raw commands above.
+2. declare it in that host's sops module:
    ```nix
    sops.secrets.my_secret = {
-     sopsFile = ../secrets/green.yaml;
+     sopsFile = ../secrets/<host>.yaml;
      owner = "someuser";
      mode = "0400";
    };
@@ -94,10 +86,11 @@ rm /tmp/s.yaml
    ```nu
    ssh-to-age -i /etc/ssh/ssh_host_ed25519_key.pub
    ```
-2. add the public key to `.sops.yaml` under a new anchor.
-3. re-encrypt the secrets file for the new key:
+2. add it to `HOST_PUBKEYS` in `nuenv/sops.nu`, and as a new anchor +
+   `creation_rules` entry in `.sops.yaml`.
+3. create the host's secrets file:
    ```nu
-   rops keys update secrets/green.yaml
+   secrets init --host <host> <first_key>
    ```
 4. add the host's SSH key path to `sops.age.sshKeyPaths` in its sops module:
    ```nix
