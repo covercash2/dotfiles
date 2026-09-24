@@ -3,7 +3,7 @@ let
   # green user only exists when services.green.enable is true
   # (modules/hoss-green.nix). fall back to root otherwise — see
   # docs/troubleshooting.md ("every nix build fails...") for why this matters.
-  greenOwner = lib.mkIf config.services.green.enable "green";
+  greenOwner = if config.services.green.enable then "green" else "root";
 in
 {
   sops = {
