@@ -13,7 +13,7 @@
     settings = {
       model = {
         provider = "ollama";
-        default = "qwen3.5:9b";
+        default = "qwen3.5:27b";
       };
 
       providers.ollama.base_url = "http://localhost:11434/v1";

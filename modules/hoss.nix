@@ -69,12 +69,11 @@ in
       # default runtime context window is far smaller than a model's trained
       # max — callers computing an output budget off the trained max then
       # hit this ceiling almost immediately and see finish_reason=length.
-      # 262144 matches qwen3.5:9b's full trained context; confirmed via
-      # `ollama ps` that it fits at ~15GB VRAM on the 4090 here (its hybrid
-      # attention only caches 8 of 32 layers, so cost scales far below a
-      # dense transformer's). lower if a bigger/different model doesn't fit.
+      # 65536 is qwen3.5:27b's ceiling for staying 100% on the 4090's GPU here
+      # (confirmed via `ollama ps`); past that it spills to CPU. qwen3.5:9b
+      # would fit its full 262144 trained context instead, if switched back.
       environmentVariables = {
-        OLLAMA_CONTEXT_LENGTH = "262144";
+        OLLAMA_CONTEXT_LENGTH = "65536";
       };
     };
 
