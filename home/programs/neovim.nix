@@ -12,12 +12,16 @@
       lua-language-server
       nil          # nix LSP
       vscode-langservers-extracted  # jsonls, htmlls, cssls, eslint
-      ruff
+
       tree-sitter
       typos-lsp
       yaml-language-server
+
+      # Python stuff
       black        # Python formatter
       djhtml       # Django/Jinja template formatter
+      djlint
+      ruff
     ];
   };
 

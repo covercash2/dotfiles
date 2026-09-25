@@ -56,5 +56,34 @@ in
       '';
       mode = "0400";
     };
+
+    secrets.hass_token = {
+      sopsFile = ../secrets/hoss.yaml;
+      mode = "0400";
+    };
+
+    # consumed by modules/hermes.nix; activates hermes-agent's homeassistant
+    # toolset. green's HA instance, reached over the shared homelab CA
+    # (see modules/green.nix for the reverse-proxied route).
+    templates."hermes-hass-env" = {
+      content = ''
+        HASS_TOKEN=${config.sops.placeholder.hass_token}
+        HASS_URL=https://homeassistant.green.chrash.net
+      '';
+      mode = "0400";
+    };
+
+    secrets.gh_token = {
+      sopsFile = ../secrets/hoss.yaml;
+      mode = "0400";
+    };
+
+    # consumed by modules/hermes.nix; scoped PAT for gh, not chrash's own.
+    templates."hermes-gh-env" = {
+      content = ''
+        GH_TOKEN=${config.sops.placeholder.gh_token}
+      '';
+      mode = "0400";
+    };
   };
 }

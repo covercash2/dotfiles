@@ -17,6 +17,8 @@
     gh # GitHub CLI
     git-filter-repo # remove secrets from repos
 
+    google-cloud-sdk
+
     jj-starship
     jujutsu
     just
