@@ -165,9 +165,10 @@
               respond "OK"
             }
             handle_path /ca {
-              header Content-Type "application/x-pem-file"
-              header Content-Disposition `attachment; filename="ca.pem"`
-              reverse_proxy localhost:${toString config.services.green.port}/api/ca
+              # content-type / content-disposition are already set by the
+              # green backend's /api/ca handler — don't duplicate them here.
+              rewrite * /api/ca
+              reverse_proxy localhost:${toString config.services.green.port}
             }
           '';
         };
