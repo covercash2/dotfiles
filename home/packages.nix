@@ -34,7 +34,8 @@
     nufmt # nushell formatter
     # nushellPlugins.net # list net interfaces: `$ net`
     nushellPlugins.skim # fuzzy finder for everything: `$ ps | sk`
-    nushellPlugins.highlight # highlight raw text: `$ open --raw data.json | highlight`
+    # this plugin is currently broken
+    # nushellPlugins.highlight # highlight raw text: `$ open --raw data.json | highlight`
 
     ripgrep
     ruff # Python linter (hermes-plugins/, scripts/)

@@ -76,10 +76,6 @@
           url = "grafana.green.chrash.net";
           description = "Grafana monitoring dashboard";
         };
-        postgres = {
-          url = "db.green.chrash.net";
-          description = "PostgreSQL database route";
-        };
         homeassistant = {
           url = "homeassistant.green.chrash.net";
           description = "Home Assistant route";
@@ -238,13 +234,6 @@
           '';
         };
 
-        ${config.services.green.routes.postgres.url} = {
-          extraConfig = ''
-            tls ${config.services.mkcert-shared.certPath} ${config.services.mkcert-shared.keyPath}
-            reverse_proxy localhost:${toString config.services.pgadmin.port}
-          '';
-        };
-
         ${config.services.green.routes.zwave.url} = {
           extraConfig = ''
             tls ${config.services.mkcert-shared.certPath} ${config.services.mkcert-shared.keyPath}
@@ -283,13 +272,6 @@
         BASE_URL = "https://${config.services.green.routes.miniflux.url}";
         CREATE_ADMIN = 1;
       };
-    };
-
-    pgadmin = {
-      enable = true;
-      port = 5050;
-      initialEmail = "covercash2@gmail.com";
-      initialPasswordFile = config.sops.secrets.pgadmin_password.path;
     };
 
     # media hosting

@@ -24,12 +24,6 @@
       mode = "0400";
     };
 
-    secrets.pgadmin_password = {
-      sopsFile = ../secrets/green.yaml;
-      owner = "pgadmin";
-      mode = "0400";
-    };
-
     secrets.homeassistant_prometheus_token = {
       sopsFile = ../secrets/green.yaml;
       owner = "prometheus";
