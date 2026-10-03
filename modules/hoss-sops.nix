@@ -85,5 +85,25 @@ in
       '';
       mode = "0400";
     };
+
+    # token.json from a gmail.readonly InstalledAppFlow, run on a machine
+    # with a browser (never on hoss, which is headless). Owned by hermes
+    # directly: unlike the other secrets above, the Gmail tool opens this
+    # file itself at runtime rather than reading an env var, so hermes needs
+    # real read access, not just systemd.
+    secrets.gmail_oauth_token = {
+      sopsFile = ../secrets/hoss.yaml;
+      owner = "hermes";
+      group = "hermes";
+      mode = "0400";
+    };
+
+    # consumed by modules/hermes.nix; points a Gmail tool at the token above.
+    templates."hermes-gmail-env" = {
+      content = ''
+        GMAIL_TOKEN_PATH=${config.sops.secrets.gmail_oauth_token.path}
+      '';
+      mode = "0400";
+    };
   };
 }

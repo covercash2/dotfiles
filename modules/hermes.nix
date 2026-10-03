@@ -14,6 +14,8 @@
       config.sops.templates."hermes-hass-env".path
       # GH_TOKEN authenticates gh beyond unauthenticated public reads.
       config.sops.templates."hermes-gh-env".path
+      # GMAIL_TOKEN_PATH points at the gmail.readonly OAuth token.
+      config.sops.templates."hermes-gmail-env".path
     ];
 
     extraPackages = with pkgs; [
