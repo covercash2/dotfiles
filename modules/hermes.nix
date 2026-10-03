@@ -46,6 +46,17 @@
 
       # don't let Hermes manage ollama; it's already a system service here.
       local_runtime.enabled = false;
+
+      # user plugins are opt-in; see modules/hermes-plugins/.
+      plugins.enabled = [ "gmail" ];
     };
   };
+
+  # Drop-in plugins live under $HERMES_HOME/plugins/<name>/ (source in
+  # ../hermes-plugins/ — not Nix-specific, so it's not under modules/). L+
+  # re-links on every activation, so edits to the plugin just need a
+  # `hermes-agent` restart, not a copy step.
+  systemd.tmpfiles.rules = [
+    "L+ /var/lib/hermes/.hermes/plugins/gmail - - - - ${../hermes-plugins/gmail}"
+  ];
 }

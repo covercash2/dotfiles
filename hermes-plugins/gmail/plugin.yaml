@@ -1,0 +1,10 @@
+name: gmail
+version: 1.0.0
+description: >
+  Read-only Gmail — list/search messages and fetch one message's content.
+  Personal single-account use; auth is a static gmail.readonly OAuth token
+  (GMAIL_TOKEN_PATH), not hermes's own `hermes auth` flow.
+author: chrash
+kind: standalone
+provides_tools:
+  - gmail_messages

@@ -1,2 +1,10 @@
 [default.extend-words]
 chrash = "chrash"
+# Home Assistant env vars/secrets (modules/hermes.nix, modules/hoss-sops.nix)
+hass = "hass"
+# MQTT broker (nuenv/mosquitto.nu)
+mosquitto = "mosquitto"
+# India Standard Time (nuenv/time.nu)
+IST = "IST"
+# the Vim command (home/programs/nvim)
+enew = "enew"

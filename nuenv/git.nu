@@ -169,13 +169,13 @@ export def "git status" [] {
     }
 }
 
-# ammend a commit
-export def "git ammend" [] {
+# amend a commit
+export def "git amend" [] {
   external git add "--all"
   external git commit "--amend"
 }
 
-# run an external command with some personal tweeks
+# run an external command with some personal tweaks
 def "external" [
   ...args: string
 ] {

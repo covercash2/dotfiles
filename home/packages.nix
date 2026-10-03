@@ -35,6 +35,7 @@
     nushellPlugins.highlight # highlight raw text: `$ open --raw data.json | highlight`
 
     ripgrep
+    ruff # Python linter (hermes-plugins/, scripts/)
     starship
     tailscale
     typos # find typos in source code projects

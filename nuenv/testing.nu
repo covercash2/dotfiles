@@ -1,7 +1,7 @@
-use std log
+use std/log
 
 def "nu-complete threads" [] {
-    seq 1 (sys|get cpu|length)
+    seq 1 (sys cpu|length)
 }
 
 # Here we store the map of annotations internal names and the annotation actually used during test creation
@@ -24,7 +24,7 @@ def valid-annotations [] {
 # Returns a table containing the list of function names together with their annotations (comments above the declaration)
 def get-annotated [
     file: path
-] path -> table<function_name: string, annotation: string> {
+]: nothing -> table<function_name: string, annotation: string> {
     let raw_file = (
         open $file
         | lines
@@ -44,7 +44,7 @@ def get-annotated [
     | reject index
     | update item {
         split column --collapse-empty ' '
-        | get column2.0
+        | get column1.0
     }
     | rename function_name
 }
@@ -55,7 +55,7 @@ def get-annotated [
 # Annotations that allow multiple functions are of type list<string>
 # Other annotations are of type string
 # Result gets merged with the template record so that the output shape remains consistent regardless of the table content
-def create-test-record [] nothing -> record<before-each: string, after-each: string, before-all: string, after-all: string, test: list<string>, test-skip: list<string>> {
+def create-test-record []: table<function_name: string, annotation: string> -> record<before-each: string, after-each: string, before-all: string, after-all: string, test: list<string>, test-skip: list<string>> {
     let input = $in
 
     let template_record = {
@@ -75,7 +75,7 @@ def create-test-record [] nothing -> record<before-each: string, after-each: str
         | group-by --to-table annotation
         | update items {|x|
             $x.items.function_name
-            | if $x.group in ["test", "test-skip"] {
+            | if $x.annotation in ["test", "test-skip"] {
                 $in
             } else {
                 get 0
@@ -183,7 +183,7 @@ export def ($test_function_name) [] {
 def run-tests-for-module [
     module: record<file: path name: string before-each: string after-each: string before-all: string after-all: string test: list test-skip: list>
     threads: int
-] -> table<file: path, name: string, test: string, result: string> {
+]: nothing -> table<file: path, name: string, test: string, result: string> {
     let global_context = if not ($module.before-all|is-empty) {
             log info $"Running before-all for module ($module.name)"
             run-test {
@@ -287,7 +287,7 @@ export def run-tests [
     --list,                               # list the selected tests without running them.
     --threads: int@"nu-complete threads", # Amount of threads to use for parallel execution. Default: All threads are utilized
 ] {
-    let available_threads = (sys | get cpu | length)
+    let available_threads = (sys cpu | length)
 
     # Can't use pattern matching here due to https://github.com/nushell/nushell/issues/9198
     let threads = (if $threads == null {
@@ -337,20 +337,20 @@ export def run-tests [
                 commands: (get-annotated $row.name)
             }
         }
-        | filter {|x| ($x.commands|length) > 0}
+        | where {|x| ($x.commands|length) > 0}
         | upsert commands {|module|
             $module.commands
             | create-test-record
         }
         | flatten
-        | filter {|x| ($x.test|length) > 0}
-        | filter {|x| if ($exclude_module|is-empty) {true} else {$x.name !~ $exclude_module}}
-        | filter {|x| if ($test|is-empty) {true} else {$x.test|any {|y| $y =~ $test}}}
-        | filter {|x| if ($module|is-empty) {true} else {$module == $x.name}}
+        | where {|x| ($x.test|length) > 0}
+        | where {|x| if ($exclude_module|is-empty) {true} else {$x.name !~ $exclude_module}}
+        | where {|x| if ($test|is-empty) {true} else {$x.test|any {|y| $y =~ $test}}}
+        | where {|x| if ($module|is-empty) {true} else {$module == $x.name}}
         | update test {|x|
             $x.test
-            | filter {|y| if ($test|is-empty) {true} else {$y =~ $test}}
-            | filter {|y| if ($exclude|is-empty) {true} else {$y !~ $exclude}}
+            | where {|y| if ($test|is-empty) {true} else {$y =~ $test}}
+            | where {|y| if ($exclude|is-empty) {true} else {$y !~ $exclude}}
         }
     )
     if $list {
@@ -378,5 +378,6 @@ export def run-tests [
 
         error make --unspanned { msg: $text }
     }
+    $results
 }
 

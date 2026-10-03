@@ -1,3 +1,6 @@
+# every machine on the network runs nushell — recipes are nu, not sh/bash.
+set shell := ["nu", "-c"]
+
 hostname := shell('hostname')
 
 # list recipes
@@ -27,11 +30,11 @@ switch-green:
   nixos-rebuild switch --flake .#green --build-host chrash@hoss --target-host chrash@green --ask-elevate-password --print-build-logs
 
 # build the system configuration without switching
-build:
+build: check
   nixos-rebuild build --flake .#{{hostname}} --print-build-logs
 
 # build and switch to the new system configuration
-switch:
+switch: build
   sudo nixos-rebuild switch --flake .#{{hostname}} --print-build-logs
 
 # switch without printing build logs
@@ -63,6 +66,34 @@ build_rescue:
 # test the configuration without applying it
 dry_build:
   nixos-rebuild dry-activate --sudo --flake .#{{hostname}} #--upgrade
+
+# run every repo-wide check: nix eval, typo scan, python lint, nu test suite, hermes plugins
+check: check_nix check_typos check_ruff check_nu check_hermes_plugins
+
+# evaluate every flake output (NixOS + home-manager configs) without building
+check_nix:
+  nix flake check --no-build
+
+# catch typos across the repo (see typos.toml for accepted domain words)
+check_typos:
+  typos
+
+# lint the repo's Python (hermes-plugins/, scripts/) — ruff, via home/packages.nix
+check_ruff:
+  ruff check hermes-plugins scripts
+
+# run the nuenv test suite (nuenv/testing.nu). A fresh `nu -c` subprocess so
+# its startup CWD is already nuenv/ — `overlay use` resolves at parse time,
+# before a same-script `cd` has run, and test fixtures (e.g. zigbee.nu's)
+# resolve their own paths against CWD too.
+check_nu:
+  cd nuenv; nu -c 'overlay use testing.nu; run-tests --path .'
+
+# validate every Hermes plugin (hermes-plugins/<name>/) against the real
+# runtime contracts: manifest parsing, import, register(ctx), tool/hook
+# registration. See hermes-plugins/ (not modules/ — not Nix-specific).
+check_hermes_plugins:
+  for d in (ls hermes-plugins | where type == dir | get name) { hermes plugins doctor $d --ci; if $env.LAST_EXIT_CODE != 0 { exit $env.LAST_EXIT_CODE } }
 
 update_flake:
   nix flake update --flake .
