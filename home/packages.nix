@@ -29,6 +29,8 @@
     nix-update # used to bump versions in nix files
     opencode
 
+    pyright # Python type checker (hermes-plugins/, scripts/)
+
     nufmt # nushell formatter
     # nushellPlugins.net # list net interfaces: `$ net`
     nushellPlugins.skim # fuzzy finder for everything: `$ ps | sk`

@@ -30,11 +30,14 @@ switch-green:
   nixos-rebuild switch --flake .#green --build-host chrash@hoss --target-host chrash@green --ask-elevate-password --print-build-logs
 
 # build the system configuration without switching
-build: check
+build:
   nixos-rebuild build --flake .#{{hostname}} --print-build-logs
 
 # build and switch to the new system configuration
-switch: build
+switch: check build
+  sudo nixos-rebuild switch --flake .#{{hostname}} --print-build-logs
+
+switch-unchecked: build
   sudo nixos-rebuild switch --flake .#{{hostname}} --print-build-logs
 
 # switch without printing build logs
@@ -67,8 +70,9 @@ build_rescue:
 dry_build:
   nixos-rebuild dry-activate --sudo --flake .#{{hostname}} #--upgrade
 
-# run every repo-wide check: nix eval, typo scan, python lint, nu test suite, hermes plugins
-check: check_nix check_typos check_ruff check_nu check_hermes_plugins
+# run every repo-wide check: nix eval, typo scan, python lint/types/tests,
+# nu syntax sweep + test suite, hermes plugins, sops plaintext guard
+check: check_nix check_typos check_ruff check_pyright check_python_tests check_nu_syntax check_nu check_hermes_plugins check_secrets
 
 # evaluate every flake output (NixOS + home-manager configs) without building
 check_nix:
@@ -82,6 +86,42 @@ check_typos:
 check_ruff:
   ruff check hermes-plugins scripts
 
+# type-check the repo's Python against the *real* interpreter hermes-agent
+# runs on (resolved dynamically — it's a nix store path that changes on every
+# rebuild, so it can't live in a committed pyrightconfig.json).
+check_pyright:
+  #!/usr/bin/env nu
+  let hermes_py = (open (which hermes | get 0.path) | lines | where $it =~ "HERMES_PYTHON=" | first | parse "export HERMES_PYTHON={path}" | get path.0 | str trim -c "'")
+  pyright --pythonpath $hermes_py hermes-plugins scripts
+
+# run each Hermes plugin's own pure-logic unit tests (test_tools.py etc.),
+# under the same interpreter hermes-agent uses — same reasoning as check_pyright.
+check_python_tests:
+  #!/usr/bin/env nu
+  let hermes_py = (open (which hermes | get 0.path) | lines | where $it =~ "HERMES_PYTHON=" | first | parse "export HERMES_PYTHON={path}" | get path.0 | str trim -c "'")
+  for f in (glob hermes-plugins/*/test_*.py) { ^$hermes_py $f }
+
+# every nuenv/*.nu file at least parses, not just the ones testing.nu's
+# suite happens to exercise. Would have caught today's testing.nu bit rot
+# immediately instead of via a user report.
+check_nu_syntax:
+  #!/usr/bin/env nu
+  let results = (ls nuenv/*.nu | get name | path expand | each {|f|
+    try {
+      nu-check $f
+      {file: $f, ok: true, error: ""}
+    } catch { |err|
+      {file: $f, ok: false, error: $err.msg}
+    }
+  })
+  let failures = ($results | where ok == false)
+  if ($failures | is-empty) {
+    print $"all ($results | length) nuenv/*.nu files parse cleanly"
+  } else {
+    print $failures
+    exit 1
+  }
+
 # run the nuenv test suite (nuenv/testing.nu). A fresh `nu -c` subprocess so
 # its startup CWD is already nuenv/ — `overlay use` resolves at parse time,
 # before a same-script `cd` has run, and test fixtures (e.g. zigbee.nu's)
@@ -94,6 +134,23 @@ check_nu:
 # registration. See hermes-plugins/ (not modules/ — not Nix-specific).
 check_hermes_plugins:
   for d in (ls hermes-plugins | where type == dir | get name) { hermes plugins doctor $d --ci; if $env.LAST_EXIT_CODE != 0 { exit $env.LAST_EXIT_CODE } }
+
+# guard against an accidentally-committed plaintext secret: every value in
+# secrets/*.yaml besides the sops metadata block must be sops-encrypted.
+check_secrets:
+  #!/usr/bin/env nu
+  let results = (ls secrets/*.yaml | get name | each {|f|
+    let data = (open $f)
+    let leaks = ($data | columns | where $it != "sops" | where {|k| not ($data | get $k | into string | str starts-with "ENC[")})
+    {file: $f, leaks: $leaks}
+  })
+  let bad = ($results | where {|r| ($r.leaks | length) > 0})
+  if ($bad | is-empty) {
+    print $"all ($results | length) secrets/*.yaml files are fully encrypted"
+  } else {
+    print $bad
+    exit 1
+  }
 
 update_flake:
   nix flake update --flake .
