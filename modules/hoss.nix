@@ -63,7 +63,7 @@ in
       user = "ollama";
       host = "0.0.0.0";
       port = 11434;
-      models = "/mnt/space/ollama/models";
+      modelsDir = "/mnt/space/ollama/models";
       home = "/mnt/space/ollama";
 
       # default runtime context window is far smaller than a model's trained

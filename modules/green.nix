@@ -23,12 +23,19 @@
 
   nix.settings.max-jobs = lib.mkForce 1;
 
-  # Ensure the shared vault directory exists (and is owned by the green
-  # service user) before green starts — it now unconditionally reads
-  # vaultPath/recipeVaultPath/blogVaultPath, all pointed at this directory.
-  systemd.tmpfiles.rules = [
-    "d /var/lib/green/vault 0750 green green - -"
-  ];
+  # green's vaultPath/recipeVaultPath/blogVaultPath all point here. Bind-mount
+  # the real Obsidian vault in read-only (green only ever reads notes, never
+  # writes) rather than chown/syncing a copy — avoids ever touching the real
+  # vault's ownership. x-systemd.mkdir creates the mountpoint once if missing;
+  # don't use a tmpfiles `d` rule for this path instead — tmpfiles re-enforces
+  # owner/mode on every `nixos-rebuild switch`, which would run against the
+  # already-mounted real vault (not the empty mountpoint) and reassign chrash's
+  # notes to the green user.
+  fileSystems."/var/lib/green/vault" = {
+    device = "/home/chrash/notes/obsidian/core";
+    fsType = "none";
+    options = [ "bind" "ro" "x-systemd.mkdir" ];
+  };
 
   hardware.nvidia-container-toolkit = {
     enable = true;

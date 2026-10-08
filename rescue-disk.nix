@@ -45,7 +45,7 @@
   ];
 
   # set a descriptive label for the generated ISO
-  isoImage.isoName = "rescue-disk.iso";
+  image.fileName = "rescue-disk.iso";
 
   nixpkgs.config.allowUnfree = true;
 
@@ -82,6 +82,11 @@
   users.users.root = {
     shell = pkgs.nushell;
     initialPassword = "rescue";
+    # installation-device.nix (pulled in via installation-cd-minimal.nix)
+    # defaults root to a passwordless login via initialHashedPassword = "".
+    # Both options being non-null makes NixOS warn about precedence — force
+    # the base module's default out so only our "rescue" password applies.
+    initialHashedPassword = lib.mkForce null;
   };
 
   # chrash user — home-manager provides the full terminal environment

@@ -74,9 +74,15 @@ dry_build:
 # nu syntax sweep + test suite, hermes plugins, sops plaintext guard
 check: check_nix check_typos check_ruff check_pyright check_python_tests check_nu_syntax check_nu check_hermes_plugins check_secrets
 
-# evaluate every flake output (NixOS + home-manager configs) without building
+# evaluate every flake output (NixOS + home-manager configs).
+# no --no-build: hermes-agent's nix/lib.nix copies a cleanSourceWith-filtered
+# "hermes-python-source" tree to compute systemd.services.hermes-agent's
+# ExecStart path — a cheap copy, not a real build, but --no-build blocks any
+# unrealized store path (filtered-source copies included), so it errors with
+# "path '...' is not valid". Without the flag this stays fast: evaluation
+# only forces that one lightweight copy, not actual package builds.
 check_nix:
-  nix flake check --no-build
+  nix flake check
 
 # catch typos across the repo (see typos.toml for accepted domain words)
 check_typos:
