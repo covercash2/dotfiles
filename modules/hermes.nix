@@ -16,7 +16,9 @@
       config.sops.templates."hermes-gh-env".path
       # GMAIL_TOKEN_PATH points at the gmail.readonly OAuth token.
       config.sops.templates."hermes-gmail-env".path
-      # OBSIDIAN_API_TOKEN + OBSIDIAN_API_BASE for the Obsidian tool.
+      # OBSIDIAN_REST_API_KEY is resolved into mcpServers.obsidian-vault's
+      # header below via hermes's own ${VAR} interpolation (see
+      # tools/mcp_tool_config.py upstream) — NOT a Nix-time substitution.
       config.sops.templates."hermes-obsidian-env".path
     ];
 
@@ -51,6 +53,18 @@
 
       # user plugins are opt-in; see modules/hermes-plugins/.
       plugins.enabled = [ "gmail" ];
+    };
+
+    # headless Obsidian + Dataview, served over MCP by the Local REST API
+    # plugin itself (/mcp/) — see modules/obsidian-headless.nix on green.
+    # Plain HTTP (not the plugin's self-signed-HTTPS port) since this is a
+    # cross-host call over Tailscale; the bearer token is the security
+    # boundary, same posture as everything else exposed that way in this repo.
+    mcpServers.obsidian-vault = {
+      url = "http://green.faun-truck.ts.net:27123/mcp/";
+      # literal ${...} — hermes resolves this itself at runtime from its own
+      # .env (see hermes-obsidian-env below), not a Nix-time substitution.
+      headers.Authorization = "Bearer \${OBSIDIAN_REST_API_KEY}";
     };
   };
 

@@ -106,16 +106,23 @@ in
       mode = "0400";
     };
 
-    secrets.obsidian_api_token = {
+    # Copy of green's obsidian_local_rest_api_key (modules/sops.nix), same
+    # mirrored-secret pattern as green_db_password above. Consumed directly
+    # by modules/hermes.nix's mcpServers.obsidian-vault — not a template,
+    # since config.sops.placeholder works from any secret declared on this
+    # host. Keep in sync manually if it ever rotates:
+    #   secrets get obsidian_local_rest_api_key            # run on green
+    #   secrets add obsidian_local_rest_api_key --host hoss # run on hoss
+    secrets.obsidian_local_rest_api_key = {
       sopsFile = ../secrets/hoss.yaml;
       mode = "0400";
     };
 
-    # consumed by modules/hermes.nix. Reaches the Obsidian Local REST API
-    # plugin on green via Caddy + the shared homelab CA (modules/green.nix),
-    # not the plugin's own self-signed cert — no OBSIDIAN_CERT needed.
+    # consumed by modules/hermes.nix; hermes itself resolves the ${VAR} in
+    # mcpServers.obsidian-vault's header against this at runtime.
     templates."hermes-obsidian-env" = {
       content = ''
+        OBSIDIAN_REST_API_KEY=${config.sops.placeholder.obsidian_local_rest_api_key}
         OBSIDIAN_API_TOKEN=${config.sops.placeholder.obsidian_api_token}
         OBSIDIAN_API_BASE=https://obsidian.green.chrash.net
       '';

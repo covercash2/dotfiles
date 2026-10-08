@@ -1,0 +1,9 @@
+{
+	"id": "obsidian-dataview-mcp-extension",
+	"name": "Dataview MCP Extension",
+	"version": "0.1.0",
+	"minAppVersion": "1.13.1",
+	"description": "Exposes Dataview DQL queries (and an experimental DataviewJS-like evaluator) as MCP tools via the Local REST API with MCP plugin's extension interface.",
+	"author": "covercash2",
+	"isDesktopOnly": true
+}

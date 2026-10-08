@@ -105,6 +105,7 @@
           ./modules/desktop.nix
           # ./modules/apollo_router.nix
           ./modules/green.nix
+          ./modules/obsidian-headless.nix
 
           ./modules/adguard.nix
           ./modules/adguardhome-sync.nix

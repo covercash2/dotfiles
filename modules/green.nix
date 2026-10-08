@@ -96,6 +96,18 @@
 
     tailscale.permitCertUid = "caddy";
 
+    # headless Obsidian + Dataview + Local REST API/MCP for Hermes — see
+    # modules/obsidian-headless.nix. Separate from the plain bind-mounted
+    # vault above: this one needs the real Obsidian plugin runtime for
+    # Dataview, and writes back to the vault repo, so it keeps its own
+    # synced clone under a dedicated user rather than touching chrash's vault.
+    obsidian-headless = {
+      enable = true;
+      repoUrl = "git@github.com:covercash2/obsidian-vault.git";
+      deployKeyFile = config.sops.secrets.obsidian_vault_deploy_key.path;
+      localRestApiDataJsonFile = config.sops.templates."obsidian-local-rest-api-data.json".path;
+    };
+
     green = {
       enable = true;
 
