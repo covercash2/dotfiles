@@ -10,6 +10,13 @@
       mode = "0400";
     };
 
+    # Read-only GitHub deploy key for green-vault-sync.service (modules/green.nix).
+    # Owned by root since that service runs as root.
+    secrets.green_vault_deploy_key = {
+      sopsFile = ../secrets/green.yaml;
+      mode = "0400";
+    };
+
     secrets.green_db_password = {
       sopsFile = ../secrets/green.yaml;
       owner = "green";

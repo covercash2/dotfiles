@@ -105,5 +105,21 @@ in
       '';
       mode = "0400";
     };
+
+    secrets.obsidian_api_token = {
+      sopsFile = ../secrets/hoss.yaml;
+      mode = "0400";
+    };
+
+    # consumed by modules/hermes.nix. Reaches the Obsidian Local REST API
+    # plugin on green via Caddy + the shared homelab CA (modules/green.nix),
+    # not the plugin's own self-signed cert — no OBSIDIAN_CERT needed.
+    templates."hermes-obsidian-env" = {
+      content = ''
+        OBSIDIAN_API_TOKEN=${config.sops.placeholder.obsidian_api_token}
+        OBSIDIAN_API_BASE=https://obsidian.green.chrash.net
+      '';
+      mode = "0400";
+    };
   };
 }

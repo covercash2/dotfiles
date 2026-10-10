@@ -23,18 +23,54 @@
 
   nix.settings.max-jobs = lib.mkForce 1;
 
-  # green's vaultPath/recipeVaultPath/blogVaultPath all point here. Bind-mount
-  # the real Obsidian vault in read-only (green only ever reads notes, never
-  # writes) rather than chown/syncing a copy — avoids ever touching the real
-  # vault's ownership. x-systemd.mkdir creates the mountpoint once if missing;
-  # don't use a tmpfiles `d` rule for this path instead — tmpfiles re-enforces
-  # owner/mode on every `nixos-rebuild switch`, which would run against the
-  # already-mounted real vault (not the empty mountpoint) and reassign chrash's
-  # notes to the green user.
-  fileSystems."/var/lib/green/vault" = {
-    device = "/home/chrash/notes/obsidian/core";
-    fsType = "none";
-    options = [ "bind" "ro" "x-systemd.mkdir" ];
+  # green's vaultPath/recipeVaultPath/blogVaultPath all point here. Content is
+  # pulled from a private git repo on a timer rather than relying on a live
+  # Obsidian instance or a bind-mounted local path — green shouldn't depend on
+  # a desktop session existing anywhere. Edits are pushed from wherever the
+  # vault is actually edited (e.g. the Obsidian Git plugin); this just pulls.
+  systemd.services.green-vault-sync = {
+    description = "Pull the notes vault from its git remote";
+    after = [ "network-online.target" ];
+    wants = [ "network-online.target" ];
+
+    serviceConfig = {
+      Type = "oneshot";
+      # Runs as root: needs to restart green.service on a change, and the
+      # vault directory is chowned to green at the end of each run anyway.
+      Environment = [
+        "GIT_SSH_COMMAND=${pkgs.openssh}/bin/ssh -i ${config.sops.secrets.green_vault_deploy_key.path} -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
+      ];
+      ExecStart = pkgs.writeShellScript "green-vault-sync" ''
+        set -euo pipefail
+        vault=/var/lib/green/vault
+        git=${pkgs.git}/bin/git
+
+        if [ -d "$vault/.git" ]; then
+          before=$("$git" -C "$vault" rev-parse HEAD)
+          "$git" -C "$vault" pull --ff-only
+        else
+          before=""
+          "$git" clone --depth 1 git@github.com:covercash2/notes-vault.git "$vault"
+        fi
+        after=$("$git" -C "$vault" rev-parse HEAD)
+
+        chown -R green:green "$vault"
+
+        if [ "$before" != "$after" ]; then
+          systemctl restart green.service
+        fi
+      '';
+    };
+  };
+
+  systemd.timers.green-vault-sync = {
+    description = "Periodically pull the notes vault";
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnBootSec = "2min";
+      OnUnitActiveSec = "1h";
+      Persistent = true;
+    };
   };
 
   hardware.nvidia-container-toolkit = {
@@ -114,6 +150,10 @@
         alertmanager = {
           url = "alertmanager.green.chrash.net";
           description = "Prometheus Alertmanager";
+        };
+        obsidian = {
+          url = "obsidian.green.chrash.net";
+          description = "Obsidian Local REST API (for hermes-agent on hoss)";
         };
       };
 
@@ -238,6 +278,17 @@
           extraConfig = ''
             tls ${config.services.mkcert-shared.certPath} ${config.services.mkcert-shared.keyPath}
             reverse_proxy localhost:${toString config.services.prometheus.alertmanager.port}
+          '';
+        };
+
+        # Obsidian Local REST API plugin — "Non-encrypted (HTTP) Server"
+        # enabled, binds 127.0.0.1:27123 by default (same host as Caddy).
+        # Its own HTTPS listener (27124, self-signed, loopback-named) stays
+        # unused; this is the only route in.
+        ${config.services.green.routes.obsidian.url} = {
+          extraConfig = ''
+            tls ${config.services.mkcert-shared.certPath} ${config.services.mkcert-shared.keyPath}
+            reverse_proxy localhost:27123
           '';
         };
 

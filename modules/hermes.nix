@@ -16,6 +16,8 @@
       config.sops.templates."hermes-gh-env".path
       # GMAIL_TOKEN_PATH points at the gmail.readonly OAuth token.
       config.sops.templates."hermes-gmail-env".path
+      # OBSIDIAN_API_TOKEN + OBSIDIAN_API_BASE for the Obsidian tool.
+      config.sops.templates."hermes-obsidian-env".path
     ];
 
     extraPackages = with pkgs; [
