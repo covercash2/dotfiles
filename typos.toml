@@ -8,3 +8,9 @@ mosquitto = "mosquitto"
 IST = "IST"
 # the Vim command (home/programs/nvim)
 enew = "enew"
+
+[files]
+# sops-encrypted — base64 ciphertext isn't real words, and the exact false
+# positives shift every time a secret is re-encrypted, so exclude rather
+# than whitelist individual tokens.
+extend-exclude = ["secrets/*.yaml"]

@@ -28,6 +28,10 @@
   # Obsidian instance or a bind-mounted local path — green shouldn't depend on
   # a desktop session existing anywhere. Edits are pushed from wherever the
   # vault is actually edited (e.g. the Obsidian Git plugin); this just pulls.
+  #
+  # Same repo as obsidian-headless (modules/obsidian-headless.nix) — this
+  # just reads it with its own read-only deploy key, rather than sharing
+  # obsidian-headless's read-write one.
   systemd.services.green-vault-sync = {
     description = "Pull the notes vault from its git remote";
     after = [ "network-online.target" ];
@@ -50,7 +54,7 @@
           "$git" -C "$vault" pull --ff-only
         else
           before=""
-          "$git" clone --depth 1 git@github.com:covercash2/notes-vault.git "$vault"
+          "$git" clone --depth 1 git@github.com:covercash2/obsidian-vault.git "$vault"
         fi
         after=$("$git" -C "$vault" rev-parse HEAD)
 

@@ -69,6 +69,10 @@ some services run as user units — check with `systemctl --user status <service
 
 managed with [sops-nix] + [rops], see [docs/secrets.md](./docs/secrets.md).
 
+## matter / thread
+
+see [docs/matter-thread.md](./docs/matter-thread.md) for onboarding new devices and debugging failures.
+
 ## rescue disk
 
 ```bash

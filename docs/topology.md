@@ -131,14 +131,17 @@ see `oci-containers.containers.node_exporter` in each host's module.
 
 ## iot / home automation
 
-defined in [`modules/green.nix`](../modules/green.nix), [`modules/zigbee_receiver.nix`](../modules/zigbee_receiver.nix), [`modules/z-wave_receiver.nix`](../modules/z-wave_receiver.nix).
+defined in [`modules/green.nix`](../modules/green.nix), [`modules/zigbee_receiver.nix`](../modules/zigbee_receiver.nix), [`modules/z-wave_receiver.nix`](../modules/z-wave_receiver.nix), [`modules/thread.nix`](../modules/thread.nix).
 
 ```mermaid
 graph TD
     zigbee[Zigbee USB adapter]
     zwave[Z-Wave USB adapter]
+    threadradio[SLZB-MR1U 2nd radio]
     z2m[zigbee2mqtt]
     zwavejs[Z-Wave JS UI]
+    otbr[otbr]
+    matterserver[matter-server]
     mqtt[MQTT broker :1883]
     ha[Home Assistant]
     frigate[Frigate NVR]
@@ -146,10 +149,14 @@ graph TD
 
     zigbee --> z2m --> mqtt
     zwave --> zwavejs --> mqtt
+    threadradio --> otbr --> matterserver
     cameras --> frigate --> mqtt
     mqtt --> ha
+    matterserver --> ha
     frigate --> ha
 ```
+
+Matter/Thread onboarding — see [docs/matter-thread.md](./matter-thread.md).
 
 ---
 

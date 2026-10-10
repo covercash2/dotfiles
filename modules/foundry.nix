@@ -94,9 +94,21 @@
         reverse_proxy green.faun-truck.ts.net:30000
       '';
     };
+    # Dials green's Tailscale MagicDNS name directly, like the vhost above,
+    # rather than "home.green.chrash.net" — that depends on AdGuard's
+    # *.chrash.net forward reaching green's dnsmasq (see
+    # modules/dnsmasq.nix), which the replica synced here can't always do.
+    # tls_server_name keeps TLS validation pointed at the name the
+    # certificate (modules/shared-ca.nix trust + green's mkcert-shared) was
+    # actually issued for, since the dial address no longer matches it.
     virtualHosts."covercash.dev" = {
       extraConfig = ''
-        reverse_proxy https://home.green.chrash.net
+        reverse_proxy https://green.faun-truck.ts.net {
+          header_up Host home.green.chrash.net
+          transport http {
+            tls_server_name home.green.chrash.net
+          }
+        }
       '';
     };
   };

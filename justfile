@@ -97,6 +97,10 @@ check_ruff:
 # rebuild, so it can't live in a committed pyrightconfig.json).
 check_pyright:
   #!/usr/bin/env nu
+  if (which hermes | is-empty) {
+    print "check_pyright: `hermes` not on PATH (hermes-agent is only wired into hoss's config — see flake.nix) — skipping"
+    exit 0
+  }
   let hermes_py = (open (which hermes | get 0.path) | lines | where $it =~ "HERMES_PYTHON=" | first | parse "export HERMES_PYTHON={path}" | get path.0 | str trim -c "'")
   pyright --pythonpath $hermes_py hermes-plugins scripts
 
@@ -104,6 +108,10 @@ check_pyright:
 # under the same interpreter hermes-agent uses — same reasoning as check_pyright.
 check_python_tests:
   #!/usr/bin/env nu
+  if (which hermes | is-empty) {
+    print "check_python_tests: `hermes` not on PATH (hermes-agent is only wired into hoss's config — see flake.nix) — skipping"
+    exit 0
+  }
   let hermes_py = (open (which hermes | get 0.path) | lines | where $it =~ "HERMES_PYTHON=" | first | parse "export HERMES_PYTHON={path}" | get path.0 | str trim -c "'")
   for f in (glob hermes-plugins/*/test_*.py) { ^$hermes_py $f }
 
@@ -139,7 +147,12 @@ check_nu:
 # runtime contracts: manifest parsing, import, register(ctx), tool/hook
 # registration. See hermes-plugins/ (not modules/ — not Nix-specific).
 check_hermes_plugins:
-  for d in (ls hermes-plugins | where type == dir | get name) { hermes plugins doctor $d --ci; if $env.LAST_EXIT_CODE != 0 { exit $env.LAST_EXIT_CODE } }
+  #!/usr/bin/env nu
+  if (which hermes | is-empty) {
+    print "check_hermes_plugins: `hermes` not on PATH (hermes-agent is only wired into hoss's config — see flake.nix) — skipping"
+  } else {
+    for d in (ls hermes-plugins | where type == dir | get name) { hermes plugins doctor $d --ci; if $env.LAST_EXIT_CODE != 0 { exit $env.LAST_EXIT_CODE } }
+  }
 
 # guard against an accidentally-committed plaintext secret: every value in
 # secrets/*.yaml besides the sops metadata block must be sops-encrypted.

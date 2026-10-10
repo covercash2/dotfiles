@@ -12,8 +12,18 @@
     settings = {
       dns = {
         upstream_dns = [
-          # Internal zone — dnsmasq handles all *.chrash.net subdomains
-          "[/chrash.net/]127.0.0.1:5353"
+          # Internal zone — dnsmasq handles all *.chrash.net subdomains.
+          # Port 5354, not 5353: that's the IANA mDNS port, and otbr
+          # (modules/thread.nix) runs its own mDNS responder on the host
+          # network namespace for Thread/Matter discovery — a real
+          # collision, not just a reserved-port nicety (see dnsmasq.nix).
+          #
+          # green's Tailscale IP, not 127.0.0.1: adguardhome-sync copies
+          # this whole config onto foundry's AdGuard replica, and a
+          # loopback target would resolve to nothing over there — dnsmasq
+          # also listens on this address (see dnsmasq.nix) so the same
+          # synced config works on both hosts.
+          "[/chrash.net/]100.64.163.18:5354"
           # Tailscale MagicDNS zone — needed so hostname-based pg_hba
           # entries (and anything else resolving *.ts.net peers) work;
           # public upstreams below don't know this zone.

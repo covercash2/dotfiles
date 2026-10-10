@@ -80,6 +80,13 @@ to root otherwise.
 check `ls /run/secrets/` afterwards; `mkcert-shared` also reissues the host
 certs on its own once `ca_key` is back.
 
+## Matter onboarding fails with no trace in any server log
+
+see [docs/matter-thread.md](./matter-thread.md) — almost always a phone/device
+issue (Wi-Fi band mismatch, Thread network choice, BLE range), not a Nix or
+container problem, which is exactly why nothing shows up in `otbr`/
+`matter-server`/Caddy logs.
+
 ## ssh one-liners with bash syntax fail on hosts where the login shell is `nu`
 
 `chrash`'s login shell is `nu` (nushell) on most hosts, including `foundry`.

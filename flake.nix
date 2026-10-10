@@ -117,6 +117,7 @@
           ./modules/postgres.nix
           ./modules/steam_server.nix
           ./modules/sunshine.nix
+          ./modules/thread.nix
           ./modules/ultron.nix
           ./modules/video_surveillance.nix
           ./modules/z-wave_receiver.nix
