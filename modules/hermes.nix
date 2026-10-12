@@ -1,6 +1,18 @@
 # Hermes Agent — Nous Research agent runtime.
 # https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 { config, lib, pkgs, ... }:
+let
+  # plugin-catalog/homeassistant.yaml pins this exact rev (v2.0.1) — mirror
+  # that pin here instead of `hermes plugins install` so the plugin's
+  # version is tracked in git like everything else, not installed
+  # procedurally onto /var/lib/hermes where a rebuild can't see it.
+  homeassistantPlugin = pkgs.fetchFromGitHub {
+    owner = "NousResearch";
+    repo = "hermes-homeassistant";
+    rev = "ba30cb0cf86c52bdb5cde98974bc062e97966529";
+    hash = "sha256-Pg4smvkiVpmcmUola0rziMBfq5V7UjzX8864Dem76pI=";
+  };
+in
 {
   services.hermes-agent = {
     enable = true;
@@ -10,7 +22,9 @@
     environmentFiles = [
       # DISCORD_BOT_TOKEN presence alone connects the Discord platform.
       config.sops.templates."hermes-discord-env".path
-      # HASS_TOKEN presence alone activates the homeassistant toolset.
+      # HASS_TOKEN: required by the homeassistant plugin below (formerly a
+      # built-in toolset gated on this var alone; now a separate plugin that
+      # still reads the same env var).
       config.sops.templates."hermes-hass-env".path
       # GH_TOKEN authenticates gh beyond unauthenticated public reads.
       config.sops.templates."hermes-gh-env".path
@@ -51,8 +65,9 @@
       # don't let Hermes manage ollama; it's already a system service here.
       local_runtime.enabled = false;
 
-      # user plugins are opt-in; see modules/hermes-plugins/.
-      plugins.enabled = [ "gmail" ];
+      # user plugins are opt-in; see modules/hermes-plugins/ (gmail, ours)
+      # and the catalog pin above (homeassistant, upstream).
+      plugins.enabled = [ "gmail" "homeassistant" ];
     };
 
     # headless Obsidian + Dataview, served over MCP by the Local REST API
@@ -74,5 +89,6 @@
   # `hermes-agent` restart, not a copy step.
   systemd.tmpfiles.rules = [
     "L+ /var/lib/hermes/.hermes/plugins/gmail - - - - ${../hermes-plugins/gmail}"
+    "L+ /var/lib/hermes/.hermes/plugins/homeassistant - - - - ${homeassistantPlugin}"
   ];
 }

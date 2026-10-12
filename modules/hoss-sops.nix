@@ -123,8 +123,6 @@ in
     templates."hermes-obsidian-env" = {
       content = ''
         OBSIDIAN_REST_API_KEY=${config.sops.placeholder.obsidian_local_rest_api_key}
-        OBSIDIAN_API_TOKEN=${config.sops.placeholder.obsidian_api_token}
-        OBSIDIAN_API_BASE=https://obsidian.green.chrash.net
       '';
       mode = "0400";
     };
