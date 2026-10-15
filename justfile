@@ -71,8 +71,8 @@ dry_build:
   nixos-rebuild dry-activate --sudo --flake .#{{hostname}} #--upgrade
 
 # run every repo-wide check: nix eval, typo scan, python lint/types/tests,
-# nu syntax sweep + test suite, hermes plugins, sops plaintext guard
-check: check_nix check_typos check_ruff check_pyright check_python_tests check_nu_syntax check_nu check_hermes_plugins check_secrets
+# nu syntax sweep + test suite, hermes plugins, obsidian plugin, sops plaintext guard
+check: check_nix check_typos check_ruff check_pyright check_python_tests check_nu_syntax check_nu check_hermes_plugins check_obsidian_plugin check_secrets
 
 # evaluate every flake output (NixOS + home-manager configs).
 # no --no-build: hermes-agent's nix/lib.nix copies a cleanSourceWith-filtered
@@ -143,16 +143,32 @@ check_nu_syntax:
 check_nu:
   cd nuenv; nu -c 'overlay use testing.nu; run-tests --path .'
 
-# validate every Hermes plugin (hermes-plugins/<name>/) against the real
-# runtime contracts: manifest parsing, import, register(ctx), tool/hook
-# registration. See hermes-plugins/ (not modules/ — not Nix-specific).
+# validate every actual Hermes plugin (hermes-plugins/<name>/, identified by
+# a plugin.yaml/.yml/.json manifest) against the real runtime contracts:
+# manifest parsing, import, register(ctx), tool/hook registration. Not every
+# hermes-plugins/ subdirectory is one — obsidian-dataview-mcp-extension is a
+# real Obsidian/TypeScript plugin (manifest.json, Obsidian's own convention,
+# not hermes's) grouped here by convention; see check_obsidian_plugin for it.
 check_hermes_plugins:
   #!/usr/bin/env nu
   if (which hermes | is-empty) {
     print "check_hermes_plugins: `hermes` not on PATH (hermes-agent is only wired into hoss's config — see flake.nix) — skipping"
   } else {
-    for d in (ls hermes-plugins | where type == dir | get name) { hermes plugins doctor $d --ci; if $env.LAST_EXIT_CODE != 0 { exit $env.LAST_EXIT_CODE } }
+    let dirs = (ls hermes-plugins | where type == dir | get name | where {|d| ($d | path join "plugin.yaml" | path exists) or ($d | path join "plugin.yml" | path exists) or ($d | path join "plugin.json" | path exists)})
+    for d in $dirs { hermes plugins doctor $d --ci; if $env.LAST_EXIT_CODE != 0 { exit $env.LAST_EXIT_CODE } }
   }
+
+# lint/typecheck/format-check the Obsidian/TypeScript plugin (nodejs via
+# home/packages.nix). `npm ci`, not `install` — deterministic from the
+# committed package-lock.json, and refuses to run if the lockfile drifts
+# from package.json instead of silently re-resolving.
+check_obsidian_plugin:
+  #!/usr/bin/env nu
+  cd hermes-plugins/obsidian-dataview-mcp-extension
+  ^npm ci --no-audit --no-fund
+  ^./node_modules/.bin/eslint src/main.ts
+  ^./node_modules/.bin/tsc --noEmit
+  ^./node_modules/.bin/prettier --check src/main.ts
 
 # guard against an accidentally-committed plaintext secret: every value in
 # secrets/*.yaml besides the sops metadata block must be sops-encrypted.

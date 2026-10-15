@@ -32,40 +32,56 @@
   # Same repo as obsidian-headless (modules/obsidian-headless.nix) — this
   # just reads it with its own read-only deploy key, rather than sharing
   # obsidian-headless's read-write one.
-  systemd.services.green-vault-sync = {
-    description = "Pull the notes vault from its git remote";
-    after = [ "network-online.target" ];
-    wants = [ "network-online.target" ];
-
-    serviceConfig = {
-      Type = "oneshot";
-      # Runs as root: needs to restart green.service on a change, and the
-      # vault directory is chowned to green at the end of each run anyway.
-      Environment = [
-        "GIT_SSH_COMMAND=${pkgs.openssh}/bin/ssh -i ${config.sops.secrets.green_vault_deploy_key.path} -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
-      ];
-      ExecStart = pkgs.writeShellScript "green-vault-sync" ''
-        set -euo pipefail
-        vault=/var/lib/green/vault
-        git=${pkgs.git}/bin/git
-
-        if [ -d "$vault/.git" ]; then
-          before=$("$git" -C "$vault" rev-parse HEAD)
-          "$git" -C "$vault" pull --ff-only
-        else
-          before=""
-          "$git" clone --depth 1 git@github.com:covercash2/obsidian-vault.git "$vault"
-        fi
-        after=$("$git" -C "$vault" rev-parse HEAD)
-
-        chown -R green:green "$vault"
-
-        if [ "$before" != "$after" ]; then
-          systemctl restart green.service
-        fi
+  systemd.services.green-vault-sync =
+    let
+      # Pin github.com's published host keys instead of StrictHostKeyChecking=
+      # accept-new: this is a root-run oneshot service with no $HOME, so
+      # accept-new's "trust it and remember it in ~/.ssh/known_hosts" has
+      # nowhere reliable to persist to and fails with "Host key verification
+      # failed" every run. A static, declarative known_hosts file needs no
+      # runtime write and verifies strictly from the first connection.
+      # Keys fetched via `ssh-keyscan github.com` — see GitHub's published
+      # fingerprints: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/githubs-ssh-key-fingerprints
+      githubKnownHosts = pkgs.writeText "github-known-hosts" ''
+        github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl
+        github.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg=
+        github.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCj7ndNxQowgcQnjshcLrqPEiiphnt+VTTvDP6mHBL9j1aNUkY4Ue1gvwnGLVlOhGeYrnZaMgRK6+PKCUXaDbC7qtbW8gIkhL7aGCsOr/C56SJMy/BCZfxd1nWzAOxSDPgVsmerOBYfNqltV9/hWCqBywINIR+5dIg6JTJ72pcEpEjcYgXkE2YEFXV1JHnsKgbLWNlhScqb2UmyRkQyytRLtL+38TGxkxCflmO+5Z8CSSNY7GidjMIZ7Q4zMjA2n1nGrlTDkzwDCsw+wqFPGQA179cnfGWOWRVruj16z6XyvxvjJwbz0wQZ75XK5tKSb7FNyeIEs4TT4jk+S4dhPeAUC5y+bDYirYgM4GC7uEnztnZyaVWQ7B381AK4Qdrwt51ZqExKbQpTUNn+EjqoTwvqNj4kqx5QUCI0ThS/YkOxJCXmPUWZbhjpCg56i+2aB6CmK2JGhn57K5mj0MNdBXA4/WnwH6XoPWJzK5Nyu2zB3nAZp+S5hpQs+p1vN1/wsjk=
       '';
+    in
+    {
+      description = "Pull the notes vault from its git remote";
+      after = [ "network-online.target" ];
+      wants = [ "network-online.target" ];
+
+      serviceConfig = {
+        Type = "oneshot";
+        # Runs as root: needs to restart green.service on a change, and the
+        # vault directory is chowned to green at the end of each run anyway.
+        Environment = [
+          "GIT_SSH_COMMAND=${pkgs.openssh}/bin/ssh -i ${config.sops.secrets.green_vault_deploy_key.path} -o IdentitiesOnly=yes -o UserKnownHostsFile=${githubKnownHosts} -o StrictHostKeyChecking=yes"
+        ];
+        ExecStart = pkgs.writeShellScript "green-vault-sync" ''
+          set -euo pipefail
+          vault=/var/lib/green/vault
+          git=${pkgs.git}/bin/git
+
+          if [ -d "$vault/.git" ]; then
+            before=$("$git" -C "$vault" rev-parse HEAD)
+            "$git" -C "$vault" pull --ff-only
+          else
+            before=""
+            "$git" clone --depth 1 git@github.com:covercash2/obsidian-vault.git "$vault"
+          fi
+          after=$("$git" -C "$vault" rev-parse HEAD)
+
+          chown -R green:green "$vault"
+
+          if [ "$before" != "$after" ]; then
+            systemctl restart green.service
+          fi
+        '';
+      };
     };
-  };
 
   systemd.timers.green-vault-sync = {
     description = "Periodically pull the notes vault";

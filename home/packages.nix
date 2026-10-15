@@ -27,6 +27,7 @@
     # lua-language-server: via programs.neovim.extraPackages
     # neovim, nil, lua-language-server, typos-lsp installed via programs.neovim in programs/neovim.nix
     nix-update # used to bump versions in nix files
+    nodejs # for hermes-plugins/obsidian-dataview-mcp-extension's eslint/tsc/prettier
     opencode
 
     pyright # Python type checker (hermes-plugins/, scripts/)

@@ -48,7 +48,10 @@ in
     settings = {
       model = {
         provider = "ollama";
-        default = "qwen3.5:27b";
+        # verified on hoss's RTX 4090: ~1GB VRAM resident (elastic/sparse
+        # architecture — far under its 18GB on-disk size), ~270 tok/s,
+        # comfortably faster than qwen3.5:27b (~45 tok/s) it replaced.
+        default = "gemma4:26b";
         # must match ollama's actual window, not the model's trained max
         # (which is what ollama's /api/show reports)
         context_length = lib.toInt config.services.ollama.environmentVariables.OLLAMA_CONTEXT_LENGTH;
@@ -56,9 +59,12 @@ in
 
       providers.ollama = {
         base_url = "http://localhost:11434/v1";
-        # backstop: qwen3.5:27b can get stuck self-verifying an exact
-        # count/length target in the prompt ("write N words") and never
-        # naturally stop — reproduced live, ran to 8,573 tokens unbounded.
+        # backstop originally added for qwen3.5:27b (could get stuck
+        # self-verifying an exact count/length target in the prompt and
+        # never naturally stop — reproduced live, ran to 8,573 tokens
+        # unbounded). Kept as a general safety ceiling after switching to
+        # gemma4:26b — not re-verified whether gemma4 has the same quirk,
+        # but 8192 is generous enough not to cut off any normal response.
         extra_body.max_tokens = 8192;
       };
 

@@ -1,0 +1,13 @@
+{
+  "name": "obsidian-dataview-mcp-extension",
+  "private": true,
+  "description": "Dev-only tooling (lint/format/typecheck) for this plugin. Not used by default.nix's build — see its own top comment for why.",
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "eslint": "^9.17.0",
+    "typescript-eslint": "^8.19.0",
+    "prettier": "^3.4.0",
+    "obsidian": "^1.7.2",
+    "zod": "^4.6.5"
+  }
+}

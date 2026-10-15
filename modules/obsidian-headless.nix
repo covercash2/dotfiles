@@ -7,9 +7,11 @@
 # repo, so a fresh clone has none of it. This module provisions the whole
 # tree itself: Dataview and "Local REST API with MCP" (pinned releases,
 # fetched by Nix), plus our own small extension plugin
-# (../obsidian-dataview-mcp-extension) that bridges Dataview's query API into
-# the REST API plugin's built-in MCP server, since that plugin has no native
-# Dataview support.
+# (../hermes-plugins/obsidian-dataview-mcp-extension — grouped with the other
+# Hermes-facing plugins for consistency, even though this one is a real
+# Obsidian/TypeScript plugin, not a Python hermes-agent plugin) that bridges
+# Dataview's query API into the REST API plugin's built-in MCP server, since
+# that plugin has no native Dataview support.
 {
   config,
   lib,
@@ -77,7 +79,7 @@ let
     };
   };
 
-  ourExtension = pkgs.callPackage ./obsidian-dataview-mcp-extension { };
+  ourExtension = pkgs.callPackage ../hermes-plugins/obsidian-dataview-mcp-extension { };
 
   obsidianPkg = pkgs.obsidian.override {
     commandLineArgs = "--disable-gpu --disable-software-rasterizer --no-sandbox";
