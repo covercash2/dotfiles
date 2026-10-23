@@ -243,7 +243,10 @@ theme "tokyo-night"
 //   - true (default)
 //   - false
 //
-// mouse_mode false
+// Disabled: a flaky mouse flooding zellij's mouse-tracking escape sequences
+// over an SSH session was hanging the client terminal badly enough to drop
+// and reconnect the whole SSH connection.
+mouse_mode false
 
 // Configure the scroll back buffer size
 // This is the number of lines zellij stores for each pane in the scroll back
