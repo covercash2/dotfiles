@@ -4,9 +4,10 @@
 # and otbr (modules/thread.nix) runs its own mDNS responder on the host
 # network namespace for Thread/Matter discovery.
 #
-# Also listens on green's Tailscale IP, not just loopback: adguardhome-sync
-# (modules/adguardhome-sync.nix) copies this whole AdGuard config onto
-# foundry's replica every 30 minutes, including the upstream_dns forward to
+# also listens on green's Tailscale IP, not just loopback:
+# adguardhome-sync (modules/adguardhome-sync.nix) copies this whole AdGuard config
+# onto foundry's replica every 30 minutes,
+# including the upstream_dns forward to
 # this dnsmasq.
 # Add a new host by appending an address line.
 { ... }:
