@@ -53,26 +53,40 @@
       after = [ "network-online.target" ];
       wants = [ "network-online.target" ];
 
+      # `environment` (an attrset) renders a properly quoted `Environment=`
+      # line. The previous serviceConfig.Environment = [ "VAR=value with
+      # spaces" ] form doesn't quote the value — systemd's Environment=
+      # splits on whitespace to find multiple assignments, so it silently
+      # truncated GIT_SSH_COMMAND at the first space (down to just "ssh",
+      # dropping every -o flag). That's why this kept failing with "Host key
+      # verification failed" even though the full command worked fine when
+      # run manually: plain `ssh` with no StrictHostKeyChecking override
+      # falls back to the interactive default, which refuses outright with
+      # no TTY.
+      environment.GIT_SSH_COMMAND = "${pkgs.openssh}/bin/ssh -i ${config.sops.secrets.green_vault_deploy_key.path} -o IdentitiesOnly=yes -o UserKnownHostsFile=${githubKnownHosts} -o StrictHostKeyChecking=yes";
+
       serviceConfig = {
         Type = "oneshot";
         # Runs as root: needs to restart green.service on a change, and the
         # vault directory is chowned to green at the end of each run anyway.
-        Environment = [
-          "GIT_SSH_COMMAND=${pkgs.openssh}/bin/ssh -i ${config.sops.secrets.green_vault_deploy_key.path} -o IdentitiesOnly=yes -o UserKnownHostsFile=${githubKnownHosts} -o StrictHostKeyChecking=yes"
-        ];
         ExecStart = pkgs.writeShellScript "green-vault-sync" ''
           set -euo pipefail
           vault=/var/lib/green/vault
-          git=${pkgs.git}/bin/git
+          # Scoped to exactly $vault (not a blanket safe.directory=*): this
+          # service runs as root, and the directory ends up owned by `green`
+          # (chown below), so git's post-CVE-2022-24765 ownership check sees
+          # a root process touching a non-root-owned repo and refuses unless
+          # told this exact path is expected.
+          git="${pkgs.git}/bin/git -c safe.directory=$vault"
 
           if [ -d "$vault/.git" ]; then
-            before=$("$git" -C "$vault" rev-parse HEAD)
-            "$git" -C "$vault" pull --ff-only
+            before=$($git -C "$vault" rev-parse HEAD)
+            $git -C "$vault" pull --ff-only
           else
             before=""
-            "$git" clone --depth 1 git@github.com:covercash2/obsidian-vault.git "$vault"
+            $git clone --depth 1 git@github.com:covercash2/obsidian-vault.git "$vault"
           fi
-          after=$("$git" -C "$vault" rev-parse HEAD)
+          after=$($git -C "$vault" rev-parse HEAD)
 
           chown -R green:green "$vault"
 
