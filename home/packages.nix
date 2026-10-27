@@ -29,6 +29,7 @@
     nix-update # used to bump versions in nix files
     nodejs # for hermes-plugins/obsidian-dataview-mcp-extension's eslint/tsc/prettier
     opencode
+    openspec
 
     pyright # Python type checker (hermes-plugins/, scripts/)
 
