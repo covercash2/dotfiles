@@ -59,7 +59,12 @@ in
 
     ollama = {
       enable = true;
-      package = pkgs.ollama-cuda;
+      # upstream builds CUDA kernels for ~10 architectures by default
+      # (cudaPackages.flags.realArches) for broad hardware compatibility.
+      # hoss has exactly one GPU — narrowing to its real arch (RTX 4090,
+      # Ada Lovelace = sm_89) cuts the ggml-cuda kernel-template-instantiation
+      # compile (the dominant cost of this build, ~15-30min) by ~10x.
+      package = pkgs.ollama-cuda.override { cudaArches = [ "sm_89" ]; };
       user = "ollama";
       host = "0.0.0.0";
       port = 11434;
