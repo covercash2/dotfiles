@@ -164,16 +164,16 @@
           };
           # prefix "0x282c02bfff" is
           "0x282c02bfffea5495" = {
-            friendly_name = "0x282c02bfffea5495";
+            friendly_name = "office desk power plug";
           };
           "0x282c02bfffec2f84" = {
-            friendly_name = "0x282c02bfffec2f84";
+            friendly_name = "guitar power plug";
           };
           "0x282c02bfffec78bf" = {
             friendly_name = "0x282c02bfffec78bf";
           };
           "0x282c02bfffec84f8" = {
-            friendly_name = "0x282c02bfffec84f8";
+            friendly_name = "south garage wall power plug";
           };
           "0xa4c13812d9bd371a" = {
             friendly_name = "0xa4c13812d9bd371a";

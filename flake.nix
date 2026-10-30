@@ -29,6 +29,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # keeps its own pinned nixpkgs so the cuda build is cached independently of this flake
+    djinn.url = "github:covercash2/djinn";
+
     nixos-cli.url = "github:nix-community/nixos-cli";
     sops-nix.url = "github:Mic92/sops-nix";
     hermes-agent.url = "github:NousResearch/hermes-agent";
@@ -40,6 +43,7 @@
       home-manager,
 
       disko,
+      djinn,
       green,
       hermes-agent,
       nixos-cli,
@@ -140,12 +144,14 @@
             ./modules/hoss.nix
             ./modules/hoss-sops.nix
             ./modules/hoss-green.nix
+            ./modules/hoss-djinn.nix
             ./modules/openssh.nix
             ./modules/embedded_dev.nix
             ./modules/steam_server.nix
             ./modules/hoss-builder.nix
             ./modules/shared-ca.nix
             ./modules/hermes.nix
+            djinn.nixosModules.default
             green.nixosModules.default
             sops-nix.nixosModules.sops
             home-manager.nixosModules.home-manager

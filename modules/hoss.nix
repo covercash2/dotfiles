@@ -111,6 +111,13 @@ in
             reverse_proxy localhost:${toString config.services.ollama.port}
           '';
         };
+
+        "djinn.hoss.chrash.net" = {
+          extraConfig = ''
+            tls ${config.services.mkcert-shared.certPath} ${config.services.mkcert-shared.keyPath}
+            reverse_proxy ${config.services.djinn.address}:${toString config.services.djinn.port}
+          '';
+        };
       };
     };
   };
